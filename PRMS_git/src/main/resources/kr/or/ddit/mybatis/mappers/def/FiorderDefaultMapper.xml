@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.FiorderDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.FiorderDefaultVO">
+    <id column="ORDERDETAIL_NO" jdbcType="VARCHAR" property="orderdetailNo" />
+    <result column="FIREQ_ID" jdbcType="VARCHAR" property="fireqId" />
+    <result column="ORDERDETAIL_QY" jdbcType="NUMERIC" property="orderdetailQy" />
+    <result column="ORDERDETAIL_PC" jdbcType="NUMERIC" property="orderdetailPc" />
+    <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+  </resultMap>
+  <delete id="deleteFiorder" parameterType="java.lang.String">
+    delete from FIORDER
+    where ORDERDETAIL_NO = #{orderdetailNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertFiorder" parameterType="kr.or.ddit.vo.def.FiorderDefaultVO">
+    insert into FIORDER (ORDERDETAIL_NO, FIREQ_ID, ORDERDETAIL_QY,
+      ORDERDETAIL_PC, PROD_ID)
+    values (#{orderdetailNo,jdbcType=VARCHAR}, #{fireqId,jdbcType=VARCHAR}, #{orderdetailQy,jdbcType=NUMERIC},
+      #{orderdetailPc,jdbcType=NUMERIC}, #{prodId,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateFiorder" parameterType="kr.or.ddit.vo.def.FiorderDefaultVO">
+    update FIORDER
+    set FIREQ_ID = #{fireqId,jdbcType=VARCHAR},
+      ORDERDETAIL_QY = #{orderdetailQy,jdbcType=NUMERIC},
+      ORDERDETAIL_PC = #{orderdetailPc,jdbcType=NUMERIC},
+      PROD_ID = #{prodId,jdbcType=VARCHAR}
+    where ORDERDETAIL_NO = #{orderdetailNo,jdbcType=VARCHAR}
+  </update>
+  <select id="selectFiorder" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select ORDERDETAIL_NO, FIREQ_ID, ORDERDETAIL_QY, ORDERDETAIL_PC, PROD_ID
+    from FIORDER
+    where ORDERDETAIL_NO = #{orderdetailNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectFiorderList" resultMap="BaseResultMap">
+    select ORDERDETAIL_NO, FIREQ_ID, ORDERDETAIL_QY, ORDERDETAIL_PC, PROD_ID
+    from FIORDER
+  </select>
+</mapper>

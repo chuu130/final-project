@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.AtchfileDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.AtchfileDefaultVO">
+    <id column="ATCH_FILE_ID" jdbcType="NUMERIC" property="atchFileId" />
+    <result column="CREATE_DT" jdbcType="TIMESTAMP" property="createDt" />
+    <result column="USE_AT" jdbcType="VARCHAR" property="useAt" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ATCHFILE
+    where ATCH_FILE_ID = #{atchFileId,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.AtchfileDefaultVO">
+    insert into ATCHFILE (ATCH_FILE_ID, CREATE_DT, USE_AT
+          )
+    values (#{atchFileId,jdbcType=NUMERIC}, SYSDATE, #{useAt,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.AtchfileDefaultVO">
+    update ATCHFILE
+    set CREATE_DT = #{createDt,jdbcType=NUMERIC},
+      USE_AT = #{useAt,jdbcType=TIMESTAMP}
+    where ATCH_FILE_CL_ID = #{atchFileId,jdbcType=NUMERIC}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select ATCH_FILE_ID, CREATE_DT, USE_AT
+    from ATCHFILE
+    where ATCH_FILE_ID = #{atchFileId,jdbcType=NUMERIC}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ATCH_FILE_ID, CREATE_DT, USE_AT
+    from ATCHFILE
+  </select>
+</mapper>

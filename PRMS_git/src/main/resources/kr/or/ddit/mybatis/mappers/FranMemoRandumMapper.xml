@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.franchise.franchisee.mapper.FranMemoRandumMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.FranchiseDefaultVO">
+    <id column="FRANCHISE_ID" jdbcType="VARCHAR" property="franchiseId" />
+    <result column="FRANCHISE_AREA" jdbcType="VARCHAR" property="franchiseArea" />
+    <result column="FRANCHISE_NM" jdbcType="VARCHAR" property="franchiseNm" />
+    <result column="FRANCHISE_TEL" jdbcType="VARCHAR" property="franchiseTel" />
+    <result column="FRANCHISE_ZIP" jdbcType="VARCHAR" property="franchiseZip" />
+    <result column="FRANCHISE_ADD1" jdbcType="VARCHAR" property="franchiseAdd1" />
+    <result column="FRANCHISE_ADD2" jdbcType="VARCHAR" property="franchiseAdd2" />
+    <result column="FRANCHISE_EMAIL" jdbcType="VARCHAR" property="franchiseEmail" />
+    <result column="FRANCHISE_YN_AT" jdbcType="VARCHAR" property="franchiseYnAt" />
+    <result column="FRANCHISE_HOTEL_CO" jdbcType="NUMERIC" property="franchiseHotelCo" />
+    <result column="EMP_NO" jdbcType="VARCHAR" property="empNo" />
+    <result column="EMP_NM" jdbcType="VARCHAR" property="empNm" />
+    <result column="CMMN_CODE_NM" jdbcType="VARCHAR" property="cmmnCodeNm" />
+    <association property="memorandum" javaType="kr.or.ddit.vo.def.MemorandumDefaultVO" autoMapping="true" />
+    <collection property="hotelroomList" ofType="HotelroomDefaultVO" >
+    	<id column="HOTEL_ID" jdbcType="VARCHAR" property="hotelId" />
+        <result column="HOTEL_NM" jdbcType="VARCHAR" property="hotelNm" />
+        <collection property="hotelresList" ofType="HotelresDefaultVO">
+			<id column="RES_HOTEL_NO" jdbcType="VARCHAR" property="resHotelNo" />
+        	<result column="RES_HOTEL_REGIST_DE" jdbcType="DATE" property="resHotelRegistDe" />
+        	<collection property="petList" ofType="PetDefaultVO">
+				<id column="PET_NO" jdbcType="VARCHAR" property="petNo" />
+	        	<result column="PET_NM" jdbcType="VARCHAR" property="petNm" />
+	        	<collection property="memList" ofType="MemberDefaultVO">
+	        		<id column="MEM_NO" jdbcType="VARCHAR" property="memNo" />
+	        		<result column="MEM_NM" jdbcType="VARCHAR" property="memNm" />
+	        	</collection>
+	        </collection>
+        </collection>
+    </collection>
+    <collection property="beautyresList" ofType="kr.or.ddit.vo.def.BeautyresDefaultVO">
+        <id column="RES_BEAUTY_NO" jdbcType="VARCHAR" property="resBeautyNo" />
+        <result column="RES_OPTION" jdbcType="VARCHAR" property="resOption" />
+        <result column="RES_BEAUTY_REGIST_DE" jdbcType="DATE" property="resBeautyRegistDe" />
+        <collection property="petList" ofType="PetDefaultVO">
+			<id column="PET_NO" jdbcType="VARCHAR" property="petNo" />
+        	<result column="PET_NM" jdbcType="VARCHAR" property="petNm" />
+        	<collection property="memList" ofType="MemberDefaultVO">
+        		<id column="MEM_NO" jdbcType="VARCHAR" property="memNo" />
+        		<result column="MEM_NM" jdbcType="VARCHAR" property="memNm" />
+        	</collection>
+        </collection>
+        <!-- 필요한 컬럼들에 대한 추가 매핑 -->
+    </collection>
+  </resultMap>
+	<select id="selectfranmemoList" resultMap="BaseResultMap" parameterType="string">
+		select a.*, b.*
+		from franchise a inner join memorandum b on (a.franchise_id = b.franchise_id)
+		where a.franchise_id = #{franchiseId}
+	</select>
+</mapper>

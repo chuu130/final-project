@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.CenterDefaultMapper">
+	<resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.CenterDefaultVO">
+		<id column="CTR_BBS_NO" jdbcType="VARCHAR" property="ctrBbsNo" />
+		<result column="CTR_BBS_NM" jdbcType="VARCHAR" property="ctrBbsNm" />
+		<result column="CTR_BBS_CN" jdbcType="VARCHAR" property="ctrBbsCn" />
+		<result column="CTR_BBS_DE" jdbcType="TIMESTAMP" property="ctrBbsDe" />
+		<result column="CTR_BBS_ACTH" jdbcType="VARCHAR" property="ctrBbsActh" />
+		<result column="MEM_NO" jdbcType="VARCHAR" property="memNo" />
+	</resultMap>
+
+	<insert id="insertCenterBoard"
+		parameterType="kr.or.ddit.vo.def.CenterDefaultVO">
+		<selectKey order="BEFORE" resultType="string"
+			keyProperty="ctrBbsNo">
+			SELECT CENTER_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		insert into CENTER
+		(CTR_BBS_NO
+		, CTR_BBS_NM
+		, CTR_BBS_CN
+		, CTR_BBS_DE
+		, CTR_BBS_ACTH
+		, CTR_BBS_SN
+		, MEM_NO
+		)
+		values (#{ctrBbsNo,jdbcType=VARCHAR}
+		, #{ctrBbsNm,jdbcType=VARCHAR}
+		, #{ctrBbsCn,jdbcType=VARCHAR}
+		<if test="ctrBbsDe != null">
+			, #{ctrBbsDe,jdbcType=TIMESTAMP}
+		</if>
+		<if test="ctrBbsDe == null">
+			,SYSDATE
+		</if>
+		, #{ctrBbsActh,jdbcType=VARCHAR}
+		, #{ctrBbsSn,jdbcType=VARCHAR}
+		, #{memNo,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="updateCenterBoard"
+		parameterType="kr.or.ddit.vo.def.CenterDefaultVO">
+		update CENTER
+		set CTR_BBS_NM = #{ctrBbsNm,jdbcType=VARCHAR}
+		,CTR_BBS_CN = #{ctrBbsCn,jdbcType=VARCHAR}
+		<if test="ctrBbsDe != null">
+			,CTR_BBS_DE = #{ctrBbsDe,jdbcType=TIMESTAMP}
+		</if>
+		<if test="ctrBbsDe == null">
+			,CTR_BBS_DE = SYSDATE
+		</if>
+		,CTR_BBS_ACTH = #{ctrBbsActh,jdbcType=VARCHAR}
+		,CTR_BBS_SN = #{ctrBbsSn,jdbcType=VARCHAR}
+		,MEM_NO = #{memNo,jdbcType=VARCHAR}
+		where CTR_BBS_NO = #{ctrBbsNo,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectByctrBbsNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT CTR_BBS_NO
+		, CTR_BBS_NM
+		, CTR_BBS_CN
+		, CTR_BBS_DE
+		, CTR_BBS_ACTH
+		, CTR_BBS_SN
+		, A.MEM_NO
+        , B.MEM_ID
+		FROM CENTER A
+        LEFT OUTER JOIN MEMBER B
+        ON A.MEM_NO = B.MEM_NO
+		WHERE CTR_BBS_NO = #{ctrBbsNo,jdbcType=VARCHAR}
+	</select>
+	
+	
+	<!-- 검색유형에 따른 검색조건 명시 컬럼에서 searchWord 찾는다 -->
+	<sql id="searchFrag">
+		<where>
+			<if
+				test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+				<choose>
+					<when test="simpleCondition.searchType eq 'title'">
+						INSTR(CTR_BBS_NM, #{simpleCondition.searchWord})
+						> 0
+					</when>
+					<when test="simpleCondition.searchType eq 'writer'">
+						INSTR(B.MEM_ID,
+						
+						#{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'content'">
+						INSTR(CTR_BBS_CN, #{simpleCondition.searchWord})
+						> 0
+					</when>
+					<otherwise>
+						INSTR(CTR_BBS_NM, #{simpleCondition.searchWord}) > 0
+						OR INSTR(B.MEM_ID, #{simpleCondition.searchWord}) > 0
+						OR INSTR(CTR_BBS_CN, #{simpleCondition.searchWord}) > 0
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+	</sql>
+	
+	
+	<select id="selectTotalRecord" resultType="int">
+		SELECT COUNT(*)
+		FROM CENTER A
+		LEFT OUTER JOIN MEMBER B
+		ON A.MEM_NO = B.MEM_NO
+		<include refid="searchFrag" />
+	</select>
+	
+	
+	<!-- 	페이징포함 전체리스트 조회 -->
+	<select id="selectAllCenterBoard" resultMap="BaseResultMap">
+		SELECT B.*
+		FROM (
+		    SELECT ROWNUM RNUM, A.*
+		    FROM (
+			SELECT CTR_BBS_NO
+			, CTR_BBS_NM
+			, CTR_BBS_CN
+			, CTR_BBS_DE
+			, CTR_BBS_ACTH
+			, CTR_BBS_SN
+			, A.MEM_NO
+	        , B.MEM_ID
+	        , B.MEM_NM
+			FROM CENTER A
+	        LEFT OUTER JOIN MEMBER B ON A.MEM_NO = B.MEM_NO
+	        <include refid="searchFrag" />
+	        ORDER BY TO_NUMBER(CTR_BBS_NO) DESC
+	      ) A
+	) B
+		<![CDATA[
+		WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+		]]>
+	</select>
+	
+	
+	<!-- 	페이징미포함 전체리스트 조회 -->
+	<select id="selectAllCenterNonPaging" resultMap="BaseResultMap">
+	SELECT A.*, ROWNUM RNUM
+		FROM (
+		SELECT CTR_BBS_NO
+		, CTR_BBS_NM
+		, CTR_BBS_CN
+		, CTR_BBS_DE
+		, CTR_BBS_ACTH
+		, CTR_BBS_SN
+		, A.MEM_NO
+        , B.MEM_ID
+        , B.MEM_NM
+		FROM CENTER A
+        LEFT OUTER JOIN MEMBER B ON A.MEM_NO = B.MEM_NO
+        ORDER BY TO_NUMBER(CTR_BBS_NO) DESC
+        ) A
+	</select>
+
+	<select id="selectAllMergeBoard" resultMap="BaseResultMap"> 
+		WITH V_CENTER AS (
+		SELECT CTR_BBS_NO
+		, MEM_NO
+		, CTR_BBS_DE
+		, CTR_BBS_CN
+		, CTR_BBS_NM
+		, CTR_BBS_SN
+		, NULL
+		PARENT_NO FROM CENTER UNION SELECT QNA_ANSWER_ID
+		, EMP_NO 
+		, QNA_ANSWER_DE 
+		,QNA_ANSWER_CN 
+		,QNA_ANSWER_NM 
+		,CTR_BBS_NO FROM qnaanswer
+		) SELECT * FROM V_CENTER 
+		START WITH PARENT_NO IS NULL 
+		CONNECT BY NOCYCLE PRIOR CTR_BBS_NO = PARENT_NO
+		</select>
+
+
+	<delete id="deleteCenterBoard" parameterType="java.lang.String">
+		delete from CENTER
+		where CTR_BBS_NO = #{ctrBbsNo,jdbcType=VARCHAR}
+	</delete>
+</mapper>

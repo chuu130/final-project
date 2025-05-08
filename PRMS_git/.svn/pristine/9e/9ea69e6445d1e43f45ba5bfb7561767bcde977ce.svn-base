@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+	<!-- 컴포넌트 스캔 (Controller 어노테이션 배제 )-->
+	<context:component-scan base-package="kr.or.ddit">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+
+	<!--  어노테이션 설정파일을 사용할 수 있다. @Configuration -->
+	<context:annotation-config/>
+
+	<context:component-scan base-package="kr.or.ddit" />
+
+	<!-- 메일 전송 빈 등록 -->
+	<!-- 메일 발송 계정설정(구글) -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"
+		p:host="smtp.gmail.com"
+		p:port="587"
+		p:username="apvmfvodls1@gmail.com"
+		p:password="ghwftsmswphaomxl"
+		p:defaultEncoding="utf-8"
+	>
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- 메일전송 커스텀 핸들러 등록 -->
+	<bean id="mailHandler" class="kr.or.ddit.api.mail.handler.MailHandler"
+		c:JavaMailSender-ref="mailSender"
+	/>
+
+
+	<!-- 결제관련 객체 빈등록 -->
+	<bean id="iamportClient" class="com.siot.IamportRestClient.IamportPaycoClient"
+		c:api_key="2058323834641186"
+		c:api_secret="4flqZU6c1g8h4CLe0c0vT5Xu3VCpL8kmeVwcpT4N4Thst2MVSRmYZtEcS9wG03GfbNspvMfWxQOiyaWz"
+	/>
+
+<!-- 	AppInfo 설정 및 properties 파읿 빈 등록(root-context.xml) -->
+	<util:properties id="appInfo" location="classpath:kr/or/ddit/appInfo.properties" />
+
+</beans>

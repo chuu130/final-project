@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.PartnersDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.PartnersDefaultVO">
+    <id column="PARTNERS_ID" jdbcType="VARCHAR" property="partnersId" />
+    <result column="PARTNERS_SE" jdbcType="VARCHAR" property="partnersSe" />
+    <result column="PARTNERS_CORNM" jdbcType="VARCHAR" property="partnersCornm" />
+    <result column="PARTNERS_NOTE" jdbcType="VARCHAR" property="partnersNote" />
+    <result column="PARTNERS_IN" jdbcType="TIMESTAMP" property="partnersIn" />
+    <result column="PARTNERS_DE" jdbcType="TIMESTAMP" property="partnersDe" />
+    <result column="PARTNERS_ATCH" jdbcType="VARCHAR" property="partnersAtch" />
+    <result column="EMP_NO" jdbcType="VARCHAR" property="empNo" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from PARTNERS
+    where PARTNERS_ID = #{partnersId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.PartnersDefaultVO">
+    insert into PARTNERS (PARTNERS_ID, PARTNERS_SE, PARTNERS_CORNM, 
+      PARTNERS_NOTE, PARTNERS_IN, PARTNERS_DE, 
+      PARTNERS_ATCH, EMP_NO)
+    values (#{partnersId,jdbcType=VARCHAR}, #{partnersSe,jdbcType=VARCHAR}, #{partnersCornm,jdbcType=VARCHAR}, 
+      #{partnersNote,jdbcType=VARCHAR}, #{partnersIn,jdbcType=TIMESTAMP}, #{partnersDe,jdbcType=TIMESTAMP}, 
+      #{partnersAtch,jdbcType=VARCHAR}, #{empNo,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.PartnersDefaultVO">
+    update PARTNERS
+    set PARTNERS_SE = #{partnersSe,jdbcType=VARCHAR},
+      PARTNERS_CORNM = #{partnersCornm,jdbcType=VARCHAR},
+      PARTNERS_NOTE = #{partnersNote,jdbcType=VARCHAR},
+      PARTNERS_IN = #{partnersIn,jdbcType=TIMESTAMP},
+      PARTNERS_DE = #{partnersDe,jdbcType=TIMESTAMP},
+      PARTNERS_ATCH = #{partnersAtch,jdbcType=VARCHAR},
+      EMP_NO = #{empNo,jdbcType=VARCHAR}
+    where PARTNERS_ID = #{partnersId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select PARTNERS_ID, PARTNERS_SE, PARTNERS_CORNM, PARTNERS_NOTE, PARTNERS_IN, PARTNERS_DE, 
+    PARTNERS_ATCH, EMP_NO
+    from PARTNERS
+    where PARTNERS_ID = #{partnersId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select PARTNERS_ID, PARTNERS_SE, PARTNERS_CORNM, PARTNERS_NOTE, PARTNERS_IN, PARTNERS_DE, 
+    PARTNERS_ATCH, EMP_NO
+    from PARTNERS
+  </select>
+</mapper>

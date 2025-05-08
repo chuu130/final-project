@@ -1,0 +1,479 @@
+@@include('./partial/head.html', {
+	"title": "Analytics", 
+	"css": [
+		"assets/plugins/bootstrap-daterangepicker/daterangepicker.css"
+]})
+	<!-- BEGIN #app -->
+	<div id="app" class="app">
+		@@include('./partial/header.html', {"title": "Home"})
+		
+		@@include('./partial/sidebar.html', {"analyticsClass": "active"})
+		
+		<!-- BEGIN #content -->
+		<div id="content" class="app-content">
+			<!-- BEGIN page-header -->
+			<h1 class="page-header">
+				Analytics <small>stats, overview & performance</small>
+			</h1>
+			<!-- END page-header -->
+			
+			<!-- BEGIN daterangepicker -->
+			<div class="d-flex align-items-center mb-3">
+				<a href="#" class="btn btn-theme" id="daterangepicker">
+					<i class="fa fa-fw fa-calendar"></i> 
+					<span data-id="daterangepicker-date">Today</span> 
+					<i class="fa fa-fw fa-caret-down me-n1"></i> 
+				</a>
+				<span class="ms-3">compared to <span data-id="prev-date" id="daterangepicker-compare-date"></span></span>
+			</div>
+			<!-- END daterangepicker -->
+		
+			<!-- BEGIN row -->
+			<div class="row" data-masonry='{"percentPosition": true }'>
+				<!-- BEGIN col-4 -->
+				<div class="col-lg-6 col-xl-4 mb-4">
+					<!-- BEGIN card -->
+					<div class="card">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<!-- title -->
+							<div class="d-flex align-items-center mb-3">
+								<div class="flex-fill fw-semibold d-flex align-items-center"><i class="bi-wallet2 text-body text-opacity-25 my-n1 fs-4 me-2"></i> Total sales</div>
+								<a href="#" class="text-decoration-none text-body text-opacity-50 fs-13px">View report</a>
+							</div>
+				
+							<!-- stats -->
+							<div class="d-flex align-items-center mb-3 h3">
+								<div class="flex-1">$821.50</div>
+								<small class="fw-semibold text-success">+5%</small>
+							</div>
+							
+							<!-- chart -->
+							<div>
+								<div class="small fw-bold mb-2 text-body">Sales over time</div>
+								<div class="chart mb-3" style="height: 190px">
+									<canvas id="chart1" class="w-100" height="190"></canvas>
+								</div>
+								<div class="d-flex align-items-center justify-content-center fw-semibold text-body">
+									<i class="fa fa-square text-secondary me-2"></i> 
+									<span class="fs-12px me-4" data-id="prev-date">&nbsp;</span>
+									<i class="fa fa-square text-theme me-2"></i> 
+									<span class="fs-12px" data-id="today-date">&nbsp;</span>
+								</div>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<!-- END col-4 -->
+				
+				<!-- BEGIN col-4 -->
+				<div class="col-lg-6 col-xl-4 mb-4">
+					<!-- BEGIN card -->
+					<div class="card">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<!-- title -->
+							<div class="d-flex align-items-center mb-3">
+								<div class="flex-fill fw-semibold d-flex align-items-center"><i class="bi-shop-window text-body text-opacity-25 my-n1 fs-4 me-2"></i> Online store sessions</div>
+								<a href="#" class="text-decoration-none text-body text-opacity-50 fs-13px">View report</a>
+							</div>
+				
+							<!-- stats -->
+							<div class="d-flex align-items-center mb-3 h3">
+								<div>39</div>
+								<small class="fw-semibold ms-auto text-danger">-2.5%</small>
+							</div>
+							
+							<hr class="opacity-1 my-2">
+							
+							<!-- stats small -->
+							<div class="row">
+								<div class="col-6">Visitors</div>
+								<div class="col-3 text-center">2</div>
+								<div class="col-3 text-end">
+									<span class="text-danger">-</span> 50%
+								</div>
+							</div>
+							
+							<hr class="opacity-1 my-2">
+							
+							<!-- chart -->
+							<div class="mt-3">
+								<div class="small fw-bold mb-2 text-body">Sessions over time</div>
+								<div class="chart mb-3" style="height: 190px">
+									<canvas id="chart2" class="w-100" height="190"></canvas>
+								</div>
+								<div class="d-flex align-items-center justify-content-center fw-semibold text-body">
+									<i class="fa fa-square text-gray-300 me-2"></i> 
+									<span class="fs-12px me-4" data-id="prev-date">&nbsp;</span>
+									<i class="fa fa-square text-theme me-2"></i> 
+									<span class="fs-12px me-4" data-id="today-date">&nbsp;</span>
+								</div>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<!-- END col-4 -->
+				
+				<!-- BEGIN col-4 -->
+				<div class="col-lg-6 col-xl-4 mb-4">
+					<!-- BEGIN card -->
+					<div class="card">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<!-- title -->
+							<div class="d-flex align-items-center mb-3">
+								<div class="flex-fill fw-semibold d-flex align-items-center"><i class="bi-box-seam text-body text-opacity-25 my-n1 fs-4 me-2"></i> Top product by units sold</div>
+							</div>
+				
+							<!-- list -->
+							<div>
+								<div class="row mb-2">
+									<div class="col-6"><i class="bi "></i> iPhone 11 Pro Max</div>
+									<div class="col-3">329</div>
+									<div class="col-3 d-flex align-items-center"><span class="text-success w-10px me-1">+</span> 25%</div>
+								</div>
+								<div class="row mb-2">
+									<div class="col-6">iPad Pro</div>
+									<div class="col-3">219</div>
+									<div class="col-3 d-flex align-items-center"><span class="text-danger w-10px me-1">-</span> 5.2%</div>
+								</div>
+								<div class="row mb-2">
+									<div class="col-6">Macbook Pro</div>
+									<div class="col-3">125</div>
+									<div class="col-3 d-flex align-items-center"><span class="text-success w-10px me-1">+</span> 2.3%</div>
+								</div>
+								<div class="row mb-2">
+									<div class="col-6">iPhone SE 2</div>
+									<div class="col-3">92</div>
+									<div class="col-3 d-flex align-items-center"><span class="text-success w-10px me-1">+</span> 4.9%</div>
+								</div>
+								<div class="row">
+									<div class="col-6">Apple pencil</div>
+									<div class="col-3">52</div>
+									<div class="col-3 d-flex align-items-center"><span class="text-success w-10px me-1">+</span> 25%</div>
+								</div>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<!-- END col-4 -->
+				
+				<!-- BEGIN col-4 -->
+				<div class="col-lg-6 col-xl-4 mb-4">
+					<!-- BEGIN card -->
+					<div class="card">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<!-- title -->
+							<div class="d-flex align-items-center mb-3">
+								<div class="flex-fill fw-semibold d-flex align-items-center"><i class="bi-person-plus text-body text-opacity-25 my-n1 fs-4 me-2"></i> Returning customer rate</div>
+							</div>
+				
+							<!-- stats -->
+							<div class="d-flex align-items-center h3 mb-3">
+								<div>52.85%</div>
+								<small class="fw-semibold ms-auto text-danger">-7%</small>
+							</div>
+							
+							<!-- chart -->
+							<div>
+								<div class="small fw-bold mb-2 text-body">Customers</div>
+								<div class="chart mb-3" style="height: 190px">
+									<canvas id="chart3" class="w-100" height="190"></canvas>
+								</div>
+								<div class="d-flex align-items-center justify-content-center fw-semibold text-body">
+									<i class="fa fa-square text-indigo me-2"></i> 
+									<span class="fs-12px me-4">First-time</span>
+									<i class="fa fa-square text-theme me-2"></i> 
+									<span class="fs-12px">Returning</span>
+								</div>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<!-- END col-4 -->
+				
+				<!-- BEGIN col-4 -->
+				<div class="col-lg-6 col-xl-4 mb-4">
+					<!-- BEGIN card -->
+					<div class="card">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<!-- title -->
+							<div class="d-flex align-items-center mb-3">
+								<div class="flex-fill fw-semibold d-flex align-items-center"><i class="bi-arrow-left-right text-body text-opacity-25 my-n1 fs-4 me-2"></i> Conversion rate</div>
+								<a href="#" class="text-decoration-none text-body text-opacity-50 fs-13px">View report</a>
+							</div>
+				
+							<!-- stats -->
+							<div class="d-flex align-items-center h3 mb-3">
+								<div>5.29%</div>
+								<small class="fw-semibold ms-auto text-success">+83%</small>
+							</div>
+							
+							<!-- list -->
+							<div>
+								<div class="small fw-bold mb-2 text-body">Conversion Funnel</div>
+								<div class="row">
+									<div class="col-6">
+										<div>Added to cart</div>
+										<div class="small text-body text-opacity-50">55 session</div>
+									</div>
+									<div class="col-3">25.28%</div>
+									<div class="col-3"><span class="text-danger">-</span> 5.0%</div>
+								</div>
+								<hr class="opacity-1 my-2">
+								<div class="row">
+									<div class="col-6">
+										<div>Reached checkout</div>
+										<div class="small text-body text-opacity-50">25 session</div>
+									</div>
+									<div class="col-3">15.28%</div>
+									<div class="col-3"><span class="text-success">+</span> 82%</div>
+								</div>
+								<hr class="opacity-1 my-2">
+								<div class="row">
+									<div class="col-6">
+										<div>Sessions converted</div>
+										<div class="small text-body text-opacity-50">5 session</div>
+									</div>
+									<div class="col-3">5.28%</div>
+									<div class="col-3"><span class="text-success">+</span> 82%</div>
+								</div>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<!-- END col-4 -->
+				
+				<!-- BEGIN col-4 -->
+				<div class="col-lg-6 col-xl-4 mb-4">
+					<!-- BEGIN card -->
+					<div class="card">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<!-- title -->
+							<div class="d-flex align-items-center mb-3">
+								<div class="flex-fill fw-semibold d-flex align-items-center"><i class="bi-cart-check text-body text-opacity-25 my-n1 fs-4 me-2"></i> Average order value</div>
+							</div>
+				
+							<!-- stats -->
+							<div class="d-flex align-items-center h3 mb-3">
+								<div>$35.12</div>
+								<small class="fw-semibold ms-auto text-danger">-3.2%</small>
+							</div>
+							
+							<!-- chart -->
+							<div>
+								<div class="small fw-bold mb-2 text-body">Orders by time</div>
+								<div class="chart mb-3" style="height: 190px">
+									<canvas id="chart4" class="w-100" height="190"></canvas>
+								</div>
+								<div class="d-flex align-items-center justify-content-center fw-semibold text-body">
+									<i class="fa fa-square text-secondary me-2"></i> 
+									<span class="fs-12px me-4" data-id="prev-date">&nbsp;</span>
+									<i class="fa fa-square text-theme me-2"></i> 
+									<span class="fs-12px" data-id="today-date">&nbsp;</span>
+								</div>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<!-- END col-4 -->
+				
+				<!-- BEGIN col-4 -->
+				<div class="col-lg-6 col-xl-4 mb-4">
+					<!-- BEGIN card -->
+					<div class="card">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<!-- title -->
+							<div class="d-flex align-items-center mb-3">
+								<div class="flex-fill fw-semibold d-flex align-items-center"><i class="bi-clipboard-check text-body text-opacity-25 my-n1 fs-4 me-2"></i> Total orders</div>
+							</div>
+				
+							<!-- stats -->
+							<div class="d-flex align-items-center h3 mb-3">
+								<div>12</div>
+								<small class="fw-semibold ms-auto text-success">+57%</small>
+							</div>
+							
+							<!-- chart -->
+							<div>
+								<div class="small fw-bold mb-2 text-body">Orders over time</div>
+								<div class="chart mb-3">
+									<canvas id="chart5" class="w-100" height="190"></canvas>
+								</div>
+								<div class="d-flex align-items-center justify-content-center fw-semibold text-body">
+									<i class="fa fa-square text-secondary me-2"></i> 
+									<span class="fs-12px me-4" data-id="prev-date">&nbsp;</span>
+									<i class="fa fa-square text-theme me-2"></i> 
+									<span class="fs-12px" data-id="today-date">&nbsp;</span>
+								</div>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<!-- END col-4 -->
+				
+				<!-- BEGIN col-4 -->
+				<div class="col-lg-6 col-xl-4 mb-4">
+					<!-- BEGIN card -->
+					<div class="card">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<!-- title -->
+							<div class="d-flex align-items-center mb-3">
+								<div class="flex-fill fw-semibold d-flex align-items-center"><i class="bi-hand-index text-body text-opacity-25 my-n1 fs-4 me-2"></i> Top pages by sessions</div>
+							</div>
+				
+							<!-- list -->
+							<div class="row mb-2">
+								<div class="col-6"><div><a href="#" class="text-decoration-none text-body">/phone/apple-11-pro-max</a></div></div>
+								<div class="col-3">15</div>
+								<div class="col-3"><span class="text-success">+</span> 15%</div>
+							</div>
+							<div class="row mb-2">
+								<div class="col-6"><div><a href="#" class="text-decoration-none text-body">/tablet/apple-ipad-pro-128gb</a></div></div>
+								<div class="col-3">12</div>
+								<div class="col-3"><span class="text-success">+</span> 8%</div>
+							</div>
+							<div class="row">
+								<div class="col-6"><div><a href="#" class="text-decoration-none text-body">/desktop/apple-mac-pro</a></div></div>
+								<div class="col-3">4</div>
+								<div class="col-3"><span class="text-danger">-</span> 3%</div>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<!-- END col-4 -->
+				
+				<!-- BEGIN col-4 -->
+				<div class="col-lg-6 col-xl-4 mb-4">
+					<!-- BEGIN card -->
+					<div class="card">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<!-- title -->
+							<div class="d-flex align-items-center mb-3">
+								<div class="flex-fill fw-semibold d-flex align-items-center"><i class="bi-phone text-body text-opacity-25 my-n1 fs-4 me-2"></i> Sessions by device type</div>
+								<a href="#" class="text-decoration-none text-body text-opacity-50 fs-13px">View report</a>
+							</div>
+				
+							<!-- list -->
+							<div class="row mb-2">
+								<div class="col-6">
+									<div>Desktop</div>
+								</div>
+								<div class="col-3">247</div>
+								<div class="col-3"><span class="text-success">+</span> 4.2%</div>
+							</div>
+							<div class="row mb-2">
+								<div class="col-6">
+									<div>Mobile</div>
+								</div>
+								<div class="col-3">198</div>
+								<div class="col-3"><span class="text-success">-</span> 2.2%</div>
+							</div>
+							<div class="row">
+								<div class="col-6">
+									<div>Tablet</div>
+								</div>
+								<div class="col-3">35</div>
+								<div class="col-3"><span class="text-success">+</span> 8.9%</div>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<!-- END col-4 -->
+				
+				<!-- BEGIN col-4 -->
+				<div class="col-lg-6 col-xl-4 mb-4">
+					<!-- BEGIN card -->
+					<div class="card">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<!-- title -->
+							<div class="d-flex align-items-center mb-3">
+								<div class="flex-fill fw-semibold d-flex align-items-center"><i class="bi-facebook text-body text-opacity-25 my-n1 fs-4 me-2"></i> Visits from social sources</div>
+								<a href="#" class="text-decoration-none text-body text-opacity-50 fs-13px">View report</a>
+							</div>
+				
+							<!-- list -->
+							<div class="row mb-2">
+								<div class="col-6">
+									<div>Facebook</div>
+								</div>
+								<div class="col-3">247</div>
+								<div class="col-3"><span class="text-success">+</span> 4.2%</div>
+							</div>
+							<div class="row mb-2">
+								<div class="col-6">
+									<div>Twitter</div>
+								</div>
+								<div class="col-3">153</div>
+								<div class="col-3"><span class="text-success">+</span> 8.2%</div>
+							</div>
+							<div class="row mb-2">
+								<div class="col-6">
+									<div>Instagram</div>
+								</div>
+								<div class="col-3">98</div>
+								<div class="col-3"><span class="text-danger">-</span> 3.4%</div>
+							</div>
+							<div class="row mb-2">
+								<div class="col-6">
+									<div>Pinterest</div>
+								</div>
+								<div class="col-3">75</div>
+								<div class="col-3"><span class="text-success">+</span> 1.9%</div>
+							</div>
+							<div class="row">
+								<div class="col-6">
+									<div>Dribbble</div>
+								</div>
+								<div class="col-3">22</div>
+								<div class="col-3"><span class="text-success">+</span> 2.1%</div>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<!-- END col-4 -->
+			</div>
+			<!-- END row -->
+		</div>
+		<!-- END #content -->
+		
+		@@include('./partial/theme-panel.html')
+		@@include('./partial/scroll-top-btn.html')
+	</div>
+	<!-- END #app -->
+	
+@@include('./partial/script.html', {"script": [
+	"assets/plugins/masonry-layout/dist/masonry.pkgd.min.js",
+	"assets/plugins/chart.js/dist/chart.umd.js",
+	"assets/plugins/moment/min/moment.min.js",
+	"assets/plugins/bootstrap-daterangepicker/daterangepicker.js",
+	"assets/js/demo/analytics.demo.js"
+]})

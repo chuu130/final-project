@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.commons.def.mapper.ReviewDefaultMapper">
+	<resultMap id="BaseResultMap"
+		type="kr.or.ddit.vo.def.ReviewDefaultVO">
+		<id column="REVIEW_NO" jdbcType="VARCHAR" property="reviewNo" />
+		<result column="REVIEW_SJ" jdbcType="VARCHAR"
+			property="reviewSj" />
+		<result column="REVIEW_CN" jdbcType="VARCHAR"
+			property="reviewCn" />
+		<result column="REVIEW_DE" jdbcType="DATE" property="reviewDe" />
+		<result column="REVIEW_IMAGE" jdbcType="VARCHAR"
+			property="reviewImage" />
+		<result column="REVIEW_SE" jdbcType="VARCHAR"
+			property="reviewSe" />
+		<result column="REVIEW_BLIND_AT" jdbcType="VARCHAR"
+			property="reviewBlindAt" />
+		<result column="REVIEW_SCORE" jdbcType="FLOAT"
+			property="reviewScore" />
+		<result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+		<result column="MEM_NO" jdbcType="VARCHAR" property="memNo" />
+	</resultMap>
+
+	<insert id="insertreviewNo"
+		parameterType="kr.or.ddit.vo.def.ReviewDefaultVO">
+		<selectKey order="BEFORE" resultType="string"
+			keyProperty="reviewNo">
+			SELECT REVIEW_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO REVIEW
+		(REVIEW_NO
+		, REVIEW_SJ
+		, REVIEW_CN
+		, REVIEW_DE
+		, REVIEW_IMAGE
+		, REVIEW_SE
+		,
+		REVIEW_BLIND_AT
+		, REVIEW_SCORE
+		, PROD_ID, MEM_NO
+		) VALUES (#{reviewNo,
+		jdbcType=VARCHAR}
+		, #{reviewSj, jdbcType=VARCHAR}
+		, #{reviewCn,
+		jdbcType=VARCHAR}
+		<if test="reviewDe != null">
+			, #{reviewDe, jdbcType=DATE}
+		</if>
+		<if test="reviewDe == null">
+			,SYSDATE
+		</if>
+		, #{reviewImage, jdbcType=VARCHAR}
+		, #{reviewSe, jdbcType=VARCHAR}
+		, 'N'
+		, #{reviewScore,jdbcType=FLOAT}
+		, #{prodId, jdbcType=VARCHAR}
+		,
+		#{memNo,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateByreviewNo"
+		parameterType="kr.or.ddit.vo.def.ReviewDefaultVO">
+		UPDATE REVIEW
+		SET REVIEW_SJ = #{reviewSj,jdbcType=VARCHAR}
+		, REVIEW_CN = #{reviewCn,
+		jdbcType=VARCHAR}
+		, REVIEW_DE = #{reviewDe, jdbcType=DATE}
+		,
+		REVIEW_IMAGE = #{reviewImage,jdbcType=VARCHAR}
+		, REVIEW_SE =
+		#{reviewSe, jdbcType=VARCHAR}
+		, REVIEW_BLIND_AT = #{reviewBlindAt,
+		jdbcType=VARCHAR}
+		, REVIEW_SCORE = #{reviewScore, jdbcType=FLOAT}
+		,
+		PROD_ID = #{prodId, jdbcType=VARCHAR}
+		, MEM_NO = #{memNo,
+		jdbcType=VARCHAR}
+		WHERE REVIEW_NO = #{reviewNo,jdbcType=VARCHAR}
+	</update>
+
+
+
+	<!-- 검색유형에 따른 검색조건 명시 컬럼에서 searchWord 찾는다 -->
+	<sql id="searchFrag">
+		<where>
+			<if
+				test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+				<choose>
+					<when test="simpleCondition.searchType eq 'title'">
+						INSTR(REVIEW_SJ, #{simpleCondition.searchWord})
+						> 0
+					</when>
+					<when test="simpleCondition.searchType eq 'writer'">
+						INSTR(B.MEM_NM,
+
+						#{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'content'">
+						INSTR(REVIEW_CN, #{simpleCondition.searchWord})
+						> 0
+					</when>
+					<otherwise>
+						INSTR(REVIEW_SJ, #{simpleCondition.searchWord}) > 0
+						OR
+						INSTR(B.MEM_NM, #{simpleCondition.searchWord}) > 0
+						OR
+						INSTR(REVIEW_CN, #{simpleCondition.searchWord}) > 0
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+	</sql>
+
+
+	<select id="selectTotalRecord" resultType="int">
+		SELECT COUNT(*)
+		FROM REVIEW A
+		LEFT OUTER JOIN MEMBER B
+		ON A.MEM_NO =
+		B.MEM_NO
+		<include refid="searchFrag" />
+	</select>
+
+
+	<select id="selectByreviewNo" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		SELECT
+		REVIEW_NO
+		,REVIEW_SJ
+		,REVIEW_CN
+		,REVIEW_DE
+		,REVIEW_IMAGE
+		,REVIEW_SE
+		,REVIEW_BLIND_AT
+		,REVIEW_SCORE
+		,PROD_ID
+		,A.MEM_NO
+		,REVIEW_DEL_AT
+		,B.MEM_ID
+		,B.MEM_NM
+		FROM
+		REVIEW A
+		LEFT OUTER JOIN MEMBER B ON A.MEM_NO = B.MEM_NO
+		WHERE
+		A.REVIEW_NO = #{reviewNo, jdbcType=VARCHAR}
+	</select>
+
+
+	<!-- 페이징포함 전체리스트 조회 -->
+	<select id="selectAllreview" resultMap="BaseResultMap">
+		SELECT B.*
+		FROM (
+		SELECT ROWNUM RNUM, A.*
+		FROM (
+		SELECT REVIEW_NO
+		, REVIEW_SJ
+		, REVIEW_CN
+		, REVIEW_DE
+		, REVIEW_IMAGE
+		, REVIEW_SE
+		, REVIEW_BLIND_AT
+		, REVIEW_SCORE
+		, PROD_ID
+		, A.MEM_NO
+		, B.MEM_ID
+		, B.MEM_NM
+		, REVIEW_DEL_AT
+		FROM REVIEW A
+		LEFT OUTER JOIN MEMBER B ON A.MEM_NO = B.MEM_NO
+		<include refid="searchFrag" />
+		) A
+		) B
+		<![CDATA[
+		WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+		]]>
+	</select>
+
+
+	<!-- 페이징미포함 전체리스트 조회 -->
+	<select id="selectAllreviewNonPaging" resultMap="BaseResultMap">
+		SELECT A.*, ROWNUM RNUM
+		FROM (
+		SELECT REVIEW_NO
+		, REVIEW_SJ
+		, REVIEW_CN
+		, REVIEW_DE
+		, REVIEW_IMAGE
+		, REVIEW_SE
+		, REVIEW_BLIND_AT
+		, REVIEW_SCORE
+		, PROD_ID
+		, A.MEM_NO
+		, B.MEM_ID
+		, B.MEM_NM
+		, REVIEW_DEL_AT
+		FROM REVIEW A
+		LEFT OUTER JOIN MEMBER B ON A.MEM_NO = B.MEM_NO
+		) A
+	</select>
+
+
+	<select id="selectMemReviewList"
+		parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT
+		REVIEW_NO
+		, REVIEW_SJ
+		, REVIEW_CN
+		, REVIEW_DE
+		, REVIEW_IMAGE
+		, REVIEW_SE
+		, REVIEW_BLIND_AT
+		, REVIEW_SCORE
+		, PROD_ID
+		, B.MEM_NO
+		, B.MEM_NM
+		, REVIEW_DEL_AT
+		FROM REVIEW A
+		LEFT OUTER JOIN MEMBER B ON A.MEM_NO = B.MEM_NO
+		WHERE A.MEM_NO = #{memNo}
+	</select>
+
+	<!-- 마이페이지 리뷰조회 -->
+	<select id="selectMyReview" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		SELECT *
+		FROM REVIEW A
+		LEFT OUTER JOIN PROD B
+		ON A.PROD_ID = B.PROD_ID
+		WHERE A.REVIEW_NO = #{reviewNo, jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByreviewNo" parameterType="java.lang.String">
+		DELETE FROM
+		REVIEW WHERE REVIEW_NO = #{reviewNo, jdbcType=VARCHAR}
+	</delete>
+
+	<update id="updateReviewDelete"
+		parameterType="kr.or.ddit.vo.def.ReviewDefaultVO">
+		UPDATE REVIEW
+		SET REVIEW_DEL_AT = 'Y'
+		WHERE REVIEW_NO =
+		#{reviewNo, jdbcType=VARCHAR} AND REVIEW_DEL_AT = 'N'
+	</update>
+
+</mapper>

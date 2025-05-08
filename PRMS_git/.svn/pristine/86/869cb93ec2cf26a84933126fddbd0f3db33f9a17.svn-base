@@ -1,0 +1,41 @@
+package kr.or.ddit.franchise.franchisee.service;
+
+import java.util.List;
+
+import kr.or.ddit.commons.paging.PaginationInfo;
+import kr.or.ddit.vo.FranBoardVO;
+
+/**
+ * @author jbk
+ *
+ */
+public interface FranBoardService {
+
+	/**
+	 * 가맹점게시판 리스트를 조회하는 메소드 (Non Paging)
+	 * @return
+	 */
+	public List<FranBoardVO> retrieveFranBoardListNonPaging();
+
+
+	/**
+	 * 가맹점게시판 리스트를 조회하는 메소드
+	 * @return
+	 */
+	public List<FranBoardVO> retrieveFranBoardList(PaginationInfo paginationInfo);
+
+
+	/**
+	 * 가맹점게시판을 상세조회하는 메소드
+	 * @param franBoardNo
+	 * @return
+	 */
+	public FranBoardVO retrieveFranBoard(int franBoardNo);
+
+
+	/**
+	 * 게시글을 수정하는 메소드
+	 * @param franBoard
+	 */
+	public void modifyFranBoard(FranBoardVO franBoard);
+}

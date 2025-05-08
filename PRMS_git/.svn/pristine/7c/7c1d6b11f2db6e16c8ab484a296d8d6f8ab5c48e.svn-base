@@ -1,0 +1,87 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="security"%>
+
+
+	<style>
+		#mainView{
+			height: 60vh;
+		}
+		#updateView{
+			height: 60vh;
+			display:none;
+		}
+		.card{
+			height:100%;
+		}
+		.card-header{
+			height:10%;
+		}
+		.card-body{
+			height: 80%;
+		}
+		.card_footer{
+			height:10%;
+		}
+	</style>
+
+	<div class="d-flex mb-3">
+		<div>
+			<a href="${pageContext.request.contextPath }/main/franchisee/franBoard" class="page-header mb-0">뒤로가기</a>
+		</div>
+	</div>
+
+	<div id="mainView">
+		<div class="card">
+			<div class="card-header">
+			   	<h3 class="card-title">${franBoardVO.franBoardTitle}</h3>
+	            <h6 class="card-subtitle mb-2 text-muted">작성자: ${franBoardVO.empId} | 작성일: ${franBoardVO.franBoardDt}</h6>
+			</div>
+	         <div class="card-body">
+	             <h4 class="card-text">${franBoardVO.franBoardCont}</h4>
+	         </div>
+	         <security:authorize access="hasAuthority('FRANCHISEE')">
+	         	<security:authentication property="principal" var="principal"/>
+	         	<c:if test="${principal.username eq franBoardVO.empId }">
+			         <div class="card-footer">
+			         	<div class="d-flex justify-content-end gap-2">
+				             <button type="button" class="btn btn-primary" id="btnUpdate">수정</button>
+				             <button type="button" class="btn btn-danger" id="btnDelete">삭제</button>
+				         </div>
+			         </div>
+		         </c:if>
+		     </security:authorize>
+	     </div>
+     </div>
+
+	<div id="updateView">
+		<div class="card">
+			<form id="updateForm" action="${pageContext.request.contextPath}/main/franchisee/franBoard/api/update">
+				<input type="hidden" name="franBoardNo" value="${franBoardVO.franBoardNo }">
+				<div class="card-header">
+				   	<input type="text" class="form-control" name="franBoardTitle" value="${franBoardVO.franBoardTitle}">
+		            <h6 class="card-subtitle mb-2 text-muted">작성자: ${franBoardVO.empId} | 작성일: ${franBoardVO.franBoardDt}</h6>
+				</div>
+		         <div class="card-body">
+		         	<textarea rows="20" cols="70" class="form-control" name="franBoardCont">
+			             ${franBoardVO.franBoardCont}
+		         	</textarea>
+		         </div>
+		         <security:authorize access="hasAuthority('FRANCHISEE')">
+		         	<security:authentication property="principal" var="principal"/>
+		         	<c:if test="${principal.username eq franBoardVO.empId }">
+				         <div class="card-footer">
+				         	<div class="d-flex justify-content-end gap-2">
+					             <button type="submit" class="btn btn-primary" id="submitUpdate">수정</button>
+					             <button type="button" class="btn btn-secondary" id="cancelUpdate">취소</button>
+					         </div>
+				         </div>
+			         </c:if>
+			     </security:authorize>
+		     </form>
+	     </div>
+     </div>
+
+     <script src="${pageContext.request.contextPath }/resources/js/app/franchise/franBoardDetail.js"></script>
+

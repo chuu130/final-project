@@ -1,0 +1,115 @@
+@@include('./partial/head.html', {
+	"title": "Compose", 
+	"css": [
+		"assets/plugins/tag-it/css/jquery.tagit.css",
+		"assets/plugins/summernote/dist/summernote-lite.css",
+]})
+	<!-- BEGIN #app -->
+	<div id="app" class="app app-content-full-height">
+		@@include('./partial/header.html')
+		
+		@@include('./partial/sidebar.html', {"emailClass": "active", "composeClass": "active"})
+		
+		<!-- BEGIN #content -->
+		<div id="content" class="app-content p-0">
+			<!-- BEGIN mailbox -->
+			<div class="mailbox">
+				<!-- BEGIN mailbox-toolbar -->
+				<div class="mailbox-toolbar">
+					<div class="mailbox-toolbar-item"><span class="mailbox-toolbar-text">New Message</span></div>
+					<div class="mailbox-toolbar-item"><a href="#" class="mailbox-toolbar-link active">Send</a></div>
+					<div class="mailbox-toolbar-item"><a href="#" class="mailbox-toolbar-link">Attachment</a></div>
+					<div class="mailbox-toolbar-item"><a href="email_inbox.html" class="mailbox-toolbar-link">Discard</a></div>
+					<div class="mailbox-toolbar-item dropdown">
+						<a href="#" class="mailbox-toolbar-link" data-bs-toggle="dropdown"><i class="fa fa-ellipsis-h"></i></a>
+						<div class="dropdown-menu ms-n1 position-fixed">
+							<a href="#" class="dropdown-item">Save draft</a>
+							<a href="#" class="dropdown-item">Show From</a>
+							<a href="#" class="dropdown-item">Check names</a>
+							<a href="#" class="dropdown-item">Set importance</a>
+							<a href="#" class="dropdown-item">Switch to plain text</a>
+							<a href="#" class="dropdown-item">Check for accessibility issues</a>
+						</div>
+					</div>
+					<div class="mailbox-toolbar-item ms-lg-auto"><a href="#" class="mailbox-toolbar-link"><i class="fa fa-redo fa-fw fs-12px me-1"></i> Undo</a></div>
+					<div class="mailbox-toolbar-item"><a href="email_inbox.html" class="mailbox-toolbar-link"><i class="fa fa-times fa-fw"></i> Cancel</a></div>
+				</div>
+				<!-- END mailbox-toolbar -->
+				<!-- BEGIN mailbox-body -->
+				<div class="mailbox-body">
+					<div class="mailbox-content">
+						<!-- BEGIN scrollbar -->
+						<div data-scrollbar="true" data-height="100%">
+							<div class="mailbox-form">
+								<form action="#" method="POST" name="email_form">
+									<div class="mailbox-form-header">
+										<div class="row mb-2">
+											<label class="col-form-label w-100px px-2 fw-500 text-lg-end">To:</label>
+											<div class="col-lg">
+												<ul id="email-to" class="form-control tagit">
+													<li>support@seantheme.com</li>
+												</ul>
+											</div>
+										</div>
+										<div class="row mb-2">
+											<label class="col-form-label w-100px px-2 fw-500 text-lg-end">Cc:</label>
+											<div class="col-lg">
+												<ul id="email-cc" class="form-control tagit">
+												</ul>
+											</div>
+										</div>
+										<div class="row mb-2">
+											<label class="col-form-label w-100px px-2 fw-500 text-lg-end">Bcc:</label>
+											<div class="col-lg">
+												<ul id="email-bcc" class="form-control tagit">
+												</ul>
+											</div>
+										</div>
+										<div class="row mb-0">
+											<label class="col-form-label w-100px px-2 fw-500 text-lg-end">Subject:</label>
+											<div class="col-lg">
+												<input type="text" class="form-control" placeholder="Email subject" value="Issue with Template Support">
+											</div>
+										</div>
+									</div>
+									<textarea name="text" class="summernote form-control" title="Contents">
+										<div class="row">
+											<div class="col-lg-6">
+												Dear Support Team,
+												<br /><br />
+												I hope this email finds you well. I am writing to you because I have been experiencing some issues with the templates on your platform. I have tried to use a few different templates, but they are not functioning as expected. Specifically, the formatting and layout seem to be off, and some of the elements are not displaying properly.
+												<br /><br />
+												I have tried to troubleshoot this issue on my own by following the instructions provided on your website, but I have not been successful in resolving the problem. I have also tried using different browsers and devices, but the issue persists.
+												<br /><br />
+												I would appreciate it if you could help me resolve this issue as soon as possible, as I need to use these templates for an important project. Please let me know what information you need from me to diagnose and resolve the issue.
+												<br /><br />
+												Thank you for your help and support.
+												<br /><br />
+												Sincerely,<br />
+												Marks.
+											</div>
+										</div>
+									</textarea>
+								</form>
+							</div>
+						</div>
+						<!-- END scrollbar -->
+					</div>
+				</div>
+				<!-- END mailbox-body -->
+			</div>
+			<!-- END mailbox -->
+		</div>
+		<!-- END #content -->
+		
+		@@include('./partial/theme-panel.html')
+		@@include('./partial/scroll-top-btn.html')
+	</div>
+	<!-- END #app -->
+	
+@@include('./partial/script.html', {"script": [
+	"assets/plugins/jquery-migrate/dist/jquery-migrate.min.js",
+	"assets/plugins/tag-it/js/tag-it.min.js",
+	"assets/plugins/summernote/dist/summernote-lite.min.js",
+	"assets/js/demo/email-compose.demo.js"
+]})

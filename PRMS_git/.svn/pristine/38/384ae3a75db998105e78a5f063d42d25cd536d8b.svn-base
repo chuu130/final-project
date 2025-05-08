@@ -1,0 +1,109 @@
+@charset "UTF-8";
+
+/* 아이디 찾기 모달 */
+.idFind_modal {
+  /*팝업 배경*/
+  display: none; /*평소에는 보이지 않도록*/
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+/*   background: rgba(0, 0, 0, 0.5); */
+}
+.idFind_modal .idFind_popup {
+  /*팝업*/
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 20px;
+  border : 1px solid silver;
+  width: 600px;
+  height: 400px;
+}
+.idFind_modal .idFind_popup .idFind_moadl_idFind_btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+
+.idFind_modal .idFind_popup .idFind_modal_idFind_closeBtn {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+.idFind_modal.on {
+  display: block;
+}
+
+
+@media (max-width: 768px) {
+  .idFind_modal .idFind_popup {
+    width: 90%;
+    height: auto;
+  }
+}
+
+
+/* 비밀번호 찾기 모달 */
+.pwFind_modal {
+  /*팝업 배경*/
+  display: none; /*평소에는 보이지 않도록*/
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+/*   background: rgba(0, 0, 0, 0.5); */
+}
+.pwFind_modal .pwFind_popup {
+  /*팝업*/
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 20px;
+  border : 1px solid silver;
+  width: 600px;
+  height: 400px;
+}
+.pwFind_modal .pwFind_popup .pwFind_moadl_pwFind_btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+
+.pwFind_modal .pwFind_popup .pwFind_modal_pwFind_closeBtn {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+.pwFind_modal.on {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .pwFind_modal .pwFind_popup {
+    width: 90%;
+    height: auto;
+  }
+}

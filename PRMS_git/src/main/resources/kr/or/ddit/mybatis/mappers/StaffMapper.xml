@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.franchise.staff.mapper.StaffMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.EmployeeDefaultVO">
+    <id column="EMP_NO" jdbcType="VARCHAR" property="empNo" />
+    <result column="EMP_ID" jdbcType="VARCHAR" property="empId" />
+    <result column="EMP_PASSWORD" jdbcType="VARCHAR" property="empPassword" />
+    <result column="EMP_NM" jdbcType="VARCHAR" property="empNm" />
+    <result column="EMP_SALARY" jdbcType="NUMERIC" property="empSalary" />
+    <result column="EMP_ZIP" jdbcType="VARCHAR" property="empZip" />
+    <result column="EMP_ADRES1" jdbcType="VARCHAR" property="empAdres1" />
+    <result column="EMP_ADRES2" jdbcType="VARCHAR" property="empAdres2" />
+    <result column="EMP_EMAIL" jdbcType="VARCHAR" property="empEmail" />
+    <result column="EMP_TELNO" jdbcType="VARCHAR" property="empTelno" />
+    <result column="EMP_CL" jdbcType="VARCHAR" property="empCl" />
+    <result column="EMP_BIR" jdbcType="TIMESTAMP" property="empBir" />
+    <result column="EMP_DE" jdbcType="TIMESTAMP" property="empDe" />
+    <result column="EMP_LEAVE_AT" jdbcType="VARCHAR" property="empLeaveAt" />
+    <result column="EMP_LICENSE_AT" jdbcType="VARCHAR" property="empLicenseAt" />
+    <result column="EMP_PROFILE" jdbcType="VARCHAR" property="empProfile" />
+    <result column="EMP_RESUME" jdbcType="VARCHAR" property="empResume" />
+    <result column="HQ_ID" jdbcType="VARCHAR" property="hqId" />
+    <result column="FRANCHISE_ID" jdbcType="VARCHAR" property="franchiseId" />
+  </resultMap>
+  <delete id="deleteStaff" parameterType="java.lang.String">
+    update EMPLOYEE
+    set EMP_LEAVE_AT = 'Y'
+    where EMP_NO = #{empNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertStaff" parameterType="kr.or.ddit.vo.def.EmployeeDefaultVO">
+    insert into EMPLOYEE (EMP_NO, EMP_ID, EMP_PASSWORD,
+      EMP_NM, EMP_SALARY, EMP_ZIP,
+      EMP_ADRES1, EMP_ADRES2, EMP_EMAIL,
+      EMP_TELNO, EMP_CL, EMP_BIR,
+      EMP_DE, EMP_LEAVE_AT, EMP_LICENSE_AT,
+      EMP_PROFILE, EMP_RESUME, HQ_ID,
+      FRANCHISE_ID)
+    values (#{empNo,jdbcType=VARCHAR}, #{empId,jdbcType=VARCHAR}, #{empPassword,jdbcType=VARCHAR},
+      #{empNm,jdbcType=VARCHAR}, #{empSalary,jdbcType=NUMERIC}, #{empZip,jdbcType=VARCHAR},
+      #{empAdres1,jdbcType=VARCHAR}, #{empAdres2,jdbcType=VARCHAR}, #{empEmail,jdbcType=VARCHAR},
+      #{empTelno,jdbcType=VARCHAR}, #{empCl,jdbcType=VARCHAR}, #{empBir,jdbcType=TIMESTAMP},
+      #{empDe,jdbcType=TIMESTAMP}, #{empLeaveAt,jdbcType=VARCHAR}, #{empLicenseAt,jdbcType=VARCHAR},
+      #{empProfile,jdbcType=VARCHAR}, #{empResume,jdbcType=VARCHAR}, #{hqId,jdbcType=VARCHAR},
+      #{franchiseId,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateStaff" parameterType="kr.or.ddit.vo.def.EmployeeDefaultVO">
+    update EMPLOYEE
+    set EMP_ID = #{empId,jdbcType=VARCHAR},
+      EMP_PASSWORD = #{empPassword,jdbcType=VARCHAR},
+      EMP_NM = #{empNm,jdbcType=VARCHAR},
+      EMP_SALARY = #{empSalary,jdbcType=NUMERIC},
+      EMP_ZIP = #{empZip,jdbcType=VARCHAR},
+      EMP_ADRES1 = #{empAdres1,jdbcType=VARCHAR},
+      EMP_ADRES2 = #{empAdres2,jdbcType=VARCHAR},
+      EMP_EMAIL = #{empEmail,jdbcType=VARCHAR},
+      EMP_TELNO = #{empTelno,jdbcType=VARCHAR},
+      EMP_CL = #{empCl,jdbcType=VARCHAR},
+      EMP_BIR = #{empBir,jdbcType=TIMESTAMP},
+      EMP_DE = #{empDe,jdbcType=TIMESTAMP},
+      EMP_LEAVE_AT = #{empLeaveAt,jdbcType=VARCHAR},
+      EMP_LICENSE_AT = #{empLicenseAt,jdbcType=VARCHAR},
+      EMP_PROFILE = #{empProfile,jdbcType=VARCHAR},
+      EMP_RESUME = #{empResume,jdbcType=VARCHAR},
+      HQ_ID = #{hqId,jdbcType=VARCHAR},
+      FRANCHISE_ID = #{franchiseId,jdbcType=VARCHAR}
+    where EMP_NO = #{empNo,jdbcType=VARCHAR}
+  </update>
+  <select id="selectStaff" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select EMP_NO, EMP_ID, EMP_PASSWORD, EMP_NM, EMP_SALARY, EMP_ZIP, EMP_ADRES1, EMP_ADRES2,
+    EMP_EMAIL, EMP_TELNO, EMP_CL, EMP_BIR, EMP_DE, EMP_LEAVE_AT, EMP_LICENSE_AT, EMP_PROFILE,
+    EMP_RESUME, HQ_ID, FRANCHISE_ID
+    from EMPLOYEE
+    where EMP_NO = #{empNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectStaffList" resultMap="BaseResultMap">
+    select EMP_NO, EMP_ID, EMP_PASSWORD, EMP_NM, EMP_SALARY, EMP_ZIP, EMP_ADRES1, EMP_ADRES2,
+    EMP_EMAIL, EMP_TELNO, EMP_CL, EMP_BIR, EMP_DE, EMP_LEAVE_AT, EMP_LICENSE_AT, EMP_PROFILE,
+    EMP_RESUME, HQ_ID, FRANCHISE_ID
+    from EMPLOYEE
+    where EMP_CL = 'COMN06DT004'
+  </select>
+  <select id="selectQuitStaffList" resultMap="BaseResultMap">
+  	select *
+  	from EMPLOYEE
+  	where EMP_LEAVE_AT = 'Y'
+  </select>
+</mapper>

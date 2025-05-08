@@ -1,0 +1,38 @@
+package kr.or.ddit.vo;
+
+import java.time.LocalDate;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+import org.springframework.lang.Nullable;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(of="franBoardNo")
+public class FranBoardVO {
+
+	private Integer franBoardNo;
+
+	@NotBlank
+	@Size(max = 150)
+	private String franBoardTitle;
+
+	@NotBlank
+	private String franBoardCont;
+
+	@DateTimeFormat(iso = ISO.DATE_TIME)
+	private LocalDate franBoardDt;
+
+	private Integer franBoardHit;
+
+	@NotBlank
+	private String empId;
+
+	@Nullable
+	private AtchfileVO atchfile;
+}

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.market.common.mapper.ProdDetailMapper">
+
+	<!-- 마켓 상품을 가져오기위한 맵 -->
+	<resultMap type="kr.or.ddit.vo.def.AdmininvDefaultVO" id="admininvMap" autoMapping="true">
+		<association property="prod" javaType="ProdDefaultVO" autoMapping="true">
+			<association property="lprod" javaType="CmmncodeDefaultVO" autoMapping="true"/>
+		</association>
+	</resultMap>
+
+	<!-- 본사재고를 조회하기위한 쿼리 -->
+	<select id="selectProd" parameterType="string" resultMap="admininvMap">
+			SELECT  A.PROD_ID
+		           , ADMININV_NM
+		           , ADMININV_DETAIL
+		           , ADMININV_QY
+		           , PROD_SLE_NM
+		           , PROD_SLE_PC
+		           , PROD_REGIST_DE
+		           , PROD_DC
+		           , PROD_IMAGE
+		           , B.CMMN_CODE_ID
+		           , CMMN_REMARK1
+		           , CMMN_CODE_NM
+			FROM
+			    ADMININV A INNER JOIN PROD B ON (A.PROD_ID = B.PROD_ID)
+			    INNER JOIN CMMNCODE C ON (B.CMMN_CODE_ID = C.CMMN_CODE_ID)
+			WHERE A.PROD_ID = #{prodId}
+	</select>
+
+	<!-- 비슷한 상품을 조회하는 쿼리 -->
+	<resultMap type="ProdDefaultVO" id="similarProdMap" autoMapping="true">
+		<association property="lprod" javaType="kr.or.ddit.vo.def.CmmncodeDefaultVO" autoMapping="true"/>
+	</resultMap>
+
+	<select id="selectSimilarProdList" parameterType="ProdDefaultVO" resultMap="similarProdMap">
+		SELECT
+		    A.PROD_ID
+		    ,PROD_SLE_NM
+		    ,PROD_SLE_PC
+		    ,PROD_DC
+		    ,PROD_IMAGE
+		    ,CMMN_REMARK1
+		    ,CMMN_CODE_NM
+		FROM
+		    PROD A INNER JOIN CMMNCODE B ON (A.CMMN_CODE_ID = B.CMMN_CODE_ID)
+		WHERE A.CMMN_CODE_ID = #{lprod.cmmnCodeId}
+	</select>
+
+	<!-- 상세상품의 리뷰를 조회하기위한 쿼리 -->
+	<resultMap type="ReviewDefaultVO" id="reviewMap" autoMapping="true">
+		<association property="reviewWriter" javaType="MemberDefaultVO" autoMapping="true" />
+	</resultMap>
+
+	<select id="selectReviewList" parameterType="string" resultMap="reviewMap">
+		SELECT
+		    REVIEW_NO
+		    , REVIEW_SJ
+		    , REVIEW_CN
+		    , REVIEW_DE
+		    , REVIEW_IMAGE
+		    , REVIEW_SCORE
+		    , A.PROD_ID
+		    , A.MEM_NO
+		    , MEM_ID
+		    , MEM_NM
+		FROM REVIEW A INNER JOIN MEMBER B ON (A.MEM_NO = B.MEM_NO)
+		WHERE PROD_ID = #{prodId} AND REVIEW_BLIND_AT = 'N'
+	</select>
+	
+
+	<!-- 마켓회원의 장바구니에 추가하는 쿼리 -->
+	<insert id="insertCart" parameterType="CartDefaultVO">
+		<selectKey order="BEFORE" resultType="string" keyProperty="cartNo">
+			SELECT 'CT' || LPAD(TO_CHAR(CART_SEQ.NEXTVAL),12,'0') FROM DUAL
+		</selectKey>
+
+		INSERT INTO CART
+		(
+			CART_NO
+			, PROD_ID
+			, MEM_NO
+			, CD_QY
+			, CART_DE
+		)
+		VALUES
+		(
+			#{cartNo, jdbcType=VARCHAR}
+			, #{prodId, jdbcType=VARCHAR}
+			, #{memNo, jdbcType=VARCHAR}
+			, #{cdQy, jdbcType=INTEGER}
+			, SYSDATE
+		)
+	</insert>
+
+</mapper>

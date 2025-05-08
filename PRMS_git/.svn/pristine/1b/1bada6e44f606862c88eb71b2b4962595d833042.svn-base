@@ -1,0 +1,206 @@
+.datepicker {
+	&.datepicker-dropdown {
+		width: rem(302px);
+		padding: rem(10px);
+		z-index: $zindex-dropdown !important;
+		border-radius: $border-radius;
+		box-shadow: $box-shadow;
+		
+		&:before,
+		&:after {
+			display: none;
+		}
+	}
+	& .datepicker-switch,
+	& .prev,
+	& .next {
+		padding: rem(5px);
+		min-width: rem(40px);
+		font-weight: $font-weight-bold;
+		border-radius: $border-radius;
+		
+		&:hover {
+			background: var(--#{$prefix}tertiary-bg) !important;
+			color: var(--#{$prefix}body-color);
+		}
+	}
+	& .next,
+	& .prev {
+		overflow: hidden;
+		text-indent: -100px;
+		width: rem(40px);
+		height: rem(40px);
+		padding: 0;
+  	text-align: center;
+  	color: rgba(var(--#{$prefix}body-color-rgb), .75);
+		
+		&:before {
+			font-family: Font Awesome\ 5 Free,Font Awesome\ 5 Pro,FontAwesome !important;
+			font-weight: 900;
+			font-style: normal;
+			font-variant: normal;
+			text-rendering: auto;
+			position: absolute;
+			width: rem(40px);
+			text-indent: 0;
+		}
+	}
+	& .next {
+		&:before {
+			content: '\f061';
+			
+			@if $enable-rtl {
+				left: 0;
+			} @else {
+				right: 0;
+			}
+    }
+  }
+  & .prev {
+		&:before {
+			content: '\f060';
+			
+			@if $enable-rtl {
+				right: 0;
+			} @else {
+				left: 0;
+			}
+    }
+	}
+	& .datepicker-switch {
+		color: var(--#{$prefix}body-color);
+		width: rem(220px) !important;
+		padding: 0;
+	}
+	& .datepicker-days,
+	& .datepicker-months,
+	& .datepicker-years {
+		position: relative;
+	}
+	& .datepicker-days {
+		& table {
+			width: 100%;
+			
+			& thead {
+				& tr {
+					& th {
+						&.dow {
+							border-radius: 0;
+							border: none;
+							padding: 0;
+							width: rem(40px);
+							height: rem(40px);
+							font-weight: $font-weight-bold;
+						}
+					}
+				}
+			}
+			& tbody {
+				& tr {
+					& td {
+						padding: rem(8px) rem(0);
+						border-radius: $border-radius * 10;
+						color: var(--#{$prefix}body-color);
+						border: none;
+						min-width: rem(40px);
+						width: rem(40px);
+						height: rem(40px);
+						
+						&.old,
+						&.new {
+							color: rgba(var(--#{$prefix}body-color-rgb), .25);
+						}
+						&:hover,
+						&.focused,
+						&.range {
+							background: var(--#{$prefix}tertiary-bg);
+						}
+						&.active,
+						&.selected,
+						&.today,
+						&.today:hover,
+						&.today:focus {
+							background: var(--#{$prefix}theme);
+							border-color: var(--#{$prefix}theme);
+							color: var(--#{$prefix}theme-color);
+							text-shadow: none;
+							position: relative;
+						}
+					}
+				}
+			}
+		}
+	}
+	& .datepicker-months,
+	& .datepicker-years,
+	& .datepicker-decades,
+	& .datepicker-centuries {
+		& table {
+			& tbody {
+				& tr {
+					& td {
+						padding: 0;
+						
+						& span {
+							width: calc(25% - $spacer * .36);
+							margin: 0;
+							margin-top: $spacer * .48;
+							border-radius: $border-radius;
+							font-weight: $font-weight-bold;
+							color: var(--#{$prefix}body-color);
+							
+							@if ($enable-rtl) {
+								margin-left: $spacer * .48;
+							} @else {
+								margin-right: $spacer * .48;
+							}
+							
+							&:hover,
+							&.focused {
+								color: var(--#{$prefix}body-color) !important;
+								background: var(--#{$prefix}tertiary-bg) !important;
+							}
+							&.focused {
+								color: var(--#{$prefix}body-color);
+							}
+							&.active {
+								border-color: var(--#{$prefix}theme);
+								position: relative;
+								background: var(--#{$prefix}theme) !important;
+								color: $white !important;
+								text-shadow: none;
+							}
+							&:nth-child(4),
+							&:nth-child(8),
+							&:nth-child(12) {
+								@if ($enable-rtl) {
+									margin-left: 0;
+								} @else {
+									margin-right: 0;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+.input-daterange {
+	& input.form-control {
+		&:first-child {
+			@if ($enable-rtl) {
+				border-radius: 0 $border-radius $border-radius 0;
+			} @else {
+				border-radius: $border-radius 0 0 $border-radius;
+			}
+		}
+		&:last-child {
+			@if ($enable-rtl) {
+				border-radius: $border-radius 0 0 $border-radius;
+			} @else {
+				border-radius: 0 $border-radius $border-radius 0;
+			}
+		}
+	}
+}

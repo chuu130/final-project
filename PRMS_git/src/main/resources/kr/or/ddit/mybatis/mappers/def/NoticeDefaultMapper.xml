@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.commons.def.mapper.NoticeDefaultMapper">
+	<resultMap id="BaseResultMap"
+		type="kr.or.ddit.vo.def.NoticeDefaultVO">
+		<id column="NOTICE_BBS_NO" jdbcType="VARCHAR" property="noticeBbsNo" />
+		<result column="NOTICE_BBS_SE" jdbcType="VARCHAR" property="noticeBbsSe" />
+		<result column="NOTICE_BBS_NM" jdbcType="VARCHAR" property="noticeBbsNm" />
+		<result column="NOTICE_BBS_CN" jdbcType="VARCHAR" property="noticeBbsCn" />
+		<result column="NOTICE_BBS_DE" jdbcType="TIMESTAMP" property="noticeBbsDe" />
+		<result column="NOTICE_BBS_REGISTER" jdbcType="VARCHAR" property="noticeBbsRegister" />
+		<result column="EMP_NO" jdbcType="VARCHAR" property="empNo" />
+		<result column="NOTICE_BBS_HIT" jdbcType="VARCHAR" property="noticeBbsHit" />
+		<result column="NOTICE_BBS_ATCH" jdbcType="INTEGER" property="noticeBbsAtch" />
+	</resultMap>
+
+	<sql id="noticeBoardColumns">
+		NOTICE_BBS_NO
+		,NOTICE_BBS_SE
+		,NOTICE_BBS_NM
+		,NOTICE_BBS_CN
+		,NOTICE_BBS_DE
+		,NOTICE_BBS_REGISTER
+		,NOTICE_BBS_ATCH
+		,EMP_NO
+		,NOTICE_BBS_HIT
+	</sql>
+
+
+	<insert id="insertNotice" parameterType="kr.or.ddit.vo.def.NoticeDefaultVO">
+		<selectKey order="BEFORE" resultType="string" keyProperty="noticeBbsNo">
+			SELECT NOTICE_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		insert into NOTICE
+		(NOTICE_BBS_NO
+		, NOTICE_BBS_SE
+		, NOTICE_BBS_NM
+		, NOTICE_BBS_CN
+		, NOTICE_BBS_DE
+		, NOTICE_BBS_REGISTER
+		, NOTICE_BBS_ATCH
+		, EMP_NO
+		, NOTICE_BBS_HIT)
+		values (#{noticeBbsNo,jdbcType=VARCHAR}
+		, #{noticeBbsSe,jdbcType=VARCHAR}
+		, #{noticeBbsNm,jdbcType=VARCHAR}
+		, #{noticeBbsCn,jdbcType=VARCHAR}
+		<if test="noticeBbsDe != null">
+			, #{noticeBbsDe,jdbcType=TIMESTAMP}
+		</if>
+		<if test="noticeBbsDe == null">
+			,SYSDATE
+		</if>
+		, #{noticeBbsRegister,jdbcType=VARCHAR}
+		, #{noticeBbsAtch,jdbcType=INTEGER}
+		, #{empNo,jdbcType=VARCHAR}
+		, 0)
+	</insert>
+
+	<update id="updateNotice" parameterType="kr.or.ddit.vo.def.NoticeDefaultVO">
+		update NOTICE
+		set NOTICE_BBS_SE = #{noticeBbsSe,jdbcType=VARCHAR}
+		,NOTICE_BBS_NM = #{noticeBbsNm,jdbcType=VARCHAR}
+		,NOTICE_BBS_CN = #{noticeBbsCn,jdbcType=VARCHAR}
+		<if test="noticeBbsDe != null">
+			,NOTICE_BBS_DE = #{noticeBbsDe,jdbcType=TIMESTAMP}
+		</if>
+		<if test="noticeBbsDe == null">
+			,NOTICE_BBS_DE = SYSDATE
+		</if>
+		,NOTICE_BBS_REGISTER = #{noticeBbsRegister,jdbcType=VARCHAR}
+		,NOTICE_BBS_ATCH = #{noticeBbsAtch,jdbcType=INTEGER}
+		,EMP_NO = #{empNo,jdbcType=VARCHAR}
+		where NOTICE_BBS_NO = #{noticeBbsNo,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteNotice" parameterType="java.lang.String">
+		delete from NOTICE
+		where NOTICE_BBS_NO = #{noticeBbsNo,jdbcType=VARCHAR}
+	</delete>
+
+	<!-- 조회수 -->
+	<update id="incrementHit"
+		parameterType="kr.or.ddit.vo.def.NoticeDefaultVO">
+		UPDATE NOTICE
+		SET
+		NOTICE_BBS_HIT = NOTICE_BBS_HIT + 1
+		WHERE NOTICE_BBS_NO = #{noticeBbsNo}
+	</update>
+
+
+	<!-- 검색유형에 따른 검색조건 명시 컬럼에서 searchWord 찾는다 -->
+	<sql id="searchFrag">
+		<where>
+			<if
+				test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+				<choose>
+					<when test="simpleCondition.searchType eq 'title'">
+						INSTR(NOTICE_BBS_NM, #{simpleCondition.searchWord})
+						> 0
+					</when>
+					<when test="simpleCondition.searchType eq 'writer'">
+						INSTR(B.EMP_ID,
+						
+						#{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'content'">
+						INSTR(NOTICE_BBS_CN, #{simpleCondition.searchWord})
+						> 0
+					</when>
+					<otherwise>
+						INSTR(NOTICE_BBS_NM, #{simpleCondition.searchWord}) > 0
+						OR INSTR(B.EMP_ID, #{simpleCondition.searchWord}) > 0
+						OR INSTR(NOTICE_BBS_CN, #{simpleCondition.searchWord}) > 0
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+	</sql>
+
+
+	<select id="selectTotalRecord" resultType="int">
+		SELECT COUNT(*)
+		FROM NOTICE A
+		LEFT OUTER JOIN EMPLOYEE B
+		ON A.EMP_NO = B.EMP_NO
+		<include refid="searchFrag" />
+	</select>
+
+
+	<select id="selectByNoticeNo" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		SELECT NOTICE_BBS_NO
+		, NOTICE_BBS_SE
+		, NOTICE_BBS_NM
+		, NOTICE_BBS_CN
+		, NOTICE_BBS_DE
+		, NOTICE_BBS_REGISTER
+		, NOTICE_BBS_ATCH
+		, A.EMP_NO
+		, B.EMP_ID
+		, B.EMP_NM
+		, NOTICE_BBS_HIT
+		FROM NOTICE A
+		LEFT OUTER JOIN EMPLOYEE B
+		ON A.EMP_NO = B.EMP_NO
+		WHERE NOTICE_BBS_NO = #{noticeBbsNo,jdbcType=VARCHAR}
+	</select>
+	
+<!-- 	페이징포함 전체리스트 조회 -->
+	<select id="selectAllNotice" resultMap="BaseResultMap">
+	SELECT B.*
+	FROM (
+	    SELECT ROWNUM RNUM, A.*
+	    FROM (
+	        SELECT NOTICE_BBS_NO
+	            , NOTICE_BBS_SE
+	            , NOTICE_BBS_NM
+	            , NOTICE_BBS_CN
+	            , NOTICE_BBS_DE
+	            , NOTICE_BBS_REGISTER
+	            , NOTICE_BBS_ATCH
+	            , A.EMP_NO
+	            , B.EMP_ID
+	            , NOTICE_BBS_HIT
+	        FROM NOTICE A
+	        LEFT OUTER JOIN EMPLOYEE B
+	        ON A.EMP_NO = B.EMP_NO
+	        <include refid="searchFrag" />
+	        ORDER BY TO_NUMBER(NOTICE_BBS_NO) DESC
+	    ) A
+	) B
+		<![CDATA[
+		WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+		]]>
+	</select>
+	
+	<!-- 	페이징미포함 전체리스트 조회 -->
+	<select id="selectAllNoticeNonPaging" resultMap="BaseResultMap">
+	SELECT A.*, ROWNUM RNUM
+		FROM (
+			SELECT 
+				NOTICE_BBS_NO
+				, NOTICE_BBS_SE
+				, NOTICE_BBS_NM
+				, NOTICE_BBS_CN
+				, NOTICE_BBS_DE
+				, NOTICE_BBS_REGISTER
+				, NOTICE_BBS_ATCH
+				, A.EMP_NO
+				, B.EMP_ID
+				, NOTICE_BBS_HIT
+		FROM NOTICE A
+			LEFT OUTER JOIN EMPLOYEE B
+			ON A.EMP_NO =
+			B.EMP_NO
+			ORDER BY TO_NUMBER(NOTICE_BBS_NO) DESC
+			) A
+	</select>
+	
+	
+</mapper>

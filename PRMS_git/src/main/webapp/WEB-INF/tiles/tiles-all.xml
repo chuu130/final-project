@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd" >
+<tiles-definitions>
+<!-- 본사직원 -->
+  <definition name="abstractParent" template="/WEB-INF/layouts/layout.jsp">
+  	<put-attribute name="preScript" value="/WEB-INF/includee/employee/emppreScript.jsp"/>
+  	<put-attribute name="header" value="/WEB-INF/includee/employee/empheader.jsp"/>
+  	<put-attribute name="sidebar" value="/WEB-INF/includee/employee/empsidebar.jsp"/>
+<!--   	<put-attribute name="footer" value="/WEB-INF/includee/franfooter.jsp"/> -->
+  	<put-attribute name="postScript" value="/WEB-INF/includee/employee/emppostScript.jsp"/>
+  </definition>
+
+  <definition name="emppage" extends="abstractParent">
+  	<put-attribute name="contentPage" value="/WEB-INF/views/employee/empindex.jsp"/>
+  </definition>
+
+  <definition name="employee:*/*" extends="abstractParent">
+	<put-attribute name="contentPage" value="/WEB-INF/views/{1}/{2}.jsp"/>
+</definition>
+<definition name="employee:*/*/*" extends="abstractParent">
+<put-attribute name="contentPage" value="/WEB-INF/views/{1}/{2}/{3}.jsp"/>
+</definition>
+
+<!-- 가맹점주 -->
+  <definition name="franchiseeabstractParent" template="/WEB-INF/layouts/layout.jsp">
+  	<put-attribute name="preScript" value="/WEB-INF/includee/franchisee/franpreScript.jsp"/>
+  	<put-attribute name="header" value="/WEB-INF/includee/franchisee/franheader.jsp"/>
+  	<put-attribute name="sidebar" value="/WEB-INF/includee/franchisee/fransidebar.jsp"/>
+<!--   	<put-attribute name="footer" value="/WEB-INF/includee/franfooter.jsp"/> -->
+  	<put-attribute name="postScript" value="/WEB-INF/includee/franchisee/franpostScript.jsp"/>
+  </definition>
+
+  <definition name="franchiseepage" extends="franchiseeabstractParent">
+  	<put-attribute name="contentPage" value="/WEB-INF/views/franchisee/franindex.jsp"/>
+  </definition>
+
+  <definition name="franchisee:*/*" extends="franchiseeabstractParent">
+	<put-attribute name="contentPage" value="/WEB-INF/views/{1}/{2}.jsp"/>
+</definition>
+<definition name="franchisee:*/*/*" extends="franchiseeabstractParent">
+<put-attribute name="contentPage" value="/WEB-INF/views/{1}/{2}/{3}.jsp"/>
+</definition>
+
+<!-- 가맹직원 -->
+  <definition name="staffabstractParent" template="/WEB-INF/layouts/layout.jsp">
+  	<put-attribute name="preScript" value="/WEB-INF/includee/staff/staffpreScript.jsp"/>
+  	<put-attribute name="header" value="/WEB-INF/includee/staff/staffheader.jsp"/>
+  	<put-attribute name="sidebar" value="/WEB-INF/includee/staff/staffsidebar.jsp"/>
+<!--   	<put-attribute name="footer" value="/WEB-INF/includee/franfooter.jsp"/> -->
+  	<put-attribute name="postScript" value="/WEB-INF/includee/staff/staffpostScript.jsp"/>
+  </definition>
+
+  <definition name="staffpage" extends="staffabstractParent">
+  	<put-attribute name="contentPage" value="/WEB-INF/views/staff/staffindex.jsp"/>
+  </definition>
+
+  <definition name="staff:*/*" extends="staffabstractParent">
+	<put-attribute name="contentPage" value="/WEB-INF/views/{1}/{2}.jsp"/>
+</definition>
+<definition name="staff:*/*/*" extends="staffabstractParent">
+<put-attribute name="contentPage" value="/WEB-INF/views/{1}/{2}/{3}.jsp"/>
+</definition>
+
+<!-- 본사총괄관리자 -->
+ <definition name="masabstractParent" template="/WEB-INF/layouts/layout.jsp">
+  	<put-attribute name="preScript" value="/WEB-INF/includee/master/masterpreScript.jsp"/>
+  	<put-attribute name="header" value="/WEB-INF/includee/master/masterheader.jsp"/>
+  	<put-attribute name="sidebar" value="/WEB-INF/includee/master/mastersidebar.jsp"/>
+<!--   	<put-attribute name="footer" value="/WEB-INF/includee/franfooter.jsp"/> -->
+  	<put-attribute name="postScript" value="/WEB-INF/includee/master/masterpostScript.jsp"/>
+  </definition>
+
+	<definition name="masterpage" extends="masabstractParent">
+  	<put-attribute name="contentPage" value="/WEB-INF/views/master/masterindex.jsp"/>
+  </definition>
+
+  <definition name="master:*/*" extends="masabstractParent">
+	<put-attribute name="contentPage" value="/WEB-INF/views/{1}/{2}.jsp"/>
+</definition>
+
+<definition name="master:*/*/*" extends="masabstractParent">
+<put-attribute name="contentPage" value="/WEB-INF/views/{1}/{2}/{3}.jsp"/>
+</definition>
+
+
+<!-- 마켓 -->
+
+ <definition name="marketabstractParent" template="/WEB-INF/layouts/marketlayout.jsp" preparer="marketCommMenuViewPreparer">
+  	<put-attribute name="preScript" value="/WEB-INF/includee/market/marketpreScript.jsp"/>
+  	<put-attribute name="header" value="/WEB-INF/includee/market/marketheader.jsp"/>
+  	<put-attribute name="sidebar" value="/WEB-INF/includee/market/marketsidebar.jsp"/>
+  	<put-attribute name="footer" value="/WEB-INF/includee/market/marketfooter.jsp"/>
+  	<put-attribute name="postScript" value="/WEB-INF/includee/market/marketpostScript.jsp"/>
+  </definition>
+
+	<definition name="marketpage" extends="marketabstractParent">
+  	<put-attribute name="contentPage" value="/WEB-INF/views/market/marketindex.jsp"/>
+  </definition>
+
+  <definition name="market:*/*" extends="marketabstractParent">
+	<put-attribute name="contentPage" value="/WEB-INF/views/{1}/{2}.jsp"/>
+</definition>
+<definition name="market:*/*/*" extends="marketabstractParent">
+<put-attribute name="contentPage" value="/WEB-INF/views/{1}/{2}/{3}.jsp"/>
+</definition>
+
+</tiles-definitions>

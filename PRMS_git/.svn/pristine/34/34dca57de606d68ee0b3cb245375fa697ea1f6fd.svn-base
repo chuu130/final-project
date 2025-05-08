@@ -1,0 +1,60 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+	<div class="d-flex mb-3">
+		<div>
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item"><a href="">커뮤니티</a></li>
+				<li class="breadcrumb-item active">가맹점게시판</li>
+			</ul>
+			<h1 class="page-header mb-0">가맹점게시판</h1>
+		</div>
+	</div>
+
+	<!-- 테이블 -->
+	<div class="card">
+
+		<div class="d-flex justify-content-end">
+			<div class="input-group flex-nowrap mb-4" style="width: 20%;margin: 1rem 1rem 0 0 !important;">
+				<div class="flex-fill">
+					<div class="input-group">
+						<div
+							class="input-group-text position-absolute top-0 bottom-0 bg-none border-0 pe-0 ms-1px z-1">
+							<i class="fa fa-search opacity-5"></i>
+						</div>
+						<div>
+						<input type="text" class="form-control ps-35px" id="searchData"
+							placeholder="제목/작성자/내용검색">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="tab-content p-4">
+			<table class="table table-hover">
+				<thead>
+					<tr class="text-center align-middle">
+						<th class="order-border">No</th>
+						<th class="order-border">제목</th>
+						<th class="order-border">작성자</th>
+						<th class="order-border">작성일</th>
+					</tr>
+				</thead>
+
+				<tbody id="franBoardList">
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- 페이징 영역 -->
+	<ul id="pagingArea" class="pagination mt-3 justify-content-end flex-wrap Bpaging-area">
+
+	</ul>
+
+
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script src="${pageContext.request.contextPath }/resources/js/app/franchise/franBoard.js"></script>
+

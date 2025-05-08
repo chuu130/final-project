@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.market.member.mapper.MemberMultiplePurchasingMapper">
+
+	<!-- 다건 주문의 본사상품수량을 수정하는 쿼리 -->
+	<update id="updateAdmininvQy" parameterType="AdmininvDefaultVO">
+			UPDATE ADMININV
+			SET ADMININV_QY = ADMININV_QY - #{admininvQy}
+			WHERE PROD_ID = #{prodId}
+	</update>
+
+
+	<!-- 다건 결제완료된 정보를 조회하는 쿼리 -->
+	<resultMap type="MemorderDefaultVO" id="memOrderMap" autoMapping="true">
+		<id property="orderDtlsId" column="ORDER_DTLS_ID"/>
+		<association property="payment" javaType="PaymentDefaultVO" autoMapping="true" />
+		<association property="delivery" javaType="DeliveryDefaultVO" autoMapping="true" />
+		<collection property="orderDtList" ofType="OrderdtDefaultVO" autoMapping="true">
+			<association property="prod" javaType="ProdDefaultVO" autoMapping="true" />
+		</collection>
+	</resultMap>
+
+	<select id="selectMemOrder" parameterType="string" resultMap="memOrderMap">
+		SELECT
+		    A.ORDER_DTLS_ID
+		    , MEM_NO
+		    , ORDER_DE
+		    , PAY_ID
+		    , PAY_MILEAGE_DISCOUNT
+		    , PAY_COUPON_DISCOUNT
+		    , PAY_TOTAL_DISCOUNT
+		    , PAY_METHOD
+		    , PAY_AMOUNT
+		    , PAY_PREMILEAGE_DISCOUNT
+		    , PAY_MLSAVINGS
+		    , MYCOUPON_NO
+		    , PAY_MILEAGE_TOTAL_DISCOUNT
+		    , PAY_PG
+		    , PAY_COMPANY
+		    , ORDER_PROD_DETAIL
+		    , C.PROD_ID
+		    , ORDER_PROD_QY
+		    , ORDER_PROD_AMOUNT
+		    , PROD_SLE_NM
+		    , PROD_SLE_PC
+		    , PROD_DC
+		    , PROD_IMAGE
+		    , DLVY_ZIP
+		    , DLVY_ADRES1
+		    , DLVY_ADRES2
+		    , DLVY_STTUS
+		FROM
+		    MEMORDER A INNER JOIN PAYMENT B ON (A.ORDER_DTLS_ID = B.ORDER_DTLS_ID)
+		    LEFT OUTER JOIN ORDERDT C ON (A.ORDER_DTLS_ID = C.ORDER_DTLS_ID)
+		    INNER JOIN PROD D ON (C.PROD_ID = D.PROD_ID)
+		    INNER JOIN DELIVERY F ON (A.ORDER_DTLS_ID = F.ORDER_DTLS_ID)
+		WHERE A.ORDER_DTLS_ID = #{orderDtlsId}
+	</select>
+
+
+	<!-- 장바구니 정보를 삭제하는 쿼리 -->
+	<delete id="deleteCart" parameterType="string">
+		DELETE FROM CART
+		WHERE MEM_NO = #{memNo}
+	</delete>
+
+
+</mapper>

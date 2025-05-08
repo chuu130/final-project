@@ -1,0 +1,44 @@
+@@include('./partial/head.html', {
+	"title": "Collapsed Sidebar", 
+	"css": [
+]})
+	<!-- BEGIN #app -->
+	<div id="app" class="app app-sidebar-collapsed">
+		@@include('./partial/header.html')
+		
+		@@include('./partial/sidebar.html', {"layoutClass": "active", "collapsedSidebarClass": "active"})
+		
+		<!-- BEGIN #content -->
+		<div id="content" class="app-content">
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item"><a href="#">Layout</a></li>
+				<li class="breadcrumb-item active">Collpased Sidebar</li>
+			</ul>
+			
+			<h1 class="page-header">
+				Collpased Sidebar <small>page header description goes here...</small>
+			</h1>
+			
+			<hr class="mb-4">
+			
+			<p>
+				Add the <code>.app-sidebar-collapsed</code> css class to <code>.app</code> container for collapsed sidebar page setting.
+			</p>
+			
+			<div class="card">
+				<div class="hljs-container border-0">
+					<pre><code class="xml" data-url="assets/data/layout-collapsed-sidebar/code-1.json"></code></pre>
+				</div>
+			</div>
+		</div>
+		<!-- END #content -->
+		
+		@@include('./partial/theme-panel.html')
+		@@include('./partial/scroll-top-btn.html')
+	</div>
+	<!-- END #app -->
+	
+@@include('./partial/script.html', {"script": [
+	"assets/plugins/@highlightjs/cdn-assets/highlight.min.js",
+	"assets/js/demo/highlightjs.demo.js"
+]})

@@ -1,0 +1,153 @@
+@charset "UTF-8";
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* 리뷰 이미지 모달 배경 */
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    transition: opacity 0.3s ease;
+}
+
+/* 모달 컨텐츠 */
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.3);
+    width: 80%;
+    max-width: 500px;
+    animation: slide-down 0.4s ease-out;
+    position: relative;
+}
+
+/* 닫기 버튼 */
+.close {
+    color: #aaa;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+}
+
+/* 모달 애니메이션 */
+@keyframes slide-down {
+    from {
+        transform: translateY(-200px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+.ms-t-review-avtar span {
+font-weight: bold;
+font-size: 14px;
+}
+
+.ms-t-review-content {
+flex-grow: 1;
+margin-left: 20px;
+}
+
+.ms-t-review-top {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 5px;
+align-items: flex-start;
+}
+
+.ms-t-review-name {
+font-weight: bold;
+font-size: 16px;
+}
+
+/* 리뷰 리스트 별점 */
+.ms-t-review-rating {
+color: #ffa500; /* 별점 색상 */
+}
+
+.ms-t-review-bottom p {
+font-size: 14px;
+line-height: 1.6;
+margin: 10px 0 0;
+}
+
+.msicon.msi-star.fill {
+color: #ffa500; /* 채워진 별 색상 */
+}
+
+.msicon.msi-star-o {
+color: #ccc; /* 빈 별 색상 */
+}
+
+.ms-single-cart {
+margin-top: 10px;
+text-align: left;
+}
+
+/* 리뷰이미지사이즈 fix */
+.rev-image{
+object-fit: contain; 
+height: 150px;
+width: 150px;
+	
+}
+
+
+/* 모달 배경 스타일 */
+.modal {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8); /* 반투명 배경 */
+}
+
+
+/*리뷰이미지  미리보기 모달 스타일*/
+/* 모달 내용 스타일 */
+.modal-content {
+    margin: 15% auto;
+    display: block;
+    max-width: 40%; /* 이미지의 최대 너비 설정 */
+    max-height: 60%; /* 이미지의 최대 높이 설정 */
+}
+
+/* 닫기 버튼 스타일 */
+.close {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}

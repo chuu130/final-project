@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+	
+	<aop:aspectj-autoproxy />
+	
+	<bean id="loggingAdvice" class="kr.or.ddit.advice.LoggingAdvice" />
+	
+	<!-- .. : 하위 패키지 모두 -->
+	<!-- 베이스 페키지 아래 service로 끝나는 모든 패키지에서, 모든 클래스,와 메소드, 모든 매개변수 -->
+	<aop:config>
+		<aop:pointcut expression="execution(* kr.or.ddit..service.*.*(..))" id="pointcut"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut"/>
+		<aop:aspect ref="loggingAdvice">
+			<!-- target 실행 전, 위빙설정 -->
+<!-- 			<aop:before method="before" pointcut-ref="pointcut"/>  -->
+<!-- 			<aop:after method="after" pointcut-ref="pointcut"/> -->
+			<aop:around method="around" pointcut-ref="pointcut"/>
+		</aop:aspect>
+	</aop:config>
+	
+</beans>

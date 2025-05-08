@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.franchise.franchisee.mapper.FranExpenseMapper">
+	<insert id="insertExpense" parameterType="ExpenseDefaultVO">
+		INSERT INTO EXPENSE(
+			FEXPS_NO
+			, FRANCHISEE_ID
+			, FEXPS_SE
+			, FEXPS_NM
+			, FEXPS_CN
+			, FEXPS_DE
+			, FEXPS_AMOUNT
+		)
+		VALUES(
+			EXPENSE_SEQ.nextval
+			, #{franchisee_Id}
+			, #{fexpsSe}
+			, #{fexpsNm}
+			, #{fexpsCn}
+			, sysdate
+			, #{fexpsAmount}
+		)
+	</insert>
+
+</mapper>

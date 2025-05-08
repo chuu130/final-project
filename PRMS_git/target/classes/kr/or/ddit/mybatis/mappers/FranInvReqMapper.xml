@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.franchise.franchisee.mapper.FranInvReqMapper">
+	<resultMap type="FiorderDefaultVO" id="foMap" autoMapping="true">
+		<association property="prod" javaType="ProdDefaultVO" autoMapping="true" />
+	</resultMap>
+
+
+	<insert id="insertFranInvReq" parameterType="InvrequestDefaultVO">
+		<selectKey order="BEFORE" resultType="String" keyProperty="fireqId">
+			SELECT INVREQUEST_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT ALL
+			INTO INVREQUEST
+			(
+				FIREQ_ID
+				, FIREQ_AMOUNT
+				, FRANCHISE_ID
+				, EMP_ID
+			)
+			VALUES
+			(
+				'INVREQ'||#{fireqId, jdbcType=VARCHAR}
+				, #{invReq.fireqAmount, jdbcType=INTEGER}
+				, #{invReq.franchiseId, jdbcType=VARCHAR}
+				, #{empId, jdbcType=VARCHAR}
+
+			)
+		<if test="invReq.fiOrderList neq null">
+			<foreach collection="invReq.fiOrderList" item="fiorder" index="idx">
+				INTO FIORDER
+				(
+					ORDERDETAIL_NO
+					, ORDERDETAIL_QY
+					, ORDERDETAIL_PC
+					, FIREQ_ID
+					, PROD_ID
+				)
+				VALUES
+				(
+					'FORDER'||TO_CHAR(FIORDER_SEQ.NEXTVAL)||(#{idx}+1)
+					, #{fiorder.orderdetailQy, jdbcType=INTEGER}
+					, #{fiorder.orderdetailPc, jdbcType=INTEGER}
+					, 'INVREQ'||#{fireqId, jdbcType=VARCHAR}
+					, #{fiorder.prodId, jdbcType=VARCHAR}
+				)
+			</foreach>
+		</if>
+		SELECT * FROM DUAL
+	</insert>
+
+	<sql id="searchFrag">
+		<trim prefix="AND" >
+        	<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(paging.simpleCondition.searchType)
+        				and @org.apache.commons.lang3.StringUtils@isNotBlank(paging.simpleCondition.searchWord)">
+        		<choose>
+        			<when test="paging.simpleCondition.searchType eq 'search'">
+						INSTR(FIREQ_STTUS, #{paging.simpleCondition.searchWord}) > 0
+        			</when>
+        		</choose>
+        	</if>
+        </trim>
+	</sql>
+
+	<select id="selectFranInvReqList">
+		WITH OTHERINVREQUEST AS (
+	        SELECT
+	            FIREQ_ID,
+	            FIREQ_DE,
+	            FIREQ_STTUS,
+	            FRANCHISE_ID,
+	            FIREQ_REJ_CN,
+	            FIREQ_AMOUNT
+	        FROM
+	            INVREQUEST
+	        WHERE FRANCHISE_ID = #{franchiseId}
+	        <include refid="searchFrag" />
+	        ORDER BY
+	            INVREQUEST.FIREQ_DE DESC
+	        )
+	    SELECT A.*
+	        FROM(
+	        SELECT OTHERINVREQUEST.*, ROWNUM RNUM
+	        FROM OTHERINVREQUEST
+	        )A
+	    WHERE RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+	</select>
+
+	<select id="selectTotalRecord">
+		SELECT COUNT(*)
+		FROM INVREQUEST
+		WHERE FRANCHISE_ID = #{franchiseId}
+		<include refid="searchFrag" />
+	</select>
+
+	<select id="selectFiOrderList" resultMap="foMap">
+		SELECT
+		    F.ORDERDETAIL_NO,
+		    F.FIREQ_ID,
+		    F.ORDERDETAIL_QY,
+		    F.ORDERDETAIL_PC,
+		    F.PROD_ID,
+		    P.PROD_SLE_NM,
+		    P.PROD_IMAGE
+		FROM
+		    FIORDER F INNER JOIN PROD P ON (F.PROD_ID = P.PROD_ID)
+		WHERE FIREQ_ID = #{fireqId}
+	</select>
+
+	<update id="updateInvReq">
+		UPDATE INVREQUEST
+		SET FIREQ_STTUS = #{fireqSttus},
+			FIREQ_RESULT_DE = SYSDATE
+		WHERE FIREQ_ID = #{fireqId}
+	</update>
+
+	<insert id="insertFranApplyInvReqExp">
+		INSERT INTO EXPENSE (
+		    FEXPS_NO,
+		    FRANCHISEE_ID,
+		    FEXPS_SE,
+		    FEXPS_NM,
+		    FEXPS_CN,
+		    FEXPS_AMOUNT
+		)
+		SELECT FN_GET_EXPENSE_SEQ  FEXPS_NO
+		     , T.FRANCHISEE_ID
+		     , T.FEXPS_SE
+		     , T.FEXPS_NM
+		     , LISTAGG(T.FEXPS_CN||'('||T.ORDERDETAIL_QY||'개)', ', ') WITHIN GROUP(ORDER BY T.FEXPS_CN) AS RSLT
+		     , T.FEXPS_AMOUNT
+		FROM
+		(
+		    SELECT #{franchiseId} FRANCHISEE_ID
+		        , 'COMN16DT002' FEXPS_SE
+		        , '재고발주비용' FEXPS_NM
+		        , (SELECT P.PROD_SLE_NM FROM PROD P WHERE P.PROD_ID = F.PROD_ID) FEXPS_CN
+		        , F.ORDERDETAIL_QY ORDERDETAIL_QY
+		        , I.FIREQ_AMOUNT FEXPS_AMOUNT
+		    FROM
+		        INVREQUEST I INNER JOIN FIORDER F ON (I.FIREQ_ID = F.FIREQ_ID)
+		    WHERE
+		        I.FIREQ_ID = 'INVREQ'||#{fireqId}
+		) T
+		GROUP BY T.FRANCHISEE_ID
+		     , T.FEXPS_SE
+		     , T.FEXPS_NM
+		     , T.FEXPS_AMOUNT
+	</insert>
+
+	<insert id="insertAdminApplyInvReqSell">
+		INSERT INTO SELLING (
+		    SELNG_NO,
+		    HQ_ID,
+		    SELNG_SE,
+		    SELNG_NM,
+		    SELNG_CN,
+		    SELNG_AMOUNT
+		)
+		SELECT FN_GET_SELLING_SEQ
+		     , T.HQ_ID
+		     , T.SELNG_SE
+		     , T.SELNG_NM
+		     , LISTAGG(T.SELNG_CN||'('||T.ORDERDETAIL_QY||'개)', ', ') WITHIN GROUP(ORDER BY T.SELNG_CN) AS RSLT
+		     , T.SELNG_AMOUNT
+		FROM
+		(
+		    SELECT 'HEAD1' HQ_ID
+		        , 'COMN17DT002' SELNG_SE
+		        , '재고판매비용' SELNG_NM
+		        , (SELECT P.PROD_SLE_NM FROM PROD P WHERE P.PROD_ID = F.PROD_ID) SELNG_CN
+		        , F.ORDERDETAIL_QY ORDERDETAIL_QY
+		        , I.FIREQ_AMOUNT SELNG_AMOUNT
+		    FROM
+		        INVREQUEST I INNER JOIN FIORDER F ON (I.FIREQ_ID = F.FIREQ_ID)
+		    WHERE
+		        I.FIREQ_ID = 'INVREQ'||#{fireqId}
+		) T
+		GROUP BY T.HQ_ID
+		     , T.SELNG_SE
+		     , T.SELNG_NM
+		     , T.SELNG_AMOUNT
+	</insert>
+
+	<insert id="insertMyHeadInvReqReturnSell">
+		INSERT INTO FRANSELLING (
+		    FSEL_NO,
+		    FRANCHISEE_ID,
+		    FSEL_SE,
+		    FSEL_NM,
+		    FSEL_CN,
+		    FSEL_DE,
+		    FSEL_AMOUNT
+		)
+		SELECT
+		    'FSEL' || FRANSELLING_SEQ.NEXTVAL,
+		    FRANCHISE_ID,
+		    'COMN18DT001',
+		    '발주취소 환불비',
+		    (SELECT LISTAGG(P.PROD_SLE_NM || '(' || F.ORDERDETAIL_QY || '개)', ', ') WITHIN GROUP (ORDER BY P.PROD_SLE_NM)
+		     FROM FIORDER F INNER JOIN PROD P ON ( P.PROD_ID = F.PROD_ID)
+		     WHERE FIREQ_ID = 'INVREQ28'),
+		    SYSDATE,
+		    FIREQ_AMOUNT
+		FROM INVREQUEST
+		WHERE FIREQ_ID = #{fireqId}
+	</insert>
+
+	<insert id="insertAdminHeadInvReqReturnExp">
+		INSERT INTO ADMINEXP (
+		    ADMINEXP_NO,
+		    HQ_ID,
+		    COMN_CODE_ID,
+		    ADMINEXP_NM,
+		    ADMINEXP_CN,
+		    ADMINEXP_DE,
+		    ADMINEXP_AMOUNT
+		)
+		SELECT
+		    'AEXP' || ADMINEXP_SEQ.NEXTVAL,
+		    'HEAD1',
+		    'COMN11DT012',
+		    '발주취소 환불비',
+		    (SELECT LISTAGG(P.PROD_SLE_NM || '(' || F.ORDERDETAIL_QY || '개)', ', ') WITHIN GROUP (ORDER BY P.PROD_SLE_NM)
+		     FROM FIORDER F INNER JOIN PROD P ON ( P.PROD_ID = F.PROD_ID)
+		     WHERE FIREQ_ID = 'INVREQ28'),
+		    SYSDATE,
+		    FIREQ_AMOUNT
+		FROM INVREQUEST
+		WHERE FIREQ_ID = #{fireqId}
+
+	</insert>
+
+</mapper>

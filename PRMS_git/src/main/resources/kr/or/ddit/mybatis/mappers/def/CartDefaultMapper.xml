@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.CartDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.CartDefaultVO">
+    <id column="CART_NO" jdbcType="VARCHAR" property="cartNo" />
+    <id column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+    <id column="MEM_NO" jdbcType="VARCHAR" property="memNo" />
+    <result column="CD_QY" jdbcType="NUMERIC" property="cdQy" />
+    <result column="CART_DE" jdbcType="TIMESTAMP" property="cartDe" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from CART
+    where CART_NO = #{cartNo,jdbcType=VARCHAR}
+      and PROD_ID = #{prodId,jdbcType=VARCHAR}
+      and MEM_NO = #{memNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.CartDefaultVO">
+    insert into CART (CART_NO, PROD_ID, MEM_NO, 
+      CD_QY, CART_DE)
+    values (#{cartNo,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{memNo,jdbcType=VARCHAR}, 
+      #{cdQy,jdbcType=NUMERIC}, #{cartDe,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.CartDefaultVO">
+    update CART
+    set CD_QY = #{cdQy,jdbcType=NUMERIC},
+      CART_DE = #{cartDe,jdbcType=TIMESTAMP}
+    where CART_NO = #{cartNo,jdbcType=VARCHAR}
+      and PROD_ID = #{prodId,jdbcType=VARCHAR}
+      and MEM_NO = #{memNo,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select CART_NO, PROD_ID, MEM_NO, CD_QY, CART_DE
+    from CART
+    where CART_NO = #{cartNo,jdbcType=VARCHAR}
+      and PROD_ID = #{prodId,jdbcType=VARCHAR}
+      and MEM_NO = #{memNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select CART_NO, PROD_ID, MEM_NO, CD_QY, CART_DE
+    from CART
+  </select>
+</mapper>

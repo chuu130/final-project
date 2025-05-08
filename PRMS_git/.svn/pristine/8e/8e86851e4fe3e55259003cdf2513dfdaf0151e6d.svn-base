@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.commons.def.mapper.FranchiseDefaultMapper">
+	<resultMap id="BaseResultMap"
+		type="kr.or.ddit.vo.def.FranchiseDefaultVO">
+		<id column="FRANCHISE_ID" jdbcType="VARCHAR" property="franchiseId" />
+		<result column="FRANCHISE_AREA" jdbcType="VARCHAR"
+			property="franchiseArea" />
+		<result column="FRANCHISE_NM" jdbcType="VARCHAR"
+			property="franchiseNm" />
+		<result column="FRANCHISE_TEL" jdbcType="VARCHAR"
+			property="franchiseTel" />
+		<result column="FRANCHISE_ZIP" jdbcType="VARCHAR"
+			property="franchiseZip" />
+		<result column="FRANCHISE_ADD1" jdbcType="VARCHAR"
+			property="franchiseAdd1" />
+		<result column="FRANCHISE_ADD2" jdbcType="VARCHAR"
+			property="franchiseAdd2" />
+		<result column="FRANCHISE_EMAIL" jdbcType="VARCHAR"
+			property="franchiseEmail" />
+		<result column="FRANCHISE_YN_AT" jdbcType="VARCHAR"
+			property="franchiseYnAt" />
+		<result column="FRANCHISE_HOTEL_CO" jdbcType="NUMERIC"
+			property="franchiseHotelCo" />
+		<result column="EMP_NO" jdbcType="VARCHAR" property="empNo" />
+		<result column="EMP_NM" jdbcType="VARCHAR" property="empNm" />
+		<result column="CMMN_CODE_NM" jdbcType="VARCHAR"
+			property="cmmnCodeNm" />
+		<association property="employee" javaType="EmployeeDefaultVO" autoMapping="true" />
+		<collection property="hotelroomList"
+			ofType="HotelroomDefaultVO">
+			<id column="HOTEL_ID" jdbcType="VARCHAR" property="hotelId" />
+			<result column="HOTEL_NM" jdbcType="VARCHAR"
+				property="hotelNm" />
+			<collection property="hotelresList"
+				ofType="HotelresDefaultVO">
+				<id column="RES_HOTEL_NO" jdbcType="VARCHAR"
+					property="resHotelNo" />
+				<result column="RES_HOTEL_REGIST_DE" jdbcType="DATE"
+					property="resHotelRegistDe" />
+				<collection property="petList" ofType="PetDefaultVO">
+					<id column="PET_NO" jdbcType="VARCHAR" property="petNo" />
+					<result column="PET_NM" jdbcType="VARCHAR" property="petNm" />
+					<collection property="memList" ofType="MemberDefaultVO">
+						<id column="MEM_NO" jdbcType="VARCHAR" property="memNo" />
+						<result column="MEM_NM" jdbcType="VARCHAR" property="memNm" />
+					</collection>
+				</collection>
+			</collection>
+		</collection>
+		<collection property="beautyresList"
+			ofType="kr.or.ddit.vo.def.BeautyresDefaultVO">
+			<id column="RES_BEAUTY_NO" jdbcType="VARCHAR"
+				property="resBeautyNo" />
+			<result column="RES_OPTION" jdbcType="VARCHAR"
+				property="resOption" />
+			<result column="RES_BEAUTY_REGIST_DE" jdbcType="DATE"
+				property="resBeautyRegistDe" />
+			<collection property="petList" ofType="PetDefaultVO">
+				<id column="PET_NO" jdbcType="VARCHAR" property="petNo" />
+				<result column="PET_NM" jdbcType="VARCHAR" property="petNm" />
+				<collection property="memList" ofType="MemberDefaultVO">
+					<id column="MEM_NO" jdbcType="VARCHAR" property="memNo" />
+					<result column="MEM_NM" jdbcType="VARCHAR" property="memNm" />
+				</collection>
+			</collection>
+			<!-- 필요한 컬럼들에 대한 추가 매핑 -->
+		</collection>
+		<collection property="employeeList" ofType="EmployeeDefaultVO">
+			<id column="EMP_NO" jdbcType="VARCHAR"
+				property="empNo" />
+			<result column="EMP_LEAVE_AT" jdbcType="VARCHAR"
+				property="empLeaveAt" />
+		</collection>
+	</resultMap>
+	<delete id="deleteFranchise" parameterType="java.lang.String">
+		delete from FRANCHISE
+		where FRANCHISE_ID = #{franchiseId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insertFranchise"
+		parameterType="kr.or.ddit.vo.def.FranchiseDefaultVO">
+		insert into FRANCHISE (FRANCHISE_ID, FRANCHISE_AREA,
+		FRANCHISE_NM,
+		FRANCHISE_TEL, FRANCHISE_ZIP, FRANCHISE_ADD1,
+		FRANCHISE_ADD2, FRANCHISE_EMAIL, FRANCHISE_YN_AT,
+		FRANCHISE_HOTEL_CO,
+		EMP_NO)
+		values (#{franchiseId,jdbcType=VARCHAR},
+		#{franchiseArea,jdbcType=VARCHAR},
+		#{franchiseNm,jdbcType=VARCHAR},
+		#{franchiseTel,jdbcType=VARCHAR}, #{franchiseZip,jdbcType=VARCHAR},
+		#{franchiseAdd1,jdbcType=VARCHAR},
+		#{franchiseAdd2,jdbcType=VARCHAR},
+		#{franchiseEmail,jdbcType=VARCHAR},
+		#{franchiseYnAt,jdbcType=VARCHAR},
+		#{franchiseHotelCo,jdbcType=NUMERIC}, #{empNo,jdbcType=VARCHAR})
+	</insert>
+	<update id="updateFranchise"
+		parameterType="kr.or.ddit.vo.def.FranchiseDefaultVO">
+		update FRANCHISE
+		set FRANCHISE_AREA =
+		#{franchiseArea,jdbcType=VARCHAR},
+		FRANCHISE_NM =
+		#{franchiseNm,jdbcType=VARCHAR},
+		FRANCHISE_TEL =
+		#{franchiseTel,jdbcType=VARCHAR},
+		FRANCHISE_ZIP =
+		#{franchiseZip,jdbcType=VARCHAR},
+		FRANCHISE_ADD1 =
+		#{franchiseAdd1,jdbcType=VARCHAR},
+		FRANCHISE_ADD2 =
+		#{franchiseAdd2,jdbcType=VARCHAR},
+		FRANCHISE_EMAIL =
+		#{franchiseEmail,jdbcType=VARCHAR}
+		where FRANCHISE_ID =
+		#{franchiseId,jdbcType=VARCHAR}
+	</update>
+	<select id="selectFranchise" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select fran.FRANCHISE_ID, fran.FRANCHISE_AREA,
+		fran.FRANCHISE_NM,
+		fran.FRANCHISE_TEL, fran.FRANCHISE_ZIP,
+		fran.FRANCHISE_ADD1, fran.FRANCHISE_ADD2, fran.FRANCHISE_EMAIL,
+		fran.FRANCHISE_YN_AT,
+		fran.FRANCHISE_HOTEL_CO,
+		fran.EMP_NO,
+		code.CMMN_CODE_NM, emp.EMP_NM
+		from FRANCHISE fran
+		INNER JOIN CMMNCODE
+		code ON (fran.FRANCHISE_AREA = code.CMMN_CODE_ID)
+		INNER JOIN EMPLOYEE
+		emp ON (fran.EMP_NO = emp.EMP_NO)
+		where fran.FRANCHISE_ID =
+		#{franchiseId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectTotalRecord" resultType="int">
+		SELECT COUNT(*)
+		FROM
+		FRANCHISE
+		WHERE FRANCHISE_YN_AT = 'N'
+	</select>
+	<select id="selectFranchiseList" resultMap="BaseResultMap">
+		select *
+		from(
+		select
+		A.*, ROWNUM AS RNUM
+		from(
+		select fran.FRANCHISE_ID, fran.FRANCHISE_AREA,
+		fran.FRANCHISE_NM,
+		fran.FRANCHISE_TEL, fran.FRANCHISE_ZIP,
+		fran.FRANCHISE_ADD1, fran.FRANCHISE_ADD2, fran.FRANCHISE_EMAIL,
+		fran.FRANCHISE_YN_AT,
+		fran.FRANCHISE_HOTEL_CO,
+		fran.EMP_NO,
+		code.CMMN_CODE_NM, emp.EMP_NM
+		from FRANCHISE fran
+		INNER JOIN CMMNCODE
+		code ON (fran.FRANCHISE_AREA = code.CMMN_CODE_ID)
+		INNER JOIN EMPLOYEE
+		emp ON (fran.EMP_NO = emp.EMP_NO)
+		where FRANCHISE_YN_AT = 'N'
+		order by
+		FRANCHISE_ID
+		)A
+		)
+		where RNUM BETWEEN #{firstRecord} AND #{lastRecord}
+	</select>
+	<update id="updateHotelCnt" parameterType="HashMap">
+		UPDATE FRANCHISE
+		SET
+		FRANCHISE_HOTEL_CO = (SELECT COUNT(*)
+		FROM HOTELROOM
+		WHERE FRANCHISE_ID
+		= #{franchiseId,jdbcType=VARCHAR})
+		WHERE FRANCHISE_ID =
+		#{franchiseId,jdbcType=VARCHAR}
+	</update>
+	<select id="selectbeautyList" resultMap="BaseResultMap">
+		select a.*, b.*, c.*,
+		d.*
+		from franchise a left outer join beautyres b on (a.franchise_id =
+		b.franchise_id)
+		left outer join PET c on (b.pet_no = c.pet_no)
+		left
+		outer join member d on (c.mem_no = d.mem_no)
+		where a.franchise_id =
+		'1001' AND b.RES_BEAUTY_STTUS = 'COMN09DT001'
+	</select>
+
+	<select id="selecthotelList" resultMap="BaseResultMap">
+		select a.*, b.*, c.*,
+		d.*, f.*
+		from franchise a left outer join hotelroom b on
+		(a.franchise_id =
+		b.franchise_id)
+		left outer join hotelres c on
+		(b.hotel_id = c.hotel_id)
+		left outer join PET d on (c.pet_no =
+		d.pet_no)
+		left outer join member f on (d.mem_no = f.mem_no)
+		where
+		a.franchise_id = '1001' AND c.RES_HOTEL_STTUS = 'COMN09DT001'
+	</select>
+
+	<select id="selectfranchiseclose" resultMap="BaseResultMap">
+		select a.*, b.*
+		from franchise a inner join employee b on (a.emp_no = b.emp_no)
+		where FRANCHISE_YN_AT = 'N'
+	</select>
+
+	<update id="franchiseClose" parameterType="string">
+		update franchise
+		set
+		FRANCHISE_YN_AT = 'Y'
+		WHERE FRANCHISE_ID =
+		#{franchiseId,jdbcType=VARCHAR}
+	</update>
+
+	<select id="countfran">
+		select MAX(TO_NUMBER(franchise_id)+1)
+		from franchise
+	</select>
+
+	<select id="selectFranchiseEmployees" parameterType="string" resultMap="BaseResultMap">
+		select a.*, b.emp_no, b.EMP_LEAVE_AT
+		from franchise a left outer join employee b on (a.emp_no = b.emp_no)
+		where a.FRANCHISE_ID = #{franchiseId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectFranchiseInfoList">
+		SELECT
+		    F.FRANCHISE_ID,
+		    F.FRANCHISE_AREA,
+		    F.FRANCHISE_NM,
+		    F.FRANCHISE_TEL,
+		    F.FRANCHISE_ZIP,
+		    F.FRANCHISE_ADD1,
+		    F.FRANCHISE_ADD2,
+		    F.FRANCHISE_EMAIL,
+		    F.FRANCHISE_YN_AT,
+		    F.FRANCHISE_HOTEL_CO,
+		    F.EMP_NO,
+		    C.CMMN_CODE_NM
+
+		FROM
+		    FRANCHISE F INNER JOIN CMMNCODE C ON (F.FRANCHISE_AREA = C.CMMN_CODE_ID)
+	</select>
+
+	<select id="selectHeadInfo">
+		SELECT
+			HQ_ID,
+		    HQ_MTLTY,
+		    HQ_ADRES1,
+		    HQ_ADRES2,
+		    HQ_ZIP,
+		    HQ_EMAIL,
+		    HQ_TELNO
+		FROM HEADQUARTER
+		WHERE HQ_ID = #{hqId}
+	</select>
+
+</mapper>

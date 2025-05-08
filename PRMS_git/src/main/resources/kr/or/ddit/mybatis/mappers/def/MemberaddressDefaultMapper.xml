@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.MemberaddressDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.MemberaddressDefaultVO">
+    <id column="MEM_ADD_ID" jdbcType="VARCHAR" property="memAddId" />
+    <result column="MEM_NO" jdbcType="VARCHAR" property="memNo" />
+    <result column="MEM_ZIP" jdbcType="VARCHAR" property="memZip" />
+    <result column="MEM_ADRES1" jdbcType="VARCHAR" property="memAdres1" />
+    <result column="MEM_ADRES2" jdbcType="VARCHAR" property="memAdres2" />
+    <result column="MEM_BASS_YN" jdbcType="VARCHAR" property="memBassYn" />
+  </resultMap>
+  <delete id="deleteAddress" parameterType="java.lang.String">
+    delete from MEMBERADDRESS
+    where MEM_ADD_ID = #{memAddId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertAddress" parameterType="kr.or.ddit.vo.def.MemberaddressDefaultVO">
+    insert into MEMBERADDRESS (MEM_ADD_ID, MEM_NO, MEM_ZIP,
+      MEM_ADRES1, MEM_ADRES2, MEM_BASS_YN
+      )
+    values (#{memAddId,jdbcType=VARCHAR}, #{memNo,jdbcType=VARCHAR}, #{memZip,jdbcType=VARCHAR},
+      #{memAdres1,jdbcType=VARCHAR}, #{memAdres2,jdbcType=VARCHAR}, #{memBassYn,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateAddress" parameterType="kr.or.ddit.vo.def.MemberaddressDefaultVO">
+    update MEMBERADDRESS
+    set MEM_NO = #{memNo,jdbcType=VARCHAR},
+      MEM_ZIP = #{memZip,jdbcType=VARCHAR},
+      MEM_ADRES1 = #{memAdres1,jdbcType=VARCHAR},
+      MEM_ADRES2 = #{memAdres2,jdbcType=VARCHAR},
+      MEM_BASS_YN = #{memBassYn,jdbcType=VARCHAR}
+    where MEM_ADD_ID = #{memAddId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectAddress" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select MEM_ADD_ID, MEM_NO, MEM_ZIP, MEM_ADRES1, MEM_ADRES2, MEM_BASS_YN
+    from MEMBERADDRESS
+    where MEM_ADD_ID = #{memAddId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAddressList" resultMap="BaseResultMap">
+    select MEM_ADD_ID, MEM_NO, MEM_ZIP, MEM_ADRES1, MEM_ADRES2, MEM_BASS_YN
+    from MEMBERADDRESS
+  </select>
+  <select id="selectAddressMemNo" parameterType="java.lang.String">
+  	select MEM_ADD_ID, MEM_NO, MEM_ZIP, MEM_ADRES1, MEM_ADRES2, MEM_BASS_YN
+    from MEMBERADDRESS
+    where MEM_NO = #{memNo,jdbcType=VARCHAR} AND MEM_BASS_YN = 'Y'
+  </select>
+</mapper>

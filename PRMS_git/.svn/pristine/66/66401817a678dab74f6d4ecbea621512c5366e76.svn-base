@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.FrreviewDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.FrreviewDefaultVO">
+    <id column="FRANREVIEW_NO" jdbcType="VARCHAR" property="franreviewNo" />
+    <result column="FRANREVIEW_SJ" jdbcType="VARCHAR" property="franreviewSj" />
+    <result column="FRANREVIEW_CN" jdbcType="VARCHAR" property="franreviewCn" />
+    <result column="FRANREVIEW_DE" jdbcType="TIMESTAMP" property="franreviewDe" />
+    <result column="FRANREVIEW_IMAGE" jdbcType="VARCHAR" property="franreviewImage" />
+    <result column="FRANREVIEW_SE" jdbcType="VARCHAR" property="franreviewSe" />
+    <result column="FRANREVIEW_BLIND_AT" jdbcType="VARCHAR" property="franreviewBlindAt" />
+    <result column="FRANREVIEW_SCORE" jdbcType="FLOAT" property="franreviewScore" />
+    <result column="FSM_SETL_NO" jdbcType="VARCHAR" property="fsmsetlNo" />
+    <result column="FRANREVIEW_WRITER" jdbcType="VARCHAR" property="franreviewWriter" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from FRREVIEW
+    where FRANREVIEW_NO = #{franreviewNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.FrreviewDefaultVO">
+    insert into FRREVIEW (FRANREVIEW_NO, FRANREVIEW_SJ, FRANREVIEW_CN,
+      FRANREVIEW_DE, FRANREVIEW_IMAGE, FRANREVIEW_SE,
+      FRANREVIEW_BLIND_AT, FRANREVIEW_SCORE, FSM_DTLS_NO,
+      FRANREVIEW_WRITER)
+    values (#{franreviewNo,jdbcType=VARCHAR}, #{franreviewSj,jdbcType=VARCHAR}, #{franreviewCn,jdbcType=VARCHAR},
+      #{franreviewDe,jdbcType=TIMESTAMP}, #{franreviewImage,jdbcType=VARCHAR}, #{franreviewSe,jdbcType=VARCHAR},
+      #{franreviewBlindAt,jdbcType=VARCHAR}, #{franreviewScore,jdbcType=FLOAT}, #{fsmDtlsNo,jdbcType=VARCHAR},
+      #{franreviewWriter,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.FrreviewDefaultVO">
+    update FRREVIEW
+    set FRANREVIEW_SJ = #{franreviewSj,jdbcType=VARCHAR},
+      FRANREVIEW_CN = #{franreviewCn,jdbcType=VARCHAR},
+      FRANREVIEW_DE = #{franreviewDe,jdbcType=TIMESTAMP},
+      FRANREVIEW_IMAGE = #{franreviewImage,jdbcType=VARCHAR},
+      FRANREVIEW_SE = #{franreviewSe,jdbcType=VARCHAR},
+      FRANREVIEW_BLIND_AT = #{franreviewBlindAt,jdbcType=VARCHAR},
+      FRANREVIEW_SCORE = #{franreviewScore,jdbcType=FLOAT},
+      FSM_DTLS_NO = #{fsmDtlsNo,jdbcType=VARCHAR},
+      FRANREVIEW_WRITER = #{franreviewWriter,jdbcType=VARCHAR}
+    where FRANREVIEW_NO = #{franreviewNo,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select FRANREVIEW_NO, FRANREVIEW_SJ, FRANREVIEW_CN, FRANREVIEW_DE, FRANREVIEW_IMAGE,
+    FRANREVIEW_SE, FRANREVIEW_BLIND_AT, FRANREVIEW_SCORE, FSM_DTLS_NO, FRANREVIEW_WRITER
+    from FRREVIEW
+    where FRANREVIEW_NO = #{franreviewNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select FRANREVIEW_NO, FRANREVIEW_SJ, FRANREVIEW_CN, FRANREVIEW_DE, FRANREVIEW_IMAGE,
+    FRANREVIEW_SE, FRANREVIEW_BLIND_AT, FRANREVIEW_SCORE, FSM_DTLS_NO, FRANREVIEW_WRITER
+    from FRREVIEW
+  </select>
+</mapper>

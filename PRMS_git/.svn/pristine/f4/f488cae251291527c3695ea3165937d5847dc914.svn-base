@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.franchise.common.mapper.FranSalesMapper">
+	
+	
+	
+	<select id="selectFranSalesFsel" resultType="FranSalesVO">
+		 WITH FRANREVENUEMONTHVIEW AS(
+		    SELECT
+		       	TO_CHAR(FSEL_DE, 'YYYY-MM') FSEL_DT
+		        , FSEL_AMOUNT
+		        , FRANCHISEE_ID
+		    FROM FRANSELLING
+		        WHERE SUBSTR(TO_CHAR(FSEL_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+		) SELECT FSEL_DT, SUM(FSEL_AMOUNT) FSEL_TOTAL_AMOUNT
+		FROM FRANREVENUEMONTHVIEW
+		WHERE FRANCHISEE_ID = #{franId}
+		GROUP BY FSEL_DT
+		ORDER BY FSEL_DT ASC
+	</select>
+	
+	<select id="selectFranSalesFexps" resultType="FranSalesVO">
+		WITH FRANREVENUEMONTHVIEW AS(
+		    SELECT
+		        TO_CHAR(FEXPS_DE, 'YYYY-MM') FEXPS_DT
+		        , FEXPS_AMOUNT
+		        , FRANCHISEE_ID
+		    FROM EXPENSE
+		        WHERE SUBSTR(TO_CHAR(FEXPS_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+		) SELECT FEXPS_DT, SUM(FEXPS_AMOUNT) FEXPS_TOTAL_AMOUNT
+		FROM FRANREVENUEMONTHVIEW
+		WHERE FRANCHISEE_ID = #{franId}
+		GROUP BY FEXPS_DT
+		ORDER BY FEXPS_DT ASC
+	</select>
+	
+	<select id="selectFranThisWeekFsel" parameterType="string" resultType="FranSalesVO">
+		SELECT A.ROW_NUM, A.FSEL_DT, A.FSEL_TOTAL_AMOUNT
+			FROM (
+			WITH FRANREVENUEMONTHVIEW AS(
+					    SELECT
+					       	TO_CHAR(FSEL_DE, 'YYYY-MM-dd') FSEL_DT
+					        , FSEL_AMOUNT
+					        , FRANCHISEE_ID
+			                
+					    FROM FRANSELLING
+					) SELECT FSEL_DT, SUM(FSEL_AMOUNT) FSEL_TOTAL_AMOUNT, ROW_NUMBER() OVER (ORDER BY FRANREVENUEMONTHVIEW.FSEL_DT DESC) row_num
+					FROM FRANREVENUEMONTHVIEW
+					WHERE FRANCHISEE_ID = #{franId} 
+			        GROUP BY FSEL_DT
+			        ) A
+			        WHERE A.ROW_NUM BETWEEN 1 AND 7
+			        ORDER BY A.FSEL_DT
+	</select>
+	
+	
+	<select id="selectFranLastWeekFsel" parameterType="string" resultType="FranSalesVO">
+	
+		SELECT A.ROW_NUM, A.FSEL_DT, A.FSEL_TOTAL_AMOUNT
+			FROM (
+			WITH FRANREVENUEMONTHVIEW AS(
+					    SELECT
+					       	TO_CHAR(FSEL_DE, 'YYYY-MM-dd') FSEL_DT
+					        , FSEL_AMOUNT
+					        , FRANCHISEE_ID
+			                
+					    FROM FRANSELLING
+					) SELECT FSEL_DT, SUM(FSEL_AMOUNT) FSEL_TOTAL_AMOUNT, ROW_NUMBER() OVER (ORDER BY FRANREVENUEMONTHVIEW.FSEL_DT DESC) row_num
+					FROM FRANREVENUEMONTHVIEW
+					WHERE FRANCHISEE_ID = #{franId} 
+			        GROUP BY FSEL_DT
+			        ) A
+			        WHERE A.ROW_NUM BETWEEN 8 AND 14
+			        ORDER BY A.FSEL_DT
+	</select>
+	
+	
+	<select id="selectFranTopFiveProd" parameterType="string" resultType="FranSalesVO">
+		SELECT B.*
+			FROM(
+			    SELECT ROWNUM RNUM, A.*
+			    FROM(
+			        SELECT F.CMMN_CODE_NM, SUM(FSM_DTLS_PC) PROD_TOTAL
+			        FROM FRANCHISE A INNER JOIN FRANPRODSETL B ON (A.FRANCHISE_ID = B.FRANCHISE_ID)
+			            INNER JOIN SETLDT C ON (B.FRANPROD_SETL_NO = C.FRANPROD_SETL_NO)
+			            INNER JOIN FRANPROD D ON (C.FRANPROD_ID = D.FRANPROD_ID)
+			            INNER JOIN PROD E ON (D.PROD_ID = E.PROD_ID)
+			            INNER JOIN CMMNCODE F ON (E.CMMN_CODE_ID = F.CMMN_CODE_ID)
+			        WHERE A.FRANCHISE_ID = #{franId}
+			        AND B.FRANCHISE_REFUND_YN ='N'
+			        GROUP BY F.CMMN_CODE_NM
+			        ORDER BY PROD_TOTAL DESC) A
+			        
+			    ) B
+			WHERE RNUM BETWEEN 1 AND 5
+	
+	</select>
+	
+	
+	<select id="selectFranTopFirveProdName" parameterType="string" resultType="FranSalesVO">
+		SELECT B.*
+		FROM(
+		    SELECT ROWNUM RNUM, A.*
+		    FROM(
+		        SELECT D.FRANPROD_NM PROD_NAME, SUM(FSM_DTLS_PC) PROD_TOTAL
+		        FROM FRANCHISE A INNER JOIN FRANPRODSETL B ON (A.FRANCHISE_ID = B.FRANCHISE_ID)
+		            INNER JOIN SETLDT C ON (B.FRANPROD_SETL_NO = C.FRANPROD_SETL_NO)
+		            INNER JOIN FRANPROD D ON (C.FRANPROD_ID = D.FRANPROD_ID)
+		            INNER JOIN PROD E ON (D.PROD_ID = E.PROD_ID)
+		            INNER JOIN CMMNCODE F ON (E.CMMN_CODE_ID = F.CMMN_CODE_ID)
+		        WHERE A.FRANCHISE_ID = #{franId}
+		        AND B.FRANCHISE_REFUND_YN ='N'
+		        GROUP BY D.FRANPROD_NM
+		        ORDER BY PROD_TOTAL DESC) A
+		        
+		    ) B
+		WHERE RNUM BETWEEN 1 AND 5
+	</select>
+	
+	<select id="selectFranProdRate" parameterType="string" resultType="FranSalesVO">
+		SELECT FSEL_NM, SUM(FSEL_AMOUNT) serviceTotal
+		FROM FRANSELLING
+		WHERE FRANCHISEE_ID = #{franId}
+		AND FSEL_NM LIKE '%판매%'
+		GROUP BY FSEL_NM
+	</select>
+	
+	<select id="selectFranHotelState" parameterType="string" resultType="FranSalesVO">
+		SELECT D.CMMN_CODE_NM, COUNT(*) HOTELCNT
+		FROM FRANCHISE A INNER JOIN HOTELROOM B ON (A.FRANCHISE_ID = B.FRANCHISE_ID)
+		    INNER JOIN HOTELRES C ON (B.HOTEL_ID = C.HOTEL_ID)
+		    INNER JOIN CMMNCODE D ON (C.RES_HOTEL_STTUS = D.CMMN_CODE_ID)
+		WHERE A.FRANCHISE_ID = #{franId}
+		GROUP BY D.CMMN_CODE_NM
+	</select>
+	
+	<select id="selectFranBeautyState" parameterType="string" resultType="FranSalesVO">
+		SELECT C.CMMN_CODE_NM, COUNT(*) BEAUTYCNT
+		FROM FRANCHISE A INNER JOIN BEAUTYRES B ON (A.FRANCHISE_ID = B.FRANCHISE_ID)
+		    INNER JOIN CMMNCODE C ON (B.RES_BEAUTY_STTUS = C.CMMN_CODE_ID)
+		WHERE A.FRANCHISE_ID = #{franId}
+		GROUP BY C.CMMN_CODE_NM
+	</select>
+	
+	<select id="selectFranByProdSales" parameterType="string" resultType="FranSalesVO">
+		SELECT D.FRANPROD_NM PROD_NAME, SUM(G.PARTPROD_PC) STORE_TOTAL_PC, G.PARTPROD_PC STORE_PC, SUM(FSM_DTLS_PC) PROD_TOTAL, H.CMMN_CODE_NM, COUNT(*) PROD_CNT
+		        FROM FRANCHISE A INNER JOIN FRANPRODSETL B ON (A.FRANCHISE_ID = B.FRANCHISE_ID)
+		            INNER JOIN SETLDT C ON (B.FRANPROD_SETL_NO = C.FRANPROD_SETL_NO)
+		            INNER JOIN FRANPROD D ON (C.FRANPROD_ID = D.FRANPROD_ID)
+		            INNER JOIN PROD E ON (D.PROD_ID = E.PROD_ID)
+		            INNER JOIN ADMININV F ON (E.PROD_ID = F.PROD_ID)
+		            INNER JOIN PARTPROD G ON (F.PROD_ID = G.PROD_ID)
+		            INNER JOIN CMMNCODE H ON (G.PARTPROD_SE = H.CMMN_CODE_ID)
+		WHERE A.FRANCHISE_ID = #{franId}
+		GROUP BY D.FRANPROD_NM,G.PARTPROD_PC, H.CMMN_CODE_NM
+		ORDER BY PROD_TOTAL DESC
+	</select>
+</mapper>

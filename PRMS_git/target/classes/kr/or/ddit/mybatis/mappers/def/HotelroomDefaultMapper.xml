@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.HotelroomDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.HotelroomDefaultVO">
+    <id column="HOTEL_ID" jdbcType="VARCHAR" property="hotelId" />
+    <result column="FRANCHISE_ID" jdbcType="VARCHAR" property="franchiseId" />
+    <result column="HOTEL_NM" jdbcType="VARCHAR" property="hotelNm" />
+    <result column="HOTEL_TYPE" jdbcType="VARCHAR" property="hotelType" />
+    <result column="HOTEL_USE_AT" jdbcType="VARCHAR" property="hotelUseAt" />
+    <result column="HOTEL_DETAIL" jdbcType="VARCHAR" property="hotelDetail" />
+    <result column="HOTEL_PRICE" jdbcType="NUMERIC" property="hotelPrice" />
+    <result column="HOTEL_INFO" jdbcType="VARCHAR" property="hotelInfo" />
+    <result column="HOTEL_IMAGE" jdbcType="VARCHAR" property="hotelImage" />
+  </resultMap>
+  <delete id="deleteHotelroom" parameterType="java.lang.String">
+    update HOTELROOM
+	set HOTEL_DELYN = 'Y'
+	where HOTEL_ID = #{hotelId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertHotelroom" parameterType="kr.or.ddit.vo.def.HotelroomDefaultVO">
+    insert into HOTELROOM (HOTEL_ID, FRANCHISE_ID, HOTEL_NM,
+      HOTEL_TYPE, HOTEL_USE_AT, HOTEL_DETAIL,
+      HOTEL_PRICE, HOTEL_INFO, HOTEL_IMAGE
+      )
+    values (LPAD(hotelroom_seq.NEXTVAL, 4, '0'), #{franchiseId,jdbcType=VARCHAR}, #{hotelNm,jdbcType=VARCHAR},
+      #{hotelType,jdbcType=VARCHAR}, 'N', #{hotelDetail,jdbcType=VARCHAR},
+      #{hotelPrice,jdbcType=NUMERIC}, #{hotelInfo,jdbcType=VARCHAR}, 'https://www.qplace.kr/content/images/2021/09/9-14.jpg'
+      )
+  </insert>
+  <update id="updateHotelroom" parameterType="kr.or.ddit.vo.def.HotelroomDefaultVO">
+    update HOTELROOM
+    set HOTEL_NM = #{hotelNm,jdbcType=VARCHAR},
+      HOTEL_TYPE = #{hotelType,jdbcType=VARCHAR},
+      HOTEL_PRICE = #{hotelPrice,jdbcType=NUMERIC},
+      HOTEL_DETAIL = #{hotelDetail,jdbcType=VARCHAR},
+      HOTEL_INFO = #{hotelInfo,jdbcType=VARCHAR}
+    where HOTEL_ID = #{hotelId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectHotelroom" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select HOTEL_ID, FRANCHISE_ID, HOTEL_NM, HOTEL_TYPE, HOTEL_USE_AT, HOTEL_DETAIL,
+    HOTEL_PRICE, HOTEL_INFO, HOTEL_IMAGE
+    from HOTELROOM
+    where HOTEL_ID = #{hotelId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectTotalRecord" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM HOTELROOM
+		WHERE HOTEL_DELYN is null
+        AND FRANCHISE_ID = #{franchiseId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectHotelroomList" parameterType="HashMap" resultMap="BaseResultMap">
+    select *
+		from(
+		    select A.*, ROWNUM AS RNUM
+				from(
+				select HOTEL_ID, FRANCHISE_ID, HOTEL_NM, HOTEL_TYPE, HOTEL_USE_AT, HOTEL_DETAIL,
+				    HOTEL_PRICE, HOTEL_INFO, HOTEL_IMAGE
+				    from HOTELROOM
+				    where FRANCHISE_ID=#{franchiseId,jdbcType=VARCHAR} and HOTEL_DELYN is null
+				    order by HOTEL_ID
+				) A
+		    )
+		where RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+  </select>
+  <select id="selectHotelroomListByDate" parameterType="HashMap" resultMap="BaseResultMap">
+	SELECT DISTINCT hr.HOTEL_ID, hr.HOTEL_NM, hr.HOTEL_TYPE, hr.HOTEL_PRICE, hr.HOTEL_INFO, hr.HOTEL_IMAGE
+	FROM HOTELROOM hr
+	WHERE hr.HOTEL_DELYN IS NULL
+	   AND NOT EXISTS (
+	      SELECT 1
+	      FROM HOTELTIME ht
+	      WHERE ht.HOTEL_ID = hr.HOTEL_ID
+	        AND ht.RES_HOTEL_DE = #{resHotelInDe,jdbcType=VARCHAR}
+	        AND ht.RES_PM = 'Y'
+	  )
+	  AND NOT EXISTS (
+	      SELECT 1
+	      FROM HOTELTIME ht
+	      WHERE ht.HOTEL_ID = hr.HOTEL_ID
+	        AND ht.RES_HOTEL_DE = #{resHotelOutDe,jdbcType=VARCHAR}
+	        AND ht.RES_AM = 'Y'
+	  )
+	  AND NOT EXISTS (
+	      SELECT 1
+	      FROM HOTELTIME ht
+	      WHERE ht.HOTEL_ID = hr.HOTEL_ID
+	        AND ht.RES_HOTEL_DE &gt; #{resHotelInDe,jdbcType=VARCHAR}
+	        AND ht.RES_HOTEL_DE &lt; #{resHotelOutDe,jdbcType=VARCHAR}
+	        AND (ht.RES_AM = 'Y' OR ht.RES_PM = 'Y')
+	  )
+	  AND hr.HOTEL_ID IN (
+	      SELECT MIN(hr2.HOTEL_ID)
+	      FROM HOTELROOM hr2
+	      WHERE hr2.FRANCHISE_ID = #{franchiseId,jdbcType=VARCHAR}
+	         AND NOT EXISTS (
+	            SELECT 1
+	            FROM HOTELTIME ht2
+	            WHERE ht2.HOTEL_ID = hr2.HOTEL_ID
+	              AND ht2.RES_HOTEL_DE = #{resHotelInDe,jdbcType=VARCHAR}
+	              AND ht2.RES_PM = 'Y'
+	        )
+	        AND NOT EXISTS (
+	            SELECT 1
+	            FROM HOTELTIME ht2
+	            WHERE ht2.HOTEL_ID = hr2.HOTEL_ID
+	              AND ht2.RES_HOTEL_DE = #{resHotelOutDe,jdbcType=VARCHAR}
+	              AND ht2.RES_AM = 'Y'
+	        )
+	        AND NOT EXISTS (
+	            SELECT 1
+	            FROM HOTELTIME ht2
+	            WHERE ht2.HOTEL_ID = hr2.HOTEL_ID
+	              AND ht2.RES_HOTEL_DE &gt; #{resHotelInDe,jdbcType=VARCHAR}
+	              AND ht2.RES_HOTEL_DE &lt; #{resHotelOutDe,jdbcType=VARCHAR}
+	              AND (ht2.RES_AM = 'Y' OR ht2.RES_PM = 'Y')
+	        )
+	      GROUP BY hr2.HOTEL_NM
+	  )
+	ORDER BY hr.HOTEL_PRICE
+	</select>
+	<update id="updateHotelUseAt">
+		UPDATE hotelroom hr
+		SET hr.hotel_use_at = 'Y'
+		WHERE EXISTS (
+		    SELECT 1
+		    FROM hotelres res
+		    WHERE hr.hotel_id = res.hotel_id
+		    AND CURRENT_DATE BETWEEN res.res_hotel_in_de AND res.res_hotel_out_de
+		)
+	</update>
+	<update id="updateHotelUseAt2">
+		UPDATE hotelroom hr
+		SET hr.hotel_use_at = 'Y'
+		WHERE EXISTS (
+		    SELECT 1
+		    FROM hotelres res
+		    WHERE hr.hotel_id = res.hotel_id
+		    AND res.res_hotel_out_de = CURRENT_DATE
+		    AND res.res_hotel_lateout > 0
+		)
+	</update>
+	<update id="updateHotelUseAt3">
+		UPDATE hotelroom hr
+		SET hr.hotel_use_at = 'Y'
+		WHERE EXISTS (
+		    SELECT 1
+		    FROM hotelres res1
+		    JOIN hotelres res2 ON res1.hotel_id = res2.hotel_id
+		    WHERE hr.hotel_id = res1.hotel_id
+		    AND res1.res_hotel_out_de = CURRENT_DATE
+		    AND res2.res_hotel_in_de = CURRENT_DATE
+		)
+	</update>
+	<update id="updateHotelUseAt4">
+		UPDATE hotelroom hr
+		SET hr.hotel_use_at = 'Y'
+		WHERE EXISTS (
+		    SELECT 1
+		    FROM hotelres res
+		    WHERE hr.hotel_id = res.hotel_id
+		    AND res.res_hotel_in_de = CURRENT_DATE
+		)
+	</update>
+	<update id="updateHotelUseAt5">
+		UPDATE hotelroom hr
+		SET hr.hotel_use_at = 'N'
+		WHERE NOT EXISTS (
+		    SELECT 1
+		    FROM hotelres res
+		    WHERE hr.hotel_id = res.hotel_id
+		    AND (CURRENT_DATE BETWEEN res.res_hotel_in_de AND res.res_hotel_out_de
+		         OR (res.res_hotel_out_de = CURRENT_DATE AND res.res_hotel_lateout > 0)
+		         OR (res.res_hotel_out_de = CURRENT_DATE AND EXISTS (
+		                SELECT 1 FROM hotelres r2 WHERE r2.hotel_id = res.hotel_id AND r2.res_hotel_in_de = CURRENT_DATE))
+		         OR res.res_hotel_in_de = CURRENT_DATE)
+		)
+	</update>
+
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.EmergencyDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.EmergencyDefaultVO">
+    <id column="EMER_NO" jdbcType="VARCHAR" property="emerNo" />
+    <result column="EMER_DE" jdbcType="TIMESTAMP" property="emerDe" />
+    <result column="EMER_PARTN" jdbcType="VARCHAR" property="emerPartn" />
+    <result column="FRANCHISE_ID" jdbcType="VARCHAR" property="franchiseId" />
+    <result column="EMER_REQST" jdbcType="VARCHAR" property="emerReqst" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from EMERGENCY
+    where EMER_NO = #{emerNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.EmergencyDefaultVO">
+    insert into EMERGENCY (EMER_NO, EMER_DE, EMER_PARTN, 
+      FRANCHISE_ID, EMER_REQST)
+    values (#{emerNo,jdbcType=VARCHAR}, #{emerDe,jdbcType=TIMESTAMP}, #{emerPartn,jdbcType=VARCHAR}, 
+      #{franchiseId,jdbcType=VARCHAR}, #{emerReqst,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.EmergencyDefaultVO">
+    update EMERGENCY
+    set EMER_DE = #{emerDe,jdbcType=TIMESTAMP},
+      EMER_PARTN = #{emerPartn,jdbcType=VARCHAR},
+      FRANCHISE_ID = #{franchiseId,jdbcType=VARCHAR},
+      EMER_REQST = #{emerReqst,jdbcType=VARCHAR}
+    where EMER_NO = #{emerNo,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select EMER_NO, EMER_DE, EMER_PARTN, FRANCHISE_ID, EMER_REQST
+    from EMERGENCY
+    where EMER_NO = #{emerNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select EMER_NO, EMER_DE, EMER_PARTN, FRANCHISE_ID, EMER_REQST
+    from EMERGENCY
+  </select>
+</mapper>

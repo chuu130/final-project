@@ -1,0 +1,73 @@
+.card-expand {
+	& .app-content {
+		z-index: $app-header-zindex + 100;
+		position: relative;
+		height: calc(100vh - #{$app-header-height});
+		overflow: hidden;
+	}
+}
+.card {
+	position: relative;
+	box-shadow: var(--#{$prefix}card-box-shadow);
+	
+	&.card-expand {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: $app-header-zindex + 100;
+		border-radius: 0;
+		margin: 0 !important;
+		padding: rem(5px);
+		background: $app-header-bg;
+		
+		& .card-header,
+		& .card-body {
+			border-radius: 0;
+		}
+		& .card-body {
+			flex: 1 0 0;
+			overflow: scroll;
+		}
+		
+		&:not(.border-0):before {
+			top: 5px;
+			bottom: 5px;
+			left: 20px;
+			right: 20px;
+		}
+		&:not(.border-0):after {
+			top: 20px;
+			bottom: 20px;
+			left: 5px;
+			right: 5px;
+		}
+		& .card-arrow {
+			margin: 5px;
+		}
+	}
+	& .card-header {
+		& .card-header-tabs {
+			& .nav-item {
+				& .nav-link {
+					&.active {
+						border-bottom-color: transparent;
+					}
+				}
+			}
+		}
+	}
+	& .card-body {
+		& .nav-tabs {
+			& .nav-item {
+				& .nav-link {
+					&.active {
+						background: $card-bg;
+						border-bottom-color: $card-bg;
+					}
+				}
+			}
+		}
+	}
+}

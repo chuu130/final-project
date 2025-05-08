@@ -1,0 +1,402 @@
+@charset "UTF-8";
+
+
+/* 테이블 설정 */
+.table {
+	width: 100%;
+	border-collapse: collapse; /*셀테두리 합치기*/
+}
+
+/* .table-content td { */
+/*     overflow: hidden; */
+/*     text-overflow: ellipsis; */
+/*     white-space: nowrap; */
+/* } */
+
+/* .ms-cart-pro-name a { */
+/*     display: block; */
+/*     overflow: hidden; */
+/*     text-overflow: ellipsis; */
+/*     white-space: nowrap; */
+/*     max-width: 100%; */
+/* } */
+.star-icon {
+	font-size: 24px;
+	color: lightgray;
+	cursor: pointer;
+	transition: color 0.3s;
+}
+
+.star-icon.fill {
+	color: gold;
+}
+
+.ms-ratting-star {
+	text-align: center;
+	margin-bottom: 1rem;
+}
+
+.ms-ratting-star span {
+	display: block;
+	margin-bottom: 0.5rem;
+}
+
+.ms-t-review-rating {
+	display: flex;
+	justify-content: center;
+}
+
+.ms-ratting-form input[type="file"] {
+	margin-top: 1rem;
+}
+
+/* 별점사이즈 */
+.custom-star-size .msicon {
+	font-size: 50px !important;
+}
+/* 별점 마진 */
+.text-center {
+	margin: 10px;
+}
+
+.custom-input-review {
+	font-size: 16px; /* 폰트 크기 조정 */
+	border-radius: 8px; /* 테두리 반경 조정 */
+	padding: 10px; /* 패딩 조정 */
+	border: 1px solid #ddd; /* 테두리 색상 및 두께 조정 */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+	transition: box-shadow 0.3s ease, border-color 0.3s ease;
+	/* 부드러운 전환 효과 추가 */
+	margin: 0 !important; /* 마진 제거 */
+	width: 100%; /* 필드가 컨테이너에 맞게 확장되도록 */
+}
+
+custom-input-review:focus {
+	border-color: #5b9bd5; /* 포커스 시 테두리 색상 변경 */
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* 포커스 시 그림자 강조 */
+	outline: none; /* 기본 포커스 윤곽선 제거 */
+	margin: 0 !important; /* 마진 제거 */
+}
+
+/* 커스텀 파일 업로드 필드 스타일 */
+.custom-file {
+	border-radius: 8px; /* 테두리 반경 조정 */
+	padding: 10px; /* 패딩 조정 */
+	border: 1px solid #ddd; /* 테두리 색상 및 두께 조정 */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+	transition: box-shadow 0.3s ease, border-color 0.3s ease;
+	/* 부드러운 전환 효과 추가 */
+	margin: 0 !important; /* 마진 제거 */
+	width: 100%; /* 필드가 컨테이너에 맞게 확장되도록 */
+}
+
+/* 별점 리뷰등록시 마우스를 올렸을 때 확대 */
+.star-icon:hover {
+	transform: scale(1.2);
+}
+
+.centered-content {
+	justify-content: center;
+}
+
+/* 별점 리뷰등록시 타이틀 */
+.title-style {
+	text-align: center;
+	font-weight: 500;
+}
+/* 별점 리뷰등록시 이미지 정렬*/
+.product-style {
+	display: inline-block;
+	text-align: center;
+}
+
+/* 회원 문의글 등록버튼 스타일 */
+#qnaBtn {
+	display: flex;
+	justify-content: flex-end;
+}
+
+/* 회원 문의글 테이블폼 정렬 */
+#qna-form {
+	justify-content: space-around;
+}
+
+.qna-header {
+	text-align: center;
+}
+
+.qnaBtn {
+	display: flex;
+	justify-content: flex-end;
+}
+
+#page-top1 {
+	border-top: 1px solid #fff;
+}
+
+.qna-item {
+	display: flex;
+	justify-content: space-around;
+	font-weight: 500;
+	line-height: 1;
+}
+
+.qna-item.indent {
+	margin-left: 20px; /* 답변의 경우 들여쓰기 */
+}
+
+/* textarea ck-editor 스타일적용 */
+.ck.ck-editor {
+	max-width: 700px;
+}
+
+.ck-editor__editable {
+	height: 500px;
+}
+
+#section-qna {
+	display: flex;
+	justify-content: space-around;
+}
+
+.ck-editor {
+	width: 100% !important;
+	max-width: 100% !important;
+	margin-bottom: 20px;
+}
+
+.ck-editor__editable {
+	min-height: 200px;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.ck-editor__editable:hover {
+	border-color: #007bff;
+}
+
+.ck-editor__toolbar {
+	border-bottom: 1px solid #ddd;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+}
+
+.ck-editor__toolbar .ck-button {
+	border-radius: 4px;
+}
+
+.ck-editor__toolbar .ck-button:hover {
+	background-color: #f1f1f1;
+}
+
+/* 기본 스타일 설정 */
+#section-width {
+	flex: 0 0 auto;
+	width: 100%; /* 기본 너비 100%로 설정 */
+	max-width: 800px; /* 최대 너비 설정 */
+	margin: 0 auto; /* 중앙 정렬 */
+	transition: box-shadow 0.3s, transform 0.3s;
+	/* 그림자와 변형에 대한 부드러운 전환 추가 */
+}
+
+@media ( min-width : 768px) {
+	#section-width {
+		width: 100%; /* 화면 너비가 768px 이상일 때 너비를 70%로 조정 */
+	}
+}
+
+
+#center-insert-Btn .btn:hover {
+	background-color: #0056b3; /* hover 시 배경 색상 */
+	transform: translateY(-2px); /* hover 시 버튼이 살짝 떠오르는 효과 */
+}
+
+#ctrBbsNm, #ctrBbsCn {
+	border: 1px solid #ddd;
+	border-radius: 6px; /* 모서리 둥글게 */
+	padding: 12px; /* 여백 추가 */
+	transition: border-color 0.3s, box-shadow 0.3s; /* 전환 효과 추가 */
+}
+
+#ctrBbsNm:focus, #ctrBbsCn:focus {
+	border-color: #007bff; /* 포커스 시 테두리 색상 변경 */
+	box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 포커스 시 그림자 추가 */
+}
+
+/*회원 질문게시판 등록 인풋스타일*/
+.ctrBbsNm-style {
+	height: 38px;
+}
+
+.ctrBbsType-style {
+	color: #0000008a;
+	font-size: 15px;
+	border-color: #ddd;
+}
+
+.ck-editor__editable {
+	min-height: 300px; /* 에디터의 최소 높이 증가 */
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	padding: 12px;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* 에디터에 그림자 추가 */
+	background-color: #fafafa; /* 에디터 배경 색상 설정 */
+}
+
+/* 카드 스타일 */
+.card {
+	border-radius: 8px;
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+	margin-bottom: 20px;
+	overflow: hidden;
+	transition: box-shadow 0.3s, transform 0.3s; /* 전환 효과 추가 */
+}
+
+.card:hover {
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* hover 시 그림자 강조 */
+	transform: translateY(-5px); /* hover 시 카드가 살짝 떠오르는 효과 */
+}
+
+/* 테이블 스타일 */
+.table-custom {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 20px; /* 테이블 상단 여백 추가 */
+}
+
+.table-custom th, .table-custom td {
+	padding: 16px;
+	text-align: left;
+	border-bottom: 2px solid #ddd; /* 테이블 셀 하단 테두리 두께 조정 */
+}
+
+.table-custom thead th {
+	background-color: #007bff; /* 테이블 헤더 배경 색상 */
+	color: #fff; /* 헤더 텍스트 색상 */
+	font-weight: bold;
+}
+
+.table-custom tbody tr:nth-child(even) {
+	background-color: #f9f9f9; /* 홀수 행 배경 색상 */
+}
+
+.table-custom tbody tr:hover {
+	background-color: #f1f1f1; /* hover 시 행 배경 색상 */
+}
+
+/* 페이지 제목 스타일 */
+.page-header {
+	font-size: 28px;
+	font-weight: bold;
+	margin-bottom: 20px; /* 제목 하단 여백 추가 */
+	color: #333; /* 제목 텍스트 색상 */
+}
+
+/* 브레드크럼 스타일 */
+.breadcrumb {
+	background: none;
+	padding: 0;
+	margin-bottom: 20px; /* 브레드크럼 하단 여백 추가 */
+}
+
+.breadcrumb-item {
+	display: inline;
+	font-size: 16px;
+	color: #007bff; /* 브레드크럼 텍스트 색상 */
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+	content: ">";
+	padding: 0 5px;
+}
+
+#ctrBbsCn {
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+	font-size: 18px;
+	font-weight: 500;
+}
+
+/* 공지사항 검색창 스타일설정 */
+.select-bar-box {
+	height: 40px;
+	border-radius: 7px;
+	padding: 5px;
+	color: #747b7b;
+	font-size: 13px;
+	border-color: #ddd;
+	height: 40px;
+	border: 1px solid #dee2e6;
+	border-radius: 0; /* 모서리 둥글기 제거 */
+}
+
+/* .custom-search-bar{ */
+/* 	width: 50%; */
+/* } */
+.search-align {
+	display: flex;
+	justify-content: flex-end;
+}
+
+#noticeMarket {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
+#noticeBtn-align {
+	justify-content: flex-end;
+}
+
+#noticeMarketBtn {
+	color: #000000;
+	display: flex;
+	justify-content: flex-end;
+}
+
+/* 마켓 검색바 스타일 */
+.market-searchbar {
+	margin-bottom: 16px;
+}
+
+.custom-search-bar {
+	display: flex;
+	align-items: center;
+}
+
+.custom-search-bar input {
+	height: 40px;
+	border: 1px solid #dee2e6;
+	border-right: none;
+	border-radius: 0; /* 모서리 둥글기 제거 */
+	width: 200px; /* 너비 조정 */
+}
+
+.custom-search-bar button {
+	height: 40px;
+	border: 1px solid #dee2e6;
+	border-left: none;
+	background: none;
+	padding: 0 10px;
+	border-radius: 0; /* 모서리 둥글기 제거 */
+}
+
+.search_svg {
+	width: 24px;
+	height: 24px;
+}
+
+/* 왼쪽 정렬 */
+.input-group {
+	display: flex;
+	justify-content: flex-start;
+}
+
+/* 공지사항제목 */
+.notice-sub {
+	font-size: 28px;
+	font-weight: bold;
+	position: relative;
+	display: inline-block;
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.ContractDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.ContractDefaultVO">
+    <id column="CONTRACT_NO" jdbcType="VARCHAR" property="contractNo" />
+    <result column="CONTRACT_DE" jdbcType="TIMESTAMP" property="contractDe" />
+    <result column="CONTRACT_PC" jdbcType="NUMERIC" property="contractPc" />
+    <result column="CONTRACT_PC_AT" jdbcType="VARCHAR" property="contractPcAt" />
+    <result column="COUNSEL_NO" jdbcType="VARCHAR" property="counselNo" />
+    <result column="FOUND_NO" jdbcType="VARCHAR" property="foundNo" />
+  </resultMap>
+  <delete id="deleteContract" parameterType="java.lang.String">
+    delete from CONTRACT
+    where CONTRACT_NO = #{contractNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertContract" parameterType="kr.or.ddit.vo.def.ContractDefaultVO">
+    insert into CONTRACT (CONTRACT_NO, CONTRACT_DE, CONTRACT_PC,
+      CONTRACT_PC_AT, COUNSEL_NO, FOUND_NO
+      )
+    values ('RACT'||CONTRACT_SEQ.nextval, sysdate, #{contractPc,jdbcType=NUMERIC},
+      #{contractPcAt,jdbcType=VARCHAR}, #{counselNo,jdbcType=VARCHAR}, #{foundNo,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateContract" parameterType="kr.or.ddit.vo.def.ContractDefaultVO">
+    update CONTRACT
+    set CONTRACT_DE = #{contractDe,jdbcType=TIMESTAMP},
+      CONTRACT_PC = #{contractPc,jdbcType=NUMERIC},
+      CONTRACT_PC_AT = #{contractPcAt,jdbcType=VARCHAR},
+      COUNSEL_NO = #{counselNo,jdbcType=VARCHAR},
+      FOUND_NO = #{foundNo,jdbcType=VARCHAR}
+    where CONTRACT_NO = #{contractNo,jdbcType=VARCHAR}
+  </update>
+  <select id="selectContract" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select CONTRACT_NO, CONTRACT_DE, CONTRACT_PC, CONTRACT_PC_AT, COUNSEL_NO, FOUND_NO
+    from CONTRACT
+    where CONTRACT_NO = #{contractNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectContractList" resultMap="BaseResultMap">
+    select CONTRACT_NO, CONTRACT_DE, CONTRACT_PC, CONTRACT_PC_AT, COUNSEL_NO, FOUND_NO
+    from CONTRACT
+  </select>
+</mapper>

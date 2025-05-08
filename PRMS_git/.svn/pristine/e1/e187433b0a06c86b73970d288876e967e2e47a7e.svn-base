@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.headquarter.master.mapper.FoundApproveMapper">
+
+	<select id="selectFoundApproveList">
+		WITH OTHERFOUNDAPPROVE AS (
+		    SELECT
+		            F.FOUND_NO,
+		            F.FOUND_NM,
+		            F.FOUND_TELNO,
+		            F.FOUND_EMAIL,
+		            F.FOUND_ZIP,
+		            F.FOUND_ADRES1,
+		            F.FOUND_ADRES2,
+		            F.FOUND_CN,
+		            F.FOUND_DE,
+		            F.FOUND_PLACE,
+		            F.FOUND_ATCH,
+		            F.FOUND_SIDE_SE,
+		            F.FOUND_LICENSE_AT,
+		            F.FOUND_CONFM_AT,
+		            F.EMP_NO,
+                    E.EMP_NM
+			FROM FOUND F LEFT OUTER JOIN EMPLOYEE E ON (F.EMP_NO = E.EMP_NO)
+			WHERE F.FOUND_CONFM_AT = 'Y' AND F.FOUND_DE IS NULL
+	    	ORDER BY F.ROWID DESC
+			)
+			SELECT A.*
+				FROM(
+	    		SELECT OTHERFOUNDAPPROVE.*, ROWNUM RNUM
+	    		FROM OTHERFOUNDAPPROVE
+				)A
+			WHERE RNUM BETWEEN #{firstRecord} AND #{lastRecord}
+	</select>
+
+	<select id="selectTotalRecord">
+		SELECT COUNT(*)
+		FROM FOUND F LEFT OUTER JOIN EMPLOYEE E ON (F.EMP_NO = E.EMP_NO)
+		WHERE F.FOUND_CONFM_AT = 'Y' AND F.FOUND_DE IS NULL
+  </select>
+
+  <update id="updateApproveFound">
+	UPDATE FOUND
+	SET EMP_NO = #{empNo},
+    	FOUND_DE = TO_DATE(#{foundDe}, 'MM/DD/YYYY'),
+    	FOUND_ASDE = SYSDATE
+	WHERE FOUND_NO = #{foundNo}
+  </update>
+
+</mapper>

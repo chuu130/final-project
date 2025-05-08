@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.headquarter.common.mapper.FranAuditMapper">
+	
+	<resultMap type="FranAuditVO" id="franAuditMap" autoMapping="true">
+		<id property="franchiseId" column="FRANCHISE_ID"/>
+		<association property="franchise" javaType="FranchiseDefaultVO" autoMapping="true" />
+		<association property="cmmncode" javaType="CmmncodeDefaultVO" autoMapping="true">
+			<id property="cmmnCodeId" column="CMMN_CODE_ID"/>
+		</association>
+	
+	</resultMap>
+	
+	
+	<select id="selectAuditList" resultMap="franAuditMap">
+		SELECT A.AUDIT_STTUS
+		    ,A.AUDIT_RESULT
+		    ,A.AUDIT_DE
+		    ,A.AUDIT_CONFM_AT
+		    ,A.CHECK_NO
+		    ,B.FRANCHISE_NM
+				    ,C.CMMN_CODE_NM
+				    ,B.FRANCHISE_TEL
+				    ,B.FRANCHISE_ADD1
+				    ,B.FRANCHISE_ADD2
+		FROM FRANAUDIT A INNER JOIN FRANCHISE B ON (A.FRANCHISE_ID = B.FRANCHISE_ID)
+		 INNER JOIN CMMNCODE C ON (B.FRANCHISE_AREA = C.CMMN_CODE_ID)
+		 WHERE NVL(#{date} ,TO_CHAR(SYSDATE, 'YYYY-MM')) = TO_CHAR(A.AUDIT_DE, 'YYYY-MM')
+		 ORDER BY B.FRANCHISE_ID ASC
+	</select>
+	
+	<select id="selectFranchiseAuditList" resultMap="franAuditMap">
+		SELECT A.FRANCHISE_NM
+		    ,B.CMMN_CODE_NM
+		    ,A.FRANCHISE_TEL
+		    ,A.FRANCHISE_ADD1
+		    ,A.FRANCHISE_ADD2
+		    ,A.FRANCHISE_ID
+		    ,C.AUDIT_DE
+		    ,C.AUDIT_DE "auditDeCheck"
+		    ,C.CHECK_NO
+		FROM FRANCHISE A INNER JOIN CMMNCODE B ON (A.FRANCHISE_AREA = B.CMMN_CODE_ID)
+		INNER JOIN FRANAUDIT C ON (A.FRANCHISE_ID = C.FRANCHISE_ID)
+		WHERE NVL(#{date} ,TO_CHAR(SYSDATE, 'YYYY-MM')) = TO_CHAR(C.AUDIT_DE, 'YYYY-MM')
+		ORDER BY A.FRANCHISE_ID ASC
+	</select>
+	
+	<resultMap type="CheckListVO" id="checkListMap" autoMapping="true">
+		<id property="checkNo" column="CHECK_NO"/>
+		<association property="franaudit" javaType="FranauditDefaultVO" autoMapping="true" />
+		<association property="franchise" javaType="FranchiseDefaultVO" autoMapping="true" >
+			<id property="franchiseId" column="FRANCHISE_ID"/>
+		</association>
+	</resultMap>
+	
+	
+	<select id="selectFranAuditCheckList" resultMap="checkListMap"> 
+		SELECT A.CHECK_NO
+		    ,A.CHECK_CLEAN
+		    ,A.CHECK_REVIEW
+		    ,A.CHECK_STOCK
+		    ,A.CHECK_KIND
+		    ,A.CHECK_JOB
+		    ,A.CHECK_SAFETY
+		    ,A.CHECK_STORE
+		    ,B.FRANCHISE_ID
+		    ,B.AUDIT_DE
+		    ,C.FRANCHISE_NM
+		FROM CHECKLIST A INNER JOIN FRANAUDIT B ON (A.CHECK_NO = B.CHECK_NO)
+		INNER JOIN FRANCHISE C ON (B.FRANCHISE_ID = C.FRANCHISE_ID)
+		WHERE B.FRANCHISE_ID = #{franId}
+		AND #{franDe} = TO_CHAR(B.AUDIT_DE, 'YYYY-MM')
+	</select>
+	
+	
+	<select id="selectFranchiseDetail">
+		SELECT *
+		FROM FRANCHISE
+		WHERE FRANCHISE_ID = #{franId}
+	</select>
+	
+	
+	<insert id="insertCheckListNo">
+		INSERT INTO CHECKLIST(CHECK_NO)
+		VALUES(CHECKLIST_SEQ.NEXTVAL)
+	</insert>
+	
+	<update id="updateAuditCheckNo">
+		UPDATE FRANAUDIT 
+		SET CHECK_NO = CHECKLIST_SEQ.CURRVAL
+		WHERE FRANCHISE_ID = #{franId}
+		    AND #{franDe} = TO_CHAR(AUDIT_DE, 'YYYY-MM')
+	</update>
+	
+	<update id="updateFranAudit">
+	
+		UPDATE FRANAUDIT
+		SET AUDIT_STTUS = #{text}
+		    ,AUDIT_RESULT = #{audit}
+		    ,AUDIT_CONFM_AT = #{confirm}
+		WHERE CHECK_NO = #{checkNo}
+	
+	</update>
+	
+	<update id="updateCheckList">
+		UPDATE CHECKLIST
+		SET CHECK_CLEAN = #{r1}
+		    ,CHECK_REVIEW = #{r2}
+		    ,CHECK_STOCK = #{r3}
+		    ,CHECK_KIND = #{r4}
+		    ,CHECK_JOB = #{r5}
+		    ,CHECK_SAFETY = #{r6}
+		    ,CHECK_STORE = #{r7}
+		WHERE CHECK_NO = #{checkNo}
+	</update>
+</mapper>

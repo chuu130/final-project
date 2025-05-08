@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.FavoritesDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.FavoritesDefaultVO">
+    <id column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+    <result column="MEM_NO" jdbcType="VARCHAR" property="memNo" />
+    <result column="LIKE_AT" jdbcType="VARCHAR" property="likeAt" />
+    <result column="LIEK_DE" jdbcType="VARCHAR" property="liekDe" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from FAVORITES
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.FavoritesDefaultVO">
+    insert into FAVORITES (PROD_ID, MEM_NO, LIKE_AT, 
+      LIEK_DE)
+    values (#{prodId,jdbcType=VARCHAR}, #{memNo,jdbcType=VARCHAR}, #{likeAt,jdbcType=VARCHAR}, 
+      #{liekDe,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.FavoritesDefaultVO">
+    update FAVORITES
+    set MEM_NO = #{memNo,jdbcType=VARCHAR},
+      LIKE_AT = #{likeAt,jdbcType=VARCHAR},
+      LIEK_DE = #{liekDe,jdbcType=VARCHAR}
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select PROD_ID, MEM_NO, LIKE_AT, LIEK_DE
+    from FAVORITES
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select PROD_ID, MEM_NO, LIKE_AT, LIEK_DE
+    from FAVORITES
+  </select>
+</mapper>

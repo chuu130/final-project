@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<!-- 트랜잭션을 관리한다. -->
+	<!-- 대부분 트랜잭션 매니저 아이디는 transactionManager -->
+	<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" 
+		  id="transactionManager"
+   		  p:dataSource-ref="dataSource"
+	/>
+	
+	
+<!-- 	<tx:annotation-driven/> -->
+
+
+	<!-- advice bean을 등록한다. -->
+	<!-- 위에있는 transactionManager를 주입한다.  -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 조회는 트랜잭션관리가 필요없다. ==> read-only="true" -->
+			<tx:method name="retrieve*" read-only="true"/>
+			<tx:method name="read*" read-only="true"/>
+			<tx:method name="get*" read-only="true"/>
+			
+			<!-- (수정,삭제,등록)로직은 트랜잭션 관리가 필요하다. propagation="REQUIRED" -->
+			<tx:method name="create*" propagation="REQUIRED"/>
+			<tx:method name="modify*" propagation="REQUIRED"/>
+			<tx:method name="remove*" propagation="REQUIRED"/>
+			
+		</tx:attributes>
+	</tx:advice>
+	
+</beans>

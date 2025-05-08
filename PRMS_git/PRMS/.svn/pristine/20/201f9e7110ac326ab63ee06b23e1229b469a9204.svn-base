@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.franchise.franchisee.mapper.FranFranchiseMapper">
+
+	<select id="selectFranFranchiseList">
+	    WITH EMPLOYEE_FRANCHISE_AREA AS (
+		    SELECT
+		        C.CMMN_CODE_NM,
+		        F.FRANCHISE_ID
+		    FROM
+		        EMPLOYEE E
+		    INNER JOIN
+		        FRANCHISE F
+		    ON
+		        E.FRANCHISE_ID = F.FRANCHISE_ID
+		    INNER JOIN
+		        CMMNCODE C
+		    ON
+		        F.FRANCHISE_AREA = C.CMMN_CODE_ID
+		    WHERE
+		        E.EMP_ID = #{empId}
+		),
+		OTHERSTAFFFRANCHISE AS (
+		    SELECT
+		        F.FRANCHISE_ID,
+		        F.FRANCHISE_AREA,
+		        F.FRANCHISE_NM,
+		        F.FRANCHISE_TEL,
+		        F.FRANCHISE_ZIP,
+		        F.FRANCHISE_ADD1,
+		        F.FRANCHISE_ADD2,
+		        F.FRANCHISE_EMAIL,
+		        F.FRANCHISE_YN_AT,
+		        F.FRANCHISE_HOTEL_CO,
+		        F.EMP_NO,
+		        C.CMMN_CODE_NM
+		    FROM
+		        FRANCHISE F
+		    INNER JOIN
+		        CMMNCODE C
+		    ON
+		        F.FRANCHISE_AREA = C.CMMN_CODE_ID
+		    WHERE
+		        C.CMMN_CODE_NM = (SELECT CMMN_CODE_NM FROM EMPLOYEE_FRANCHISE_AREA)
+		        AND F.FRANCHISE_ID != (SELECT FRANCHISE_ID FROM EMPLOYEE_FRANCHISE_AREA)
+		        AND F.FRANCHISE_YN_AT = 'N'
+		    ORDER BY
+		        F.ROWID ASC
+		)
+		SELECT A.*
+		FROM (
+		    SELECT OTHERSTAFFFRANCHISE.*, ROWNUM RNUM
+		    FROM OTHERSTAFFFRANCHISE
+		) A
+		WHERE RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+	</select>
+
+	<select id="selectTotalRecord">
+		WITH EMPLOYEE_FRANCHISE_AREA AS (
+		    SELECT
+		        C.CMMN_CODE_NM,
+		        F.FRANCHISE_ID
+		    FROM
+		        EMPLOYEE E
+		    INNER JOIN
+		        FRANCHISE F
+		    ON
+		        E.FRANCHISE_ID = F.FRANCHISE_ID
+		    INNER JOIN
+		        CMMNCODE C
+		    ON
+		        F.franchise_area = C.CMMN_CODE_ID
+		    WHERE
+		        E.EMP_ID = #{empId}
+		)
+		SELECT COUNT(*)
+		FROM
+		    FRANCHISE F
+		INNER JOIN
+		    CMMNCODE C
+		ON
+		    F.franchise_area = C.CMMN_CODE_ID
+		WHERE
+		    C.CMMN_CODE_NM = (SELECT CMMN_CODE_NM FROM EMPLOYEE_FRANCHISE_AREA)
+		    AND F.franchise_id != (SELECT franchise_id FROM EMPLOYEE_FRANCHISE_AREA)
+		    AND F.FRANCHISE_YN_AT = 'N'
+	</select>
+
+	<select id="selectMyFranchiseInfo">
+		SELECT *
+		FROM FRANCHISE
+		WHERE FRANCHISE_ID = #{franchiseId}
+	</select>
+
+	<select id="selectKakaoFranchiseList">
+		WITH EMPLOYEE_FRANCHISE_AREA AS (
+		    SELECT
+		        C.CMMN_CODE_NM,
+		        F.FRANCHISE_ID
+		    FROM
+		        EMPLOYEE E
+		    INNER JOIN
+		        FRANCHISE F
+		    ON
+		        E.FRANCHISE_ID = F.FRANCHISE_ID
+		    INNER JOIN
+		        CMMNCODE C
+		    ON
+		        F.FRANCHISE_AREA = C.CMMN_CODE_ID
+		    WHERE
+		        E.EMP_ID = #{empId}
+		)
+	    SELECT
+	        F.FRANCHISE_ID,
+	        F.FRANCHISE_AREA,
+	        F.FRANCHISE_NM,
+	        F.FRANCHISE_TEL,
+	        F.FRANCHISE_ZIP,
+	        F.FRANCHISE_ADD1,
+	        F.FRANCHISE_ADD2,
+	        F.FRANCHISE_EMAIL,
+	        F.FRANCHISE_YN_AT,
+	        F.FRANCHISE_HOTEL_CO,
+	        F.EMP_NO,
+	        C.CMMN_CODE_NM
+	    FROM
+	        FRANCHISE F
+	    INNER JOIN
+	        CMMNCODE C
+	    ON
+	        F.FRANCHISE_AREA = C.CMMN_CODE_ID
+	    WHERE
+	        C.CMMN_CODE_NM = (SELECT CMMN_CODE_NM FROM EMPLOYEE_FRANCHISE_AREA)
+	        AND F.FRANCHISE_ID != (SELECT FRANCHISE_ID FROM EMPLOYEE_FRANCHISE_AREA)
+	        AND F.FRANCHISE_YN_AT = 'N'
+	</select>
+
+</mapper>

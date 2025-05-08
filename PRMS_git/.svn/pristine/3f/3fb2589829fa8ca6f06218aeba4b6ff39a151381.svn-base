@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.BeautyoptionDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.BeautyoptionDefaultVO">
+    <id column="OPTION_NO" jdbcType="VARCHAR" property="optionNo" />
+    <result column="RES_BEAUTY_NO" jdbcType="VARCHAR" property="resBeautyNo" />
+    <result column="OPTION_CN" jdbcType="VARCHAR" property="optionCn" />
+    <result column="OPTION_PRICE" jdbcType="NUMERIC" property="optionPrice" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from BEAUTYOPTION
+    where OPTION_NO = #{optionNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.BeautyoptionDefaultVO">
+    insert into BEAUTYOPTION (OPTION_NO, RES_BEAUTY_NO, OPTION_CN, 
+      OPTION_PRICE)
+    values (#{optionNo,jdbcType=VARCHAR}, #{resBeautyNo,jdbcType=VARCHAR}, #{optionCn,jdbcType=VARCHAR}, 
+      #{optionPrice,jdbcType=NUMERIC})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.BeautyoptionDefaultVO">
+    update BEAUTYOPTION
+    set RES_BEAUTY_NO = #{resBeautyNo,jdbcType=VARCHAR},
+      OPTION_CN = #{optionCn,jdbcType=VARCHAR},
+      OPTION_PRICE = #{optionPrice,jdbcType=NUMERIC}
+    where OPTION_NO = #{optionNo,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select OPTION_NO, RES_BEAUTY_NO, OPTION_CN, OPTION_PRICE
+    from BEAUTYOPTION
+    where OPTION_NO = #{optionNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select OPTION_NO, RES_BEAUTY_NO, OPTION_CN, OPTION_PRICE
+    from BEAUTYOPTION
+  </select>
+</mapper>

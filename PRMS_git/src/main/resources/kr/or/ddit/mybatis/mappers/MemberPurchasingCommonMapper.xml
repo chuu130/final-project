@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.market.member.mapper.MemberPurchasingCommonMapper">
+
+	<!-- 마켓 회원의 기본배송지 정보를 조회하는 쿼리 -->
+	<select id="selectMemberAddress" parameterType="string" resultType="MemberaddressDefaultVO">
+		SELECT
+			MEM_ADD_ID
+			, MEM_NO
+			, MEM_ZIP
+			, MEM_ADRES1
+			, MEM_ADRES2
+			, MEM_BASS_YN
+		FROM MEMBERADDRESS
+		WHERE MEM_NO = #{memNo} AND MEM_BASS_YN = 'Y'
+	</select>
+
+	<!-- 마켓 회원의 모든 배송지 정보를 조회하는 쿼리 -->
+	<select id="selectMemberAddressList" parameterType="string" resultType="MemberaddressDefaultVO">
+		SELECT
+			MEM_ADD_ID
+			, MEM_NO
+			, MEM_ZIP
+			, MEM_ADRES1
+			, MEM_ADRES2
+			, MEM_BASS_YN
+		FROM MEMBERADDRESS
+		WHERE MEM_NO = #{memNo}
+	</select>
+
+	<!-- 회원이 가진 쿠폰을 조회하는 쿼리 -->
+	<resultMap type="MycouponDefaultVO" id="myCouponMap" autoMapping="true">
+		<association property="coupon" javaType="CouponDefaultVO" autoMapping="true"/>
+	</resultMap>
+
+	<select id="selectMemberCouponList" parameterType="string" resultMap="myCouponMap">
+		SELECT
+		    MYCOUPON_NO
+		    , MEM_NO
+		    , A.COUPON_NO
+		    , COUPON_DELYN
+		    , COUPON_NM
+		    , COUPON_DC
+		    , COUPON_PD
+		    , COUPON_DE
+		    , COUPON_ATCH
+		    , COUPON_DISCOUNT
+		    , EVENT_ID
+		FROM
+		    MYCOUPON A INNER JOIN COUPON B ON (A.COUPON_NO = B.COUPON_NO)
+		WHERE
+		    MEM_NO = #{memNo}
+		    AND COUPON_DELYN = 'N'
+		    <![CDATA[AND COUPON_PD <= SYSDATE]]>
+	</select>
+
+
+	<!-- 신규 주문번호를 생성하는 쿼리 -->
+	<select id="selectNewOrderId" resultType="string">
+<!-- 		SELECT 'MO' || LPAD(TO_CHAR(MAX(TO_NUMBER(NVL(SUBSTR(ORDER_DTLS_ID,3,20),0))) + 1),18,'0') -->
+<!-- 		FROM MEMORDER -->
+		SELECT 'MO' || LPAD(TO_CHAR(MEMORDER_SEQ.NEXTVAL),18,'0') FROM DUAL
+	</select>
+
+
+
+	<!-- 주문정보와 상세주문정보를 추가하는 쿼리 -->
+	<insert id="insertOrder">
+		<selectKey order="BEFORE" keyProperty="odDt" resultType="string">
+ 			SELECT  MAX(NVL(SUBSTR(ORDER_PROD_DETAIL,3,20),0)) + 1
+ 			FROM ORDERDT
+		</selectKey>
+
+		INSERT ALL
+			INTO MEMORDER
+			(
+			    ORDER_DTLS_ID
+			    , MEM_NO
+			    , ORDER_DE
+			)
+			VALUES
+			(
+			    #{newMemOrder.orderDtlsId, jdbcType=VARCHAR}
+			    ,#{newMemOrder.memNo, jdbcType=VARCHAR}
+			    ,SYSDATE
+			)
+		<if test="newMemOrder.orderDtList neq null">
+			<foreach collection="newMemOrder.orderDtList" item="order" index="idx">
+				INTO ORDERDT
+				(
+				    ORDER_PROD_DETAIL
+				    , ORDER_DTLS_ID
+				    , PROD_ID
+				    , ORDER_PROD_QY
+				    , ORDER_PROD_AMOUNT
+				)
+				VALUES
+				(
+					 'OD' || LPAD(TO_CHAR(NVL(#{odDt},0) + #{idx}),18,'0')
+					, #{newMemOrder.orderDtlsId, jdbcType=VARCHAR}
+					, #{order.prodId, jdbcType=VARCHAR}
+					, #{order.orderProdQy, jdbcType=NUMERIC}
+					, #{order.orderProdAmount, jdbcType=NUMERIC}
+				)
+			</foreach>
+		</if>
+		SELECT * FROM DUAL
+	</insert>
+
+
+
+
+	<!-- 결제정보를 추가하는 쿼리 -->
+	<insert id="insertPayment" parameterType="PaymentDefaultVO" flushCache="true" keyProperty="payId" keyColumn="PAY_ID">
+		<selectKey order="BEFORE" resultType="string" keyProperty="payId">
+			SELECT 'PY' || LPAD(TO_CHAR(PAYMENT_SEQ.NEXTVAL),10,'0') FROM DUAL
+		</selectKey>
+
+		INSERT INTO PAYMENT (
+		    PAY_ID
+		    , PAY_MILEAGE_DISCOUNT
+		    , PAY_COUPON_DISCOUNT
+		    , PAY_TOTAL_DISCOUNT
+		    , PAY_METHOD
+		    , PAY_AMOUNT
+		    , ORDER_DTLS_ID
+		    , PAY_PREMILEAGE_DISCOUNT
+		    , PAY_MILEAGE_TOTAL_DISCOUNT
+		    , PAY_PG
+		    , PAY_COMPANY
+		    , PAY_MLSAVINGS
+		    , MYCOUPON_NO
+		) VALUES (
+		    #{payId, jdbcType=VARCHAR}
+		    , #{payMileageDiscount, jdbcType=NUMERIC}
+		    , #{payCouponDiscount, jdbcType=NUMERIC}
+		    , #{payTotalDiscount, jdbcType=NUMERIC}
+		    , #{payMethod, jdbcType=VARCHAR}
+		    , #{payAmount, jdbcType=NUMERIC}
+		    , #{orderDtlsId, jdbcType=VARCHAR}
+		    , #{payPremileageDiscount, jdbcType=NUMERIC}
+		    , #{payMileageTotalDiscount, jdbcType=NUMERIC}
+		    , #{payPg, jdbcType=VARCHAR}
+		    , #{payCompany, jdbcType=VARCHAR}
+		    , #{payMlsavings, jdbcType=NUMERIC}
+		    , #{mycouponNo, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!-- 사용한 쿠폰정보를 수정하는 쿼리 -->
+	<update id="updateMyCoupon" parameterType="MycouponDefaultVO">
+		UPDATE MYCOUPON
+		SET COUPON_DELYN = 'Y'
+		WHERE MYCOUPON_NO = #{mycouponNo} AND MEM_NO = #{memNo}
+	</update>
+
+	<!-- 마일리지 정보를 업데이트하는 쿼리 -->
+	<update id="updateMemberMileage" parameterType="MemberDefaultVO">
+		UPDATE MEMBER
+		SET MEM_ML = MEM_ML + #{memMl}
+		WHERE MEM_NO = #{memNo}
+	</update>
+
+	<!-- 배송정보를 추가하는 쿼리 -->
+	<insert id="insertDelivery" parameterType="DeliveryDefaultVO">
+		INSERT INTO DELIVERY (
+		    ORDER_DTLS_ID
+		    , DLVY_ADRES1
+		    , DLVY_ADRES2
+		    , DLVY_ZIP
+		) VALUES (
+		    #{orderDtlsId, jdbcType=VARCHAR}
+		    , #{dlvyAdres1, jdbcType=VARCHAR}
+		    , #{dlvyAdres2, jdbcType=VARCHAR}
+		    , #{dlvyZip, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!-- 전체 주문내역을 조회하는 쿼리 -->
+	<resultMap type="MemorderDefaultVO" id="memOrderMap" autoMapping="true">
+		<id property="orderDtlsId" column="ORDER_DTLS_ID"/>
+		<association property="payment" javaType="PaymentDefaultVO" autoMapping="true" />
+		<association property="delivery" javaType="DeliveryDefaultVO" autoMapping="true" />
+		<collection property="orderDtList" ofType="OrderdtDefaultVO" autoMapping="true">
+			<association property="prod" javaType="ProdDefaultVO" autoMapping="true" />
+		</collection>
+	</resultMap>
+
+	<select id="selectMemOrderList" parameterType="string" resultMap="memOrderMap">
+		SELECT
+		    A.ORDER_DTLS_ID
+		    , MEM_NO
+		    , ORDER_DE
+		    , PAY_ID
+		    , PAY_MILEAGE_DISCOUNT
+		    , PAY_COUPON_DISCOUNT
+		    , PAY_TOTAL_DISCOUNT
+		    , PAY_METHOD
+		    , PAY_AMOUNT
+		    , PAY_PREMILEAGE_DISCOUNT
+		    , PAY_MILEAGE_TOTAL_DISCOUNT
+		    , PAY_PG
+		    , PAY_COMPANY
+		    , ORDER_PROD_DETAIL
+		    , C.PROD_ID
+		    , ORDER_PROD_QY
+		    , ORDER_PROD_AMOUNT
+		    , PROD_SLE_NM
+		    , PROD_SLE_PC
+		    , PROD_DC
+		    , PROD_IMAGE
+		    , DLVY_ZIP
+		    , DLVY_ADRES1
+		    , DLVY_ADRES2
+		    , DLVY_STTUS
+		FROM
+		    MEMORDER A INNER JOIN PAYMENT B ON (A.ORDER_DTLS_ID = B.ORDER_DTLS_ID)
+		    LEFT OUTER JOIN ORDERDT C ON (A.ORDER_DTLS_ID = C.ORDER_DTLS_ID)
+		    INNER JOIN PROD D ON (C.PROD_ID = D.PROD_ID)
+		    INNER JOIN DELIVERY F ON (A.ORDER_DTLS_ID = F.ORDER_DTLS_ID)
+		WHERE MEM_NO = #{memNo}
+		ORDER BY A.ORDER_DTLS_ID DESC
+	</select>
+
+
+	<!-- 환불시, 이전 쿠폰정보로 업데이트하는 쿼리 -->
+	<update id="updateMyCouponBefore" parameterType="MycouponDefaultVO">
+		UPDATE MYCOUPON
+		SET COUPON_DELYN = 'N'
+		WHERE MYCOUPON_NO = #{mycouponNo} AND MEM_NO = #{memNo}
+	</update>
+
+
+	<!-- 환불시, 배송상태를 업데이트하는 쿼리 -->
+	<update id="updateDeliveryStatus" parameterType="DeliveryDefaultVO">
+		UPDATE DELIVERY
+		SET DLVY_STTUS = '취소완료'
+		WHERE ORDER_DTLS_ID = #{orderDtlsId}
+	</update>
+
+
+	<!-- 환불시, 본사수량을 복구하는 쿼리 -->
+	<update id="updateOrderDtList" parameterType="OrderdtDefaultVO">
+		UPDATE ADMININV
+		SET ADMININV_QY = ADMININV_QY + #{orderProdQy}
+		WHERE PROD_ID = #{prodId}
+	</update>
+	
+	
+	<!-- 주문정보를 환불상태로 변경하는 쿼리 -->
+	<update id="updateMarketOrderIncomeRefund" parameterType="string">
+		UPDATE MEMORDER
+		SET INCOME_STATUS = 'R'
+		WHERE ORDER_DTLS_ID = #{orderDtlsId}
+	</update>
+
+
+	<!-- 본사매출에 반영되지않은 주문정보를 조회하는 쿼리 -->
+	<select id="selectNoneIncomeMemOrderList" resultMap="memOrderMap">
+		SELECT
+		    A.ORDER_DTLS_ID
+		    , MEM_NO
+		    , ORDER_DE
+		    , PAY_ID
+		    , PAY_MILEAGE_DISCOUNT
+		    , PAY_COUPON_DISCOUNT
+		    , PAY_TOTAL_DISCOUNT
+		    , PAY_METHOD
+		    , PAY_AMOUNT
+		    , PAY_PREMILEAGE_DISCOUNT
+		    , MYCOUPON_NO
+		    , PAY_MILEAGE_TOTAL_DISCOUNT
+		    , PAY_PG
+		    , PAY_COMPANY
+		    , ORDER_PROD_DETAIL
+		    , C.PROD_ID
+		    , ORDER_PROD_QY
+		    , ORDER_PROD_AMOUNT
+		    , PROD_SLE_NM
+		    , PROD_SLE_PC
+		    , PROD_DC
+		    , PROD_IMAGE
+		    , DLVY_ZIP
+		    , DLVY_ADRES1
+		    , DLVY_ADRES2
+		    , DLVY_STTUS
+		FROM
+		    MEMORDER A INNER JOIN PAYMENT B ON (A.ORDER_DTLS_ID = B.ORDER_DTLS_ID)
+		    LEFT OUTER JOIN ORDERDT C ON (A.ORDER_DTLS_ID = C.ORDER_DTLS_ID)
+		    INNER JOIN PROD D ON (C.PROD_ID = D.PROD_ID)
+		    INNER JOIN DELIVERY F ON (A.ORDER_DTLS_ID = F.ORDER_DTLS_ID)
+		WHERE INCOME_STATUS = 'N'
+	</select>
+
+
+	<!-- 온라인 다건 주문금액을 본사 매출에 반영하는 메소드 -->
+	<insert id="insertMarketOrderAmountToSelling" parameterType="MemorderDefaultVO">
+		INSERT INTO SELLING
+		(
+		    SELNG_NO
+		    , HQ_ID
+		    , SELNG_SE
+		    , SELNG_NM
+		    , SELNG_CN
+		    , SELNG_DE
+		    , SELNG_AMOUNT
+		)
+		VALUES
+		(
+		    FN_GET_SELLING_SEQ
+		    , 'HEAD1'
+		    , (SELECT CMMN_CODE_ID FROM CMMNCODE WHERE CMMN_CODE_NM = '쇼핑몰판매수익')
+		    , '쇼핑몰판매수익'
+		    , (SELECT
+		        LISTAGG(PROD_SLE_NM || '(' || TO_CHAR(ORDER_PROD_QY) || '개)',', ') WITHIN GROUP (ORDER BY PROD_SLE_NM)
+		      FROM
+		        MEMORDER A LEFT OUTER JOIN ORDERDT B ON (A.ORDER_DTLS_ID = B.ORDER_DTLS_ID)
+		        INNER JOIN PROD C ON (B.PROD_ID = C.PROD_ID)
+		        WHERE A.ORDER_DTLS_ID = #{orderDtlsId}
+		      )
+		    , SYSDATE
+		    , #{payment.payAmount}
+		)
+	</insert>
+	
+	
+	<!-- 본사매출에 반영한 후, 해당 주문정보를 반영상태로 표시하는 쿼리 -->
+	<update id="updateMarketOrderIncomeSuccess" parameterType="string">
+		UPDATE MEMORDER
+		SET INCOME_STATUS = 'Y'
+		WHERE ORDER_DTLS_ID = #{orderDtlsId}
+	</update>
+	
+	
+	<!-- 환불한 주문정보를 조회하는 메소드 -->
+	<select id="selectRefundIncomeMemOrderList" resultMap="memOrderMap">
+		SELECT
+		    A.ORDER_DTLS_ID
+		    , MEM_NO
+		    , ORDER_DE
+		    , PAY_ID
+		    , PAY_MILEAGE_DISCOUNT
+		    , PAY_COUPON_DISCOUNT
+		    , PAY_TOTAL_DISCOUNT
+		    , PAY_METHOD
+		    , PAY_AMOUNT
+		    , PAY_PREMILEAGE_DISCOUNT
+		    , MYCOUPON_NO
+		    , PAY_MILEAGE_TOTAL_DISCOUNT
+		    , PAY_PG
+		    , PAY_COMPANY
+		    , ORDER_PROD_DETAIL
+		    , C.PROD_ID
+		    , ORDER_PROD_QY
+		    , ORDER_PROD_AMOUNT
+		    , PROD_SLE_NM
+		    , PROD_SLE_PC
+		    , PROD_DC
+		    , PROD_IMAGE
+		    , DLVY_ZIP
+		    , DLVY_ADRES1
+		    , DLVY_ADRES2
+		    , DLVY_STTUS
+		FROM
+		    MEMORDER A INNER JOIN PAYMENT B ON (A.ORDER_DTLS_ID = B.ORDER_DTLS_ID)
+		    LEFT OUTER JOIN ORDERDT C ON (A.ORDER_DTLS_ID = C.ORDER_DTLS_ID)
+		    INNER JOIN PROD D ON (C.PROD_ID = D.PROD_ID)
+		    INNER JOIN DELIVERY F ON (A.ORDER_DTLS_ID = F.ORDER_DTLS_ID)
+		WHERE INCOME_STATUS = 'R'
+	</select>
+	
+	
+	<!-- 쇼핑몰 환불금액을 본사 매출에 반영하는 쿼리 -->
+	<insert id="insertMarketOrderRefundAmountToAdminExp" parameterType="MemorderDefaultVO">
+		INSERT INTO ADMINEXP (
+		    ADMINEXP_NO
+		    , HQ_ID
+		    , COMN_CODE_ID
+		    , ADMINEXP_NM
+		    , ADMINEXP_CN
+		    , ADMINEXP_DE
+		    , ADMINEXP_AMOUNT
+		)
+		VALUES(
+		    'AEXP' || ADMINEXP_SEQ.NEXTVAL
+		    , 'HEAD1'
+		    , (SELECT CMMN_CODE_ID FROM CMMNCODE WHERE CMMN_CODE_NM = '쇼핑몰 환불금액')
+		    , '쇼핑몰 환불금액'
+		    , (SELECT
+		        LISTAGG(PROD_SLE_NM || '(' || TO_CHAR(ORDER_PROD_QY) || '개)',', ') WITHIN GROUP (ORDER BY PROD_SLE_NM)
+		      FROM
+		        MEMORDER A LEFT OUTER JOIN ORDERDT B ON (A.ORDER_DTLS_ID = B.ORDER_DTLS_ID)
+		        INNER JOIN PROD C ON (B.PROD_ID = C.PROD_ID)
+		        WHERE A.ORDER_DTLS_ID = #{orderDtlsId}
+		      )
+		    , SYSDATE
+		    , #{payment.payAmount}
+		)
+	</insert>
+
+</mapper>

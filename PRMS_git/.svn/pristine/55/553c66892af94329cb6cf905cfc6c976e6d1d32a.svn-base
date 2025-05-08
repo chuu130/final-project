@@ -1,0 +1,67 @@
+.pace {
+	pointer-events: none;
+	user-select: none;
+	
+	& .pace-progress {
+		position: fixed;
+		z-index: 2000;
+		top: $app-header-height - rem(1px);
+		width: 100%;
+		height: rem(3px);
+		background: var(--#{$prefix}theme);
+		
+		@if $enable-rtl {
+			left: 100%;
+		} @else {
+			right: 100%;
+		}
+		
+		.pace-top & {
+			top: 0;
+		}
+	}
+	& .pace-progress-inner {
+		display: block;
+		position: absolute;
+		width: rem(100px);
+		height: 100%;
+		opacity: 1.0;
+		box-shadow: none;
+		
+		@if $enable-rtl {
+			left: 0;
+		} @else {
+			right: 0;
+		}
+	}
+	& .pace-activity {
+		display: block;
+		position: fixed;
+		z-index: 2000;
+		top: $app-header-height + $spacer;
+		width: rem(24px);
+		height: rem(24px);
+		border: rem(3px) solid rgba(var(--#{$prefix}component-color-rgb), .15);
+		border-top-color: var(--#{$prefix}theme);
+		border-radius: 26px;
+		
+		@if $enable-rtl {
+			border-right-color: rgba(var(--#{$prefix}component-color-rgb), .15);
+			left: $spacer;
+		} @else {
+			border-left-color: rgba(var(--#{$prefix}component-color-rgb), .15);
+			right: $spacer;
+		}
+		.pace-top & {
+			top: $spacer;
+		}
+	}
+	&.pace-inactive {
+		display: none;
+	}
+}
+
+@keyframes pace-spinner {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}

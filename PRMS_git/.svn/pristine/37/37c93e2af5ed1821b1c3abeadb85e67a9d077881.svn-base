@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.websocket.alerm.mapper.AlermMapper">
+
+	<!-- 알림을 저장하는 쿼리 -->
+	<insert id="insertAlerm" parameterType="AlermVO">
+		INSERT INTO ALERM (
+		    ALERM_NO
+		    , ALERM_SENDER_ID
+		    , ALERM_RECIVER_ID
+		    , ALERM_KIND
+		    , ALERM_CONTENT
+		    , ALERM_STATUS
+		) VALUES (
+		    ALERM_SEQ.NEXTVAL
+		    , #{alermSenderId}
+		    , #{alermReciverId}
+		    , #{alermKind}
+		    , #{alermContent}
+		    ,'N'
+		)
+	</insert>
+
+
+	<!-- 알림을 읽었을시, 알람상태를 변경하는 쿼리 -->
+	<delete id="updateAlerm" parameterType="AlermVO">
+		DELETE FROM ALERM
+		WHERE ALERM_NO = #{alermNo}
+	</delete>
+
+
+<!-- 알림상태 변경 데이터 삭제하지 않는 버전 -->
+<!-- 	<update id="updateAlerm" parameterType="AlermVO"> -->
+<!-- 		UPDATE ALERM -->
+<!-- 		SET ALERM_STATUS = 'Y' -->
+<!-- 		WHERE ALERM_NO = #{alermNo} -->
+<!-- 	</update> -->
+
+
+
+	<!-- 알림을 보낸 송신자 정보를 조회하는 쿼리 -->
+	<select id="selectSenderInfo" parameterType="AlermVO" resultType="EmployeeDefaultVO">
+		SELECT
+		    EMP_NO,
+		    EMP_ID,
+		    EMP_PASSWORD,
+		    EMP_NM,
+		    EMP_SALARY,
+		    EMP_ZIP,
+		    EMP_ADRES1,
+		    EMP_ADRES2,
+		    EMP_EMAIL,
+		    EMP_TELNO,
+		    EMP_CL,
+		    EMP_BIR,
+		    EMP_DE,
+		    EMP_LEAVE_AT,
+		    EMP_LICENSE_AT,
+		    EMP_PROFILE,
+		    EMP_RESUME,
+		    HQ_ID,
+		    FRANCHISE_ID
+		FROM
+		    EMPLOYEE
+		WHERE EMP_ID = #{alermSenderId}
+	</select>
+
+
+	<!-- 내가 받은 알람을 조회하는 쿼리 -->
+	<select id="selectMyAlerm" parameterType="AlermVO">
+		SELECT
+			ALERM_NO
+		    , ALERM_SENDER_ID
+		    , ALERM_RECIVER_ID
+		    , ALERM_KIND
+		    , ALERM_CONTENT
+		    , ALERM_STATUS
+		    , ALERM_SEND_DT
+		FROM ALERM
+		WHERE ALERM_RECIVER_ID = #{alermReciverId}
+		ORDER BY ALERM_SEND_DT DESC
+	</select>
+
+</mapper>

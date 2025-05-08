@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.BeautytimeDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.BeautytimeDefaultVO">
+    <id column="RES_BEAUTY_DE" jdbcType="VARCHAR" property="resBeautyDe" />
+    <id column="EMP_NO" jdbcType="VARCHAR" property="empNo" />
+    <id column="FRANCHISE_ID" jdbcType="VARCHAR" property="franchiseId" />
+    <result column="RES_HR1" jdbcType="VARCHAR" property="resHr1" />
+    <result column="RES_HR2" jdbcType="VARCHAR" property="resHr2" />
+    <result column="RES_HR3" jdbcType="VARCHAR" property="resHr3" />
+    <result column="RES_HR4" jdbcType="VARCHAR" property="resHr4" />
+    <result column="RES_HR5" jdbcType="VARCHAR" property="resHr5" />
+    <result column="RES_HR6" jdbcType="VARCHAR" property="resHr6" />
+    <result column="RES_HR7" jdbcType="VARCHAR" property="resHr7" />
+    <result column="RES_HR8" jdbcType="VARCHAR" property="resHr8" />
+    <result column="RES_HR9" jdbcType="VARCHAR" property="resHr9" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from BEAUTYTIME
+    where RES_BEAUTY_DE = #{resBeautyDe,jdbcType=VARCHAR}
+      and EMP_NO = #{empNo,jdbcType=VARCHAR}
+      and FRANCHISE_ID = #{franchiseId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertBeautyTime" parameterType="kr.or.ddit.vo.def.BeautytimeDefaultVO">
+    insert into BEAUTYTIME (RES_BEAUTY_DE, EMP_NO, FRANCHISE_ID)
+    values (#{resBeautyDe,jdbcType=VARCHAR}, #{empNo,jdbcType=VARCHAR}, #{franchiseId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateBeautyTime" parameterType="kr.or.ddit.vo.def.BeautytimeDefaultVO">
+    update BEAUTYTIME
+    set RES_HR1 = #{resHr1,jdbcType=VARCHAR},
+      RES_HR2 = #{resHr2,jdbcType=VARCHAR},
+      RES_HR3 = #{resHr3,jdbcType=VARCHAR},
+      RES_HR4 = #{resHr4,jdbcType=VARCHAR},
+      RES_HR5 = #{resHr5,jdbcType=VARCHAR},
+      RES_HR6 = #{resHr6,jdbcType=VARCHAR},
+      RES_HR7 = #{resHr7,jdbcType=VARCHAR},
+      RES_HR8 = #{resHr8,jdbcType=VARCHAR},
+      RES_HR9 = #{resHr9,jdbcType=VARCHAR}
+    where RES_BEAUTY_DE = #{resBeautyDe,jdbcType=VARCHAR}
+      and EMP_NO = #{empNo,jdbcType=VARCHAR}
+      and FRANCHISE_ID = #{franchiseId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectBeautyTime" parameterType="HashMap" resultMap="BaseResultMap">
+    select RES_BEAUTY_DE, EMP_NO, FRANCHISE_ID, RES_HR1, RES_HR2, RES_HR3, RES_HR4, RES_HR5,
+    RES_HR6, RES_HR7, RES_HR8, RES_HR9
+    from BEAUTYTIME
+    where RES_BEAUTY_DE = #{resBeautyDe,jdbcType=VARCHAR}
+      and EMP_NO = #{empNo,jdbcType=VARCHAR}
+      and FRANCHISE_ID = #{franchiseId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select RES_BEAUTY_DE, EMP_NO, FRANCHISE_ID, RES_HR1, RES_HR2, RES_HR3, RES_HR4, RES_HR5,
+    RES_HR6, RES_HR7, RES_HR8, RES_HR9
+    from BEAUTYTIME
+  </select>
+  <select id="selectByDate" resultMap="BaseResultMap">
+  	select RES_BEAUTY_DE, EMP_NO, FRANCHISE_ID, RES_HR1, RES_HR2, RES_HR3, RES_HR4, RES_HR5,
+    	RES_HR6, RES_HR7, RES_HR8, RES_HR9
+	from BEAUTYTIME
+	where RES_BEAUTY_DE = #{resBeautyDe,jdbcType=VARCHAR} and FRANCHISE_ID = #{franchiseId,jdbcType=VARCHAR}
+  </select>
+</mapper>

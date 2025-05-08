@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.HotelresDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.HotelresDefaultVO">
+    <id column="RES_HOTEL_NO" jdbcType="VARCHAR" property="resHotelNo" />
+    <result column="PET_NO" jdbcType="VARCHAR" property="petNo" />
+    <result column="RES_HOTEL_REGIST_DE" jdbcType="DATE" property="resHotelRegistDe" />
+    <result column="RES_HOTEL_STTUS" jdbcType="VARCHAR" property="resHotelSttus" />
+    <result column="HOTEL_ID" jdbcType="VARCHAR" property="hotelId" />
+    <result column="RES_HOTEL_IN_DE" jdbcType="VARCHAR" property="resHotelInDe" />
+    <result column="RES_HOTEL_OUT_DE" jdbcType="VARCHAR" property="resHotelOutDe" />
+    <result column="RES_HOTEL_IN_TIME" jdbcType="VARCHAR" property="resHotelInTime" />
+    <result column="RES_HOTEL_PRICE" jdbcType="NUMERIC" property="resHotelPrice" />
+    <result column="RES_HOTEL_LATEOUT" jdbcType="NUMERIC" property="resHotelLateout" />
+    <result column="RES_HOTEL_NIGHT" jdbcType="NUMERIC" property="resHotelNight" />
+    <result column="MEM_NO" jdbcType="VARCHAR" property="memNo" />
+    <result column="FRANCHISE_NM" jdbcType="VARCHAR" property="franchiseNm" />
+	<result column="CMMN_CODE_NM" jdbcType="VARCHAR" property="cmmnCodeNm" />
+    <result column="HOTEL_NM" jdbcType="VARCHAR" property="hotelNm" />
+    <association property="mem" javaType="MemberDefaultVO" autoMapping="true" />
+    <association property="pet" javaType="PetDefaultVO" autoMapping="true" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from HOTELRES
+    where RES_HOTEL_NO = #{resHotelNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertHotelRes" parameterType="kr.or.ddit.vo.def.HotelresDefaultVO">
+  	<selectKey keyProperty="resHotelNo" resultType="String" order="BEFORE">
+        SELECT hotelres_seq.NEXTVAL FROM DUAL
+    </selectKey>
+    insert into HOTELRES (RES_HOTEL_NO, PET_NO, RES_HOTEL_REGIST_DE,
+      RES_HOTEL_STTUS, HOTEL_ID, RES_HOTEL_IN_DE,
+      RES_HOTEL_OUT_DE, RES_HOTEL_IN_TIME, RES_HOTEL_PRICE, RES_HOTEL_LATEOUT, RES_HOTEL_NIGHT
+      )
+    values (#{resHotelNo}, #{petNo,jdbcType=VARCHAR}, SYSDATE,
+      'COMN09DT001', #{hotelId,jdbcType=VARCHAR}, #{resHotelInDe,jdbcType=VARCHAR},
+      #{resHotelOutDe,jdbcType=VARCHAR}, #{resHotelInTime,jdbcType=VARCHAR}, #{resHotelPrice,jdbcType=NUMERIC},
+      #{resHotelLateout,jdbcType=NUMERIC}, #{resHotelNight,jdbcType=NUMERIC}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.HotelresDefaultVO">
+    update HOTELRES
+    set PET_NO = #{petNo,jdbcType=VARCHAR},
+      RES_HOTEL_REGIST_DE = #{resHotelRegistDe,jdbcType=TIMESTAMP},
+      RES_HOTEL_STTUS = #{resHotelSttus,jdbcType=VARCHAR},
+      HOTEL_ID = #{hotelId,jdbcType=VARCHAR},
+      RES_HOTEL_IN_DE = #{resHotelInDe,jdbcType=VARCHAR},
+      RES_HOTEL_OUT_DE = #{resHotelOutDe,jdbcType=VARCHAR},
+      RES_HOTEL_IN_TIME = #{resHotelInTime,jdbcType=VARCHAR},
+      RES_HOTEL_PRICE = #{resHotelPrice,jdbcType=NUMERIC},
+      RES_HOTEL_LATEOUT = #{resHotelLateout,jdbcType=NUMERIC}
+    where RES_HOTEL_NO = #{resHotelNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateHotelRes" parameterType="java.lang.String">
+  	update HOTELRES
+  	set RES_HOTEL_STTUS = 'COMN09DT003'
+  	where RES_HOTEL_NO = #{resHotelNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateAllHotelResStatus">
+	UPDATE hotelres
+	SET res_hotel_sttus = 'COMN09DT002'
+	WHERE res_hotel_out_de = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+  	AND res_hotel_lateout = 0
+	AND res_hotel_sttus != 'COMN09DT002'
+  </update>
+  <update id="updateLateoutHotelResStatus">
+	UPDATE hotelres
+	SET res_hotel_sttus = 'COMN09DT002'
+	WHERE res_hotel_out_de = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+	AND res_hotel_lateout != 0
+	AND res_hotel_sttus != 'COMN09DT002'
+  </update>
+  <select id="selectResInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select RES_HOTEL_NO, PET_NO, RES_HOTEL_REGIST_DE, RES_HOTEL_STTUS, HOTEL_ID, RES_HOTEL_IN_DE,
+    RES_HOTEL_OUT_DE, RES_HOTEL_IN_TIME, RES_HOTEL_PRICE, RES_HOTEL_LATEOUT, RES_HOTEL_NIGHT
+    from HOTELRES
+    where RES_HOTEL_NO = #{resHotelNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select RES_HOTEL_NO, PET_NO, RES_HOTEL_REGIST_DE, RES_HOTEL_STTUS, HOTEL_ID, RES_HOTEL_IN_DE,
+    RES_HOTEL_OUT_DE, RES_HOTEL_IN_TIME, RES_HOTEL_PRICE, RES_HOTEL_LATEOUT, RES_HOTEL_NIGHT
+    from HOTELRES
+  </select>
+  <select id="selectResInfoDetail" parameterType="java.lang.String" resultMap="BaseResultMap">
+	select res.res_hotel_no, res.res_hotel_price, res.res_hotel_regist_de, res.res_hotel_sttus,
+                    res.res_hotel_in_de, res.res_hotel_out_de, res.res_hotel_lateout, res.res_hotel_night,
+			  		res.res_hotel_in_time, mem.mem_no, fran.franchise_nm, room.hotel_nm, room.hotel_id, pet.pet_nm, mem.mem_nm,
+                    pet.pet_weight, code.cmmn_code_nm, mem.mem_telno
+				from hotelres res
+				            INNER JOIN pet pet ON (res.pet_no = pet.pet_no)
+                            INNER JOIN cmmncode code ON (pet.pet_knd = code.cmmn_code_id)
+                            INNER JOIN hotelroom room ON (res.hotel_id = room.hotel_id)
+                            INNER JOIN franchise fran ON (room.franchise_id = fran.franchise_id)
+				            INNER JOIN member mem ON (pet.mem_no = mem.mem_no)
+				where res.res_hotel_no = #{resHotelNo,jdbcType=VARCHAR}
+				ORDER BY res.res_hotel_regist_de DESC
+  </select>
+  <select id="selectTotalRecordMem" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM hotelres res
+		        INNER JOIN pet pet ON (res.pet_no = pet.pet_no)
+		        INNER JOIN member mem ON (pet.mem_no = mem.mem_no)
+		WHERE mem.mem_no = #{memNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectResListByMem" parameterType="HashMap" resultMap="BaseResultMap">
+	select *
+		from(
+		    select A.*, ROWNUM AS RNUM
+            from(
+			  	select res.res_hotel_no, res.res_hotel_price, res.res_hotel_regist_de, res.res_hotel_sttus,
+                    res.res_hotel_in_de, res.res_hotel_out_de, res.res_hotel_lateout, res.res_hotel_night,
+			  		res.res_hotel_in_time, mem.mem_no, fran.franchise_nm, code.cmmn_code_nm, room.hotel_nm
+				from hotelres res
+                            INNER JOIN cmmncode code ON (res.res_hotel_sttus = code.cmmn_code_id)
+				            INNER JOIN pet pet ON (res.pet_no = pet.pet_no)
+                            INNER JOIN hotelroom room ON (res.hotel_id = room.hotel_id)
+                            INNER JOIN franchise fran ON (room.franchise_id = fran.franchise_id)
+				            INNER JOIN member mem ON (pet.mem_no = mem.mem_no)
+				where mem.mem_no = #{memNo,jdbcType=VARCHAR}
+				ORDER BY res.res_hotel_regist_de DESC
+				)A
+			)
+		where RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+  </select>
+  <select id="selectTotalRecordFran" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM hotelres res
+		        INNER JOIN hotelroom room ON (res.hotel_id = room.hotel_id)
+		WHERE room.franchise_id = #{franchiseId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectResListByFran" parameterType="HashMap" resultMap="BaseResultMap">
+	SELECT *
+		FROM (
+		    SELECT A.*, ROWNUM AS RNUM
+		    FROM (
+		        SELECT res.res_hotel_no, res.res_hotel_price, res.res_hotel_regist_de, res.res_hotel_sttus,
+		               res.res_hotel_in_de, res.res_hotel_out_de, res.res_hotel_lateout, res.res_hotel_night,
+		               res.res_hotel_in_time, mem.mem_no, fran.franchise_nm, code.cmmn_code_nm, room.hotel_nm, room.hotel_id, pet.pet_nm, mem.mem_nm, pet.pet_weight,
+		               CASE
+		                   WHEN res.res_hotel_in_de = TO_CHAR(SYSDATE, 'YYYY-MM-DD') THEN 1  -- Check-in date is today
+		                   WHEN res.res_hotel_out_de = TO_CHAR(SYSDATE, 'YYYY-MM-DD') THEN 2  -- Check-out date is today
+		                   ELSE 3  -- All other dates
+		               END AS sort_priority
+		        FROM hotelres res
+		                 INNER JOIN cmmncode code ON (res.res_hotel_sttus = code.cmmn_code_id)
+		                 INNER JOIN pet pet ON (res.pet_no = pet.pet_no)
+		                 INNER JOIN hotelroom room ON (res.hotel_id = room.hotel_id)
+		                 INNER JOIN franchise fran ON (room.franchise_id = fran.franchise_id)
+		                 INNER JOIN member mem ON (pet.mem_no = mem.mem_no)
+		        WHERE fran.franchise_id = #{franchiseId,jdbcType=VARCHAR}
+		        ORDER BY
+		            sort_priority ASC,              -- 우선순위로 정렬 (오늘 날짜가 가장 위)
+		            res.res_hotel_in_de DESC,       -- 날짜 순으로 내림차순 정렬
+		            res.res_hotel_in_time ASC       -- 시간 순으로 오름차순 정렬
+		    ) A
+		)
+		WHERE RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+
+
+  </select>
+  <select id="selectTotalRecordFran1" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM hotelres res
+		        INNER JOIN hotelroom room ON (res.hotel_id = room.hotel_id)
+		WHERE room.franchise_id = #{franchiseId,jdbcType=VARCHAR}
+			and res.res_hotel_sttus = 'COMN09DT001'
+  </select>
+  <select id="selectResListByFran1" parameterType="HashMap" resultMap="BaseResultMap">
+	select *
+		from(
+		    select A.*, ROWNUM AS RNUM
+            from(
+			  	select res.res_hotel_no, res.res_hotel_price, res.res_hotel_regist_de, res.res_hotel_sttus,
+                    res.res_hotel_in_de, res.res_hotel_out_de, res.res_hotel_lateout, res.res_hotel_night,
+			  		res.res_hotel_in_time, mem.mem_no, fran.franchise_nm, code.cmmn_code_nm, room.hotel_nm, room.hotel_id, pet.pet_nm, mem.mem_nm, pet.pet_weight,
+			  		CASE
+			            WHEN res.res_hotel_in_de = TO_CHAR(SYSDATE, 'YYYY-MM-DD') THEN 1  -- Check-in date is today
+		                   WHEN res.res_hotel_out_de = TO_CHAR(SYSDATE, 'YYYY-MM-DD') THEN 2  -- Check-out date is today
+		                   ELSE 3  -- All other dates
+		               END AS sort_priority
+				from hotelres res
+                            INNER JOIN cmmncode code ON (res.res_hotel_sttus = code.cmmn_code_id)
+				            INNER JOIN pet pet ON (res.pet_no = pet.pet_no)
+                            INNER JOIN hotelroom room ON (res.hotel_id = room.hotel_id)
+                            INNER JOIN franchise fran ON (room.franchise_id = fran.franchise_id)
+				            INNER JOIN member mem ON (pet.mem_no = mem.mem_no)
+				where fran.franchise_id = #{franchiseId,jdbcType=VARCHAR}
+					and res.res_hotel_sttus = 'COMN09DT001'
+				ORDER BY sort_priority ASC,              -- 우선순위로 정렬 (오늘 날짜가 가장 위)
+		            	res.res_hotel_in_de DESC,       -- 날짜 순으로 내림차순 정렬
+						res.res_hotel_in_time ASC       -- 시간 순으로 오름차순 정렬
+				)A
+			)
+		where RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+  </select>
+  <select id="selectTotalRecordFran2" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM hotelres res
+		        INNER JOIN hotelroom room ON (res.hotel_id = room.hotel_id)
+		WHERE room.franchise_id = #{franchiseId,jdbcType=VARCHAR}
+			and res.res_hotel_sttus = 'COMN09DT002'
+  </select>
+  <select id="selectResListByFran2" parameterType="HashMap" resultMap="BaseResultMap">
+	select *
+		from(
+		    select A.*, ROWNUM AS RNUM
+            from(
+			  	select res.res_hotel_no, res.res_hotel_price, res.res_hotel_regist_de, res.res_hotel_sttus,
+                    res.res_hotel_in_de, res.res_hotel_out_de, res.res_hotel_lateout, res.res_hotel_night,
+			  		res.res_hotel_in_time, mem.mem_no, fran.franchise_nm, code.cmmn_code_nm, room.hotel_nm, room.hotel_id, pet.pet_nm, mem.mem_nm, pet.pet_weight,
+			  		CASE
+			            WHEN res.res_hotel_in_de = TO_CHAR(SYSDATE, 'YYYY-MM-DD') THEN 1  -- Check-in date is today
+		                WHEN res.res_hotel_out_de = TO_CHAR(SYSDATE, 'YYYY-MM-DD') THEN 2  -- Check-out date is today
+		                   ELSE 3  -- All other dates
+		               END AS sort_priority
+				from hotelres res
+                            INNER JOIN cmmncode code ON (res.res_hotel_sttus = code.cmmn_code_id)
+				            INNER JOIN pet pet ON (res.pet_no = pet.pet_no)
+                            INNER JOIN hotelroom room ON (res.hotel_id = room.hotel_id)
+                            INNER JOIN franchise fran ON (room.franchise_id = fran.franchise_id)
+				            INNER JOIN member mem ON (pet.mem_no = mem.mem_no)
+				where fran.franchise_id = #{franchiseId,jdbcType=VARCHAR}
+					and res.res_hotel_sttus = 'COMN09DT002'
+				ORDER BY sort_priority ASC,              -- 우선순위로 정렬 (오늘 날짜가 가장 위)
+		            	res.res_hotel_in_de DESC,       -- 날짜 순으로 내림차순 정렬
+						res.res_hotel_in_time ASC       -- 시간 순으로 오름차순 정렬
+				)A
+			)
+		where RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+  </select>
+  <select id="selectTotalRecordFran3" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM hotelres res
+		        INNER JOIN hotelroom room ON (res.hotel_id = room.hotel_id)
+		WHERE room.franchise_id = #{franchiseId,jdbcType=VARCHAR}
+			and res.res_hotel_sttus = 'COMN09DT003'
+  </select>
+  <select id="selectResListByFran3" parameterType="HashMap" resultMap="BaseResultMap">
+	select *
+		from(
+		    select A.*, ROWNUM AS RNUM
+            from(
+			  	select res.res_hotel_no, res.res_hotel_price, res.res_hotel_regist_de, res.res_hotel_sttus,
+                    res.res_hotel_in_de, res.res_hotel_out_de, res.res_hotel_lateout, res.res_hotel_night,
+			  		res.res_hotel_in_time, mem.mem_no, fran.franchise_nm, code.cmmn_code_nm, room.hotel_nm, room.hotel_id, pet.pet_nm, mem.mem_nm, pet.pet_weight,
+			  		CASE
+			            WHEN res.res_hotel_in_de = TO_CHAR(SYSDATE, 'YYYY-MM-DD') THEN 1  -- Check-in date is today
+		                   WHEN res.res_hotel_out_de = TO_CHAR(SYSDATE, 'YYYY-MM-DD') THEN 2  -- Check-out date is today
+		                   ELSE 3  -- All other dates
+		               END AS sort_priority
+				from hotelres res
+                            INNER JOIN cmmncode code ON (res.res_hotel_sttus = code.cmmn_code_id)
+				            INNER JOIN pet pet ON (res.pet_no = pet.pet_no)
+                            INNER JOIN hotelroom room ON (res.hotel_id = room.hotel_id)
+                            INNER JOIN franchise fran ON (room.franchise_id = fran.franchise_id)
+				            INNER JOIN member mem ON (pet.mem_no = mem.mem_no)
+				where fran.franchise_id = #{franchiseId,jdbcType=VARCHAR}
+					and res.res_hotel_sttus = 'COMN09DT003'
+				ORDER BY sort_priority ASC,              -- 우선순위로 정렬 (오늘 날짜가 가장 위)
+		            	res.res_hotel_in_de DESC,       -- 날짜 순으로 내림차순 정렬
+						res.res_hotel_in_time ASC       -- 시간 순으로 오름차순 정렬
+				)A
+			)
+		where RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+  </select>
+  <select id="selectResByPetNo">
+	 select res.res_hotel_no, res.res_hotel_price, res.res_hotel_regist_de, res.res_hotel_sttus,
+                    res.res_hotel_in_de, res.res_hotel_out_de, res.res_hotel_lateout, res.res_hotel_night,
+			  		res.res_hotel_in_time, room.hotel_nm
+				from hotelres res
+                            INNER JOIN hotelroom room ON (res.hotel_id = room.hotel_id)
+				where res.pet_no = #{petNo,jdbcType=VARCHAR}
+  </select>
+  <insert id="insertHotelResExp" parameterType="HotelresDefaultVO">
+  	INSERT INTO EXPENSE (
+		    FEXPS_NO,
+		    FRANCHISEE_ID,
+		    FEXPS_SE,
+		    FEXPS_NM,
+		    FEXPS_CN,
+		    FEXPS_DE,
+		    FEXPS_AMOUNT
+		)
+		SELECT
+		    'FEXPS' || EXPENSE_SEQ.NEXTVAL,
+		    fran.franchise_id,
+		    'COMN16DT005',
+		    '호텔예약 환불비',
+		    room.hotel_nm,
+		    SYSDATE,
+		    res.res_hotel_price+res.res_hotel_lateout
+		FROM hotelres res
+			INNER JOIN hotelroom room ON (res.hotel_id = room.hotel_id)
+            INNER JOIN franchise fran ON (room.franchise_id = fran.franchise_id)
+        WHERE res.res_hotel_no = #{resHotelNo,jdbcType=VARCHAR}
+  </insert>
+  <insert id="insertHotelResSell" parameterType="HotelresDefaultVO">
+  	INSERT INTO FRANSELLING (
+		    FSEL_NO,
+		    FRANCHISEE_ID,
+		    FSEL_SE,
+		    FSEL_NM,
+		    FSEL_CN,
+		    FSEL_DE,
+		    FSEL_AMOUNT
+		)
+		SELECT
+		    'FSEL' || FRANSELLING_SEQ.NEXTVAL,
+		    fran.franchise_id,
+		    'COMN18DT004',
+		    '호텔예약 판매비',
+		    room.hotel_nm,
+		    SYSDATE,
+		    res.res_hotel_price+res.res_hotel_lateout
+		FROM hotelres res
+			INNER JOIN hotelroom room ON (res.hotel_id = room.hotel_id)
+            INNER JOIN franchise fran ON (room.franchise_id = fran.franchise_id)
+        WHERE res.res_hotel_no = #{resHotelNo,jdbcType=VARCHAR}
+  </insert>
+</mapper>

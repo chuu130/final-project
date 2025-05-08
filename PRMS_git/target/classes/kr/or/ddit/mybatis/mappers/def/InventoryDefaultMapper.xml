@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.InventoryDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.InventoryDefaultVO">
+    <id column="FIV_ID" jdbcType="VARCHAR" property="fivId" />
+    <result column="FIV_QY" jdbcType="NUMERIC" property="fivQy" />
+    <result column="FRANCHISE_ID" jdbcType="VARCHAR" property="franchiseId" />
+    <result column="FRANPROD_ID" jdbcType="VARCHAR" property="franprodId" />
+  </resultMap>
+  <delete id="deleteInventory" parameterType="java.lang.String">
+    delete from INVENTORY
+    where FIV_ID = #{fivId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertInventory" parameterType="kr.or.ddit.vo.def.InventoryDefaultVO">
+    insert into INVENTORY (FIV_ID, FIV_QY, FRANCHISE_ID,
+      FRANPROD_ID)
+    values (seq_inventory.nextval, #{fivQy,jdbcType=NUMERIC}, #{franchiseId,jdbcType=VARCHAR},
+      #{franprodId,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateInventory" parameterType="kr.or.ddit.vo.def.InventoryDefaultVO">
+    update INVENTORY
+    set FIV_QY = #{fivQy,jdbcType=NUMERIC},
+      FRANCHISE_ID = #{franchiseId,jdbcType=VARCHAR},
+      FRANPROD_ID = #{franprodId,jdbcType=VARCHAR}
+    where FIV_ID = #{fivId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectInventory" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select FIV_ID, FIV_QY, FRANCHISE_ID, FRANPROD_ID
+    from INVENTORY
+    where FIV_ID = #{fivId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectInventoryList" resultMap="BaseResultMap">
+    select FIV_ID, FIV_QY, FRANCHISE_ID, FRANPROD_ID
+    from INVENTORY
+  </select>
+  <select id="selectInvenPk" parameterType="kr.or.ddit.vo.def.InventoryDefaultVO">
+	select *
+	from inventory
+	where franprod_id = #{franprodId} AND franchise_id = #{franchiseId}
+  </select>
+  <select id="CheckPk" parameterType="kr.or.ddit.vo.def.InventoryDefaultVO">
+	select count(fIV_ID)
+	from inventory
+	where franprod_id = #{franprodId} AND franchise_id = #{franchiseId}
+  </select>
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.MemorderDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.MemorderDefaultVO">
+    <id column="ORDER_DTLS_ID" jdbcType="VARCHAR" property="orderDtlsId" />
+    <result column="MEM_NO" jdbcType="VARCHAR" property="memNo" />
+    <result column="ORDER_DE" jdbcType="TIMESTAMP" property="orderDe" />
+    <result column="FRANCHISEE_ID" jdbcType="VARCHAR" property="franchiseeId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from MEMORDER
+    where ORDER_DTLS_ID = #{orderDtlsId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.MemorderDefaultVO">
+    insert into MEMORDER (ORDER_DTLS_ID, MEM_NO, ORDER_DE, 
+      FRANCHISEE_ID)
+    values (#{orderDtlsId,jdbcType=VARCHAR}, #{memNo,jdbcType=VARCHAR}, #{orderDe,jdbcType=TIMESTAMP}, 
+      #{franchiseeId,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.MemorderDefaultVO">
+    update MEMORDER
+    set MEM_NO = #{memNo,jdbcType=VARCHAR},
+      ORDER_DE = #{orderDe,jdbcType=TIMESTAMP},
+      FRANCHISEE_ID = #{franchiseeId,jdbcType=VARCHAR}
+    where ORDER_DTLS_ID = #{orderDtlsId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select ORDER_DTLS_ID, MEM_NO, ORDER_DE, FRANCHISEE_ID
+    from MEMORDER
+    where ORDER_DTLS_ID = #{orderDtlsId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ORDER_DTLS_ID, MEM_NO, ORDER_DE, FRANCHISEE_ID
+    from MEMORDER
+  </select>
+</mapper>

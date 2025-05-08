@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.PaymentDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.PaymentDefaultVO">
+    <id column="PAY_ID" jdbcType="VARCHAR" property="payId" />
+    <result column="PAY_MILEAGE_DISCOUNT" jdbcType="NUMERIC" property="payMileageDiscount" />
+    <result column="PAY_COUPON_DISCOUNT" jdbcType="NUMERIC" property="payCouponDiscount" />
+    <result column="PAY_TOTAL_DISCOUNT" jdbcType="NUMERIC" property="payTotalDiscount" />
+    <result column="PAY_METHOD" jdbcType="VARCHAR" property="payMethod" />
+    <result column="PAY_AMOUNT" jdbcType="NUMERIC" property="payAmount" />
+    <result column="ORDER_DTLS_ID" jdbcType="VARCHAR" property="orderDtlsId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from PAYMENT
+    where PAY_ID = #{payId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.PaymentDefaultVO">
+    insert into PAYMENT (PAY_ID, PAY_MILEAGE_DISCOUNT, PAY_COUPON_DISCOUNT, 
+      PAY_TOTAL_DISCOUNT, PAY_METHOD, PAY_AMOUNT, 
+      ORDER_DTLS_ID)
+    values (#{payId,jdbcType=VARCHAR}, #{payMileageDiscount,jdbcType=NUMERIC}, #{payCouponDiscount,jdbcType=NUMERIC}, 
+      #{payTotalDiscount,jdbcType=NUMERIC}, #{payMethod,jdbcType=VARCHAR}, #{payAmount,jdbcType=NUMERIC}, 
+      #{orderDtlsId,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.PaymentDefaultVO">
+    update PAYMENT
+    set PAY_MILEAGE_DISCOUNT = #{payMileageDiscount,jdbcType=NUMERIC},
+      PAY_COUPON_DISCOUNT = #{payCouponDiscount,jdbcType=NUMERIC},
+      PAY_TOTAL_DISCOUNT = #{payTotalDiscount,jdbcType=NUMERIC},
+      PAY_METHOD = #{payMethod,jdbcType=VARCHAR},
+      PAY_AMOUNT = #{payAmount,jdbcType=NUMERIC},
+      ORDER_DTLS_ID = #{orderDtlsId,jdbcType=VARCHAR}
+    where PAY_ID = #{payId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select PAY_ID, PAY_MILEAGE_DISCOUNT, PAY_COUPON_DISCOUNT, PAY_TOTAL_DISCOUNT, PAY_METHOD, 
+    PAY_AMOUNT, ORDER_DTLS_ID
+    from PAYMENT
+    where PAY_ID = #{payId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select PAY_ID, PAY_MILEAGE_DISCOUNT, PAY_COUPON_DISCOUNT, PAY_TOTAL_DISCOUNT, PAY_METHOD, 
+    PAY_AMOUNT, ORDER_DTLS_ID
+    from PAYMENT
+  </select>
+</mapper>

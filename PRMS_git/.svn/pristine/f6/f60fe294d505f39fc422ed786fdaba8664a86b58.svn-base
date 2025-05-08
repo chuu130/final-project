@@ -1,0 +1,91 @@
+document.addEventListener("DOMContentLoaded", () => {
+
+	const contextPath = document.body.dataset.contextPath;
+	const franBoardListTag = document.querySelector("#franBoardList");
+	const commUrl = `${contextPath}/main/franchisee/franBoard`;
+	const pagingArea = document.querySelector("#pagingArea");
+	const searchData = document.querySelector("#searchData");
+
+	let page = 1;
+	let searchWord = "";
+
+
+	/* 가맹점게시판 UI를 뽑는함수 */
+	const franBoardUI = (franBoard) => {
+		return `
+			<tr style="cursor:pointer" class="franBoardRecord" data-fran-board-no=${franBoard.franBoardNo}>
+				<td class="text-center align-middle">${franBoard.franBoardNo}</td>
+				<td class="text-center align-middle">${franBoard.franBoardTitle}</td>
+				<td class="text-center align-middle">${franBoard.empId}</td>
+				<td class="text-center align-middle">${franBoard.franBoardDt.join("/")}</td>
+			</tr>
+		`;
+	}
+
+	/* 가맹점게시판을 조회하는 함수 */
+	const showFranBoardList = async () => {
+
+		let jsonData = await axios.get(`${commUrl}/api/list?page=${page}&searchWord=${searchWord}`);
+		console.log(jsonData);
+		let franBoardList = jsonData.data.franBoardList;
+
+		let franBoardTags = franBoardList.map(franBoardUI).join("\n");
+		franBoardListTag.innerHTML = franBoardTags;
+
+		pagingArea.innerHTML = jsonData.data.pagingHTML;
+
+		// 레코드 클릭시 상세페이지로 이동하는 이벤트를 추가한다.
+		let franBoardRecordList = document.querySelectorAll(".franBoardRecord");
+		franBoardRecordList.forEach((franBoardRecord) => {
+			franBoardRecord.addEventListener("click",(e) => {
+
+				let currTarget = e.target;
+//				console.log(e.target);
+
+				const trTag = document.createElement("tr");
+
+				// tr태그 위치로 이동한다.
+				while(trTag.tagName != currTarget.tagName) {
+					currTarget = currTarget.parentElement;
+				}
+
+				// 게시글번호를 가져온다.
+				let franBoardNo = currTarget.dataset.franBoardNo;
+//				console.log(franBoardNo);
+
+				// 해당 게시글의 상세페이지로 이동한다.
+				location.replace(`${commUrl}/detail/${franBoardNo}`);
+			})
+		});
+	}
+
+	showFranBoardList();
+
+	/* 페이지클릭시 발생하는 이벤트 */
+	pagingArea.addEventListener("click", (e) => {
+
+		// 클릭한 페이지정보를 구한다.
+		page = e.target.dataset.page;
+
+		// 가맹점게시판을 조회한다.
+		showFranBoardList();
+	});
+
+	/* 검색시 발생하는 이벤트 */
+	searchData.addEventListener("keyup", (e) => {
+
+		// 검색어 입력후 엔터를 클릭했을 때
+		if(e.keyCode == 13) {
+
+			// 입력값을 가져온 후 셋팅한다.
+			searchWord = e.target.value;
+
+			// 1페이지로 셋팅한다.
+			page = 1;
+
+			// 가맹점게시판을 조회한다.
+			showFranBoardList();
+		}
+	});
+
+});

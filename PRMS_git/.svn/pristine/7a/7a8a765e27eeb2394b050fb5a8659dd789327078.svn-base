@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.BeautyresDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.BeautyresDefaultVO">
+    <id column="RES_BEAUTY_NO" jdbcType="VARCHAR" property="resBeautyNo" />
+    <result column="PET_NO" jdbcType="VARCHAR" property="petNo" />
+    <result column="RES_BEAUTY_REGIST_DE" jdbcType="DATE" property="resBeautyRegistDe" />
+    <result column="RES_BEAUTY_STTUS" jdbcType="VARCHAR" property="resBeautySttus" />
+    <result column="FRANCHISE_ID" jdbcType="VARCHAR" property="franchiseId" />
+    <result column="EMP_NO" jdbcType="VARCHAR" property="empNo" />
+    <result column="RES_BEAUTY_DE" jdbcType="VARCHAR" property="resBeautyDe" />
+    <result column="RES_BEAUTY_TIME" jdbcType="VARCHAR" property="resBeautyTime" />
+    <result column="RES_BEAUTY_PRICE" jdbcType="NUMERIC" property="resBeautyPrice" />
+    <result column="RES_OPTION" jdbcType="VARCHAR" property="resOption" />
+    <result column="RES_OPTION_PRICE" jdbcType="NUMERIC" property="resOptionPrice" />
+    <result column="MEM_NO" jdbcType="VARCHAR" property="memNo" />
+    <result column="MEM_NM" jdbcType="VARCHAR" property="memNm" />
+    <result column="FRANCHISE_NM" jdbcType="VARCHAR" property="franchiseNm" />
+    <result column="CMMN_CODE_NM" jdbcType="VARCHAR" property="cmmnCodeNm" />
+    <result column="FRANREVIEW_SJ" property="franreviewSj"/>
+	<result column="FRANREVIEW_CN" property="franreviewCn"/>
+	<result column="FRANREVIEW_DE" property="franreviewDe"/>
+	<result column="FRANREVIEW_IMAGE" property="franreviewImage"/>
+	<result column="FRANREVIEW_SCORE" property="franreviewScore"/>
+	<result column="FRANREVIEW_SE" property="franreviewSe"/>
+    <association property="mem" javaType="MemberDefaultVO" autoMapping="true" />
+    <association property="pet" javaType="PetDefaultVO" autoMapping="true" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from BEAUTYRES
+    where RES_BEAUTY_NO = #{resBeautyNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertBeautyRes" parameterType="kr.or.ddit.vo.def.BeautyresDefaultVO">
+  	<selectKey keyProperty="resBeautyNo" resultType="String" order="BEFORE">
+        SELECT beautyres_seq.NEXTVAL FROM DUAL
+    </selectKey>
+    insert into BEAUTYRES (RES_BEAUTY_NO, PET_NO, RES_BEAUTY_REGIST_DE,
+      RES_BEAUTY_STTUS, FRANCHISE_ID, EMP_NO,
+      RES_BEAUTY_DE, RES_BEAUTY_TIME, RES_BEAUTY_PRICE, RES_OPTION, RES_OPTION_PRICE
+      )
+    values (#{resBeautyNo}, #{petNo,jdbcType=VARCHAR}, SYSDATE,
+      'COMN09DT001', #{franchiseId,jdbcType=VARCHAR}, #{empNo,jdbcType=VARCHAR},
+      #{resBeautyDe,jdbcType=VARCHAR}, #{resBeautyTime,jdbcType=VARCHAR}, #{resBeautyPrice,jdbcType=NUMERIC}
+      , #{resOption,jdbcType=VARCHAR}, #{resOptionPrice,jdbcType=NUMERIC}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.BeautyresDefaultVO">
+    update BEAUTYRES
+    set PET_NO = #{petNo,jdbcType=VARCHAR},
+      RES_BEAUTY_REGIST_DE = #{resBeautyRegistDe,jdbcType=DATE},
+      RES_BEAUTY_STTUS = #{resBeautySttus,jdbcType=VARCHAR},
+      FRANCHISE_ID = #{franchiseId,jdbcType=VARCHAR},
+      EMP_NO = #{empNo,jdbcType=VARCHAR},
+      RES_BEAUTY_DE = #{resBeautyDe,jdbcType=VARCHAR},
+      RES_BEAUTY_TIME = #{resBeautyTime,jdbcType=VARCHAR},
+      RES_BEAUTY_PRICE = #{resBeautyPrice,jdbcType=NUMERIC},
+      RES_OPTION = #{resOption,jdbcType=VARCHAR},
+      RES_OPTION_PRICE = #{resOptionPrice,jdbcType=NUMERIC},
+    where RES_BEAUTY_NO = #{resBeautyNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateBeautyRes" parameterType="java.lang.String">
+  	update BEAUTYRES
+  	set RES_BEAUTY_STTUS = 'COMN09DT003'
+  	where RES_BEAUTY_NO = #{resBeautyNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateAllBeautyResStatus">
+	UPDATE BEAUTYRES
+	SET RES_BEAUTY_STTUS = 'COMN09DT002'
+	WHERE TO_DATE(RES_BEAUTY_DE || ' ' || RES_BEAUTY_TIME, 'YY-MM-DD HH24:MI') &lt; SYSDATE
+	AND RES_BEAUTY_STTUS != 'COMN09DT002'
+  </update>
+  <select id="selectResInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select RES_BEAUTY_NO, PET_NO, RES_BEAUTY_REGIST_DE, RES_BEAUTY_STTUS, FRANCHISE_ID,
+    EMP_NO, RES_BEAUTY_DE, RES_BEAUTY_TIME, RES_BEAUTY_PRICE, RES_OPTION, RES_OPTION_PRICE
+    from BEAUTYRES
+    where RES_BEAUTY_NO = #{resBeautyNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectResInfoDetail" parameterType="java.lang.String" resultMap="BaseResultMap">
+	select res.res_beauty_no, res.franchise_id, res.res_beauty_de, res.res_beauty_price, res.res_beauty_regist_de, res.res_beauty_sttus,
+			  		res.res_beauty_time, res.res_option, res.res_option_price, mem.mem_no, fran.franchise_nm, code.cmmn_code_nm,
+                    pet.pet_nm, pet.pet_weight, mem.mem_nm, mem.mem_telno
+				from beautyres res
+				            INNER JOIN franchise fran ON (res.franchise_id = fran.franchise_id)
+				            INNER JOIN pet pet ON (res.pet_no = pet.pet_no)
+                            INNER JOIN cmmncode code ON (pet.pet_knd = code.cmmn_code_id)
+				            INNER JOIN member mem ON (pet.mem_no = mem.mem_no)
+				where res.res_beauty_no = #{resBeautyNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select RES_BEAUTY_NO, PET_NO, RES_BEAUTY_REGIST_DE, RES_BEAUTY_STTUS, FRANCHISE_ID,
+    EMP_NO, RES_BEAUTY_DE, RES_BEAUTY_TIME, RES_BEAUTY_PRICE, RES_OPTION, RES_OPTION_PRICE
+    from BEAUTYRES
+  </select>
+  <select id="selectTotalRecordMem" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM beautyres res
+		        INNER JOIN pet pet ON (res.pet_no = pet.pet_no)
+		        INNER JOIN member mem ON (pet.mem_no = mem.mem_no)
+		WHERE mem.mem_no = #{memNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectResListByMem" parameterType="HashMap" resultMap="BaseResultMap">
+    select *
+		from(
+		    select A.*, ROWNUM AS RNUM
+            from(
+			  	select res.res_beauty_no, res.franchise_id, res.res_beauty_de, res.res_beauty_price, res.res_beauty_regist_de, res.res_beauty_sttus,
+			  		res.res_beauty_time, res.res_option, res.res_option_price, mem.mem_no, fran.franchise_nm, code.cmmn_code_nm
+				from beautyres res
+				            INNER JOIN franchise fran ON (res.franchise_id = fran.franchise_id)
+                            INNER JOIN cmmncode code ON (res.res_beauty_sttus = code.cmmn_code_id)
+				            INNER JOIN pet pet ON (res.pet_no = pet.pet_no)
+				            INNER JOIN member mem ON (pet.mem_no = mem.mem_no)
+				where mem.mem_no = #{memNo,jdbcType=VARCHAR}
+				ORDER BY res.res_beauty_regist_de DESC
+				)A
+			)
+		where RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+  </select>
+  <select id="selectTotalRecordFran" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM beautyres res
+		WHERE franchise_id = #{franchiseId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectResListByFran" parameterType="HashMap" resultMap="BaseResultMap">
+  	SELECT *
+	FROM (
+	    SELECT A.*, ROWNUM AS RNUM
+	    FROM (
+	        SELECT res.res_beauty_no, res.franchise_id, res.res_beauty_de, res.res_beauty_price, res.res_beauty_regist_de, res.res_beauty_sttus,
+	               res.res_beauty_time, res.res_option, res.res_option_price, mem.mem_no, fran.franchise_nm, code.cmmn_code_nm, emp.emp_nm, mem.mem_nm,
+	               CASE
+	                   WHEN res.res_beauty_de = TO_CHAR(SYSDATE, 'YYYY-MM-DD') THEN 1
+	                   ELSE 2
+	               END AS sort_priority
+	        FROM beautyres res
+	                 INNER JOIN franchise fran ON (res.franchise_id = fran.franchise_id)
+	                 INNER JOIN cmmncode code ON (res.res_beauty_sttus = code.cmmn_code_id)
+	                 INNER JOIN pet pet ON (res.pet_no = pet.pet_no)
+	                 INNER JOIN member mem ON (pet.mem_no = mem.mem_no)
+	                 INNER JOIN employee emp ON (res.emp_no = emp.emp_no)
+	        WHERE fran.franchise_id = #{franchiseId,jdbcType=VARCHAR}
+	        ORDER BY
+	            sort_priority ASC,               -- 우선순위로 정렬 (오늘 날짜가 가장 위)
+	            res.res_beauty_de DESC,          -- 날짜 순으로 내림차순 정렬
+	            TO_DATE(res.res_beauty_time, 'HH24:MI') ASC  -- 시간을 시간 형식으로 변환하여 오름차순 정렬
+	    ) A
+	)
+	WHERE RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+  </select>
+  <select id="selectTotalRecordFran1" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM beautyres res
+		WHERE franchise_id = #{franchiseId,jdbcType=VARCHAR}
+            AND res_beauty_sttus = 'COMN09DT001'
+  </select>
+  <select id="selectResListByFran1" parameterType="HashMap" resultMap="BaseResultMap">
+  	select *
+		from(
+		    select A.*, ROWNUM AS RNUM
+            from(
+			  	select res.res_beauty_no, res.franchise_id, res.res_beauty_de, res.res_beauty_price, res.res_beauty_regist_de, res.res_beauty_sttus,
+			  		res.res_beauty_time, res.res_option, res.res_option_price, mem.mem_no, fran.franchise_nm, code.cmmn_code_nm, emp.emp_nm, mem.mem_nm,
+			  		CASE
+	                   WHEN res.res_beauty_de = TO_CHAR(SYSDATE, 'YYYY-MM-DD') THEN 1
+	                   ELSE 2
+	               	END AS sort_priority
+				from beautyres res
+				            INNER JOIN franchise fran ON (res.franchise_id = fran.franchise_id)
+                            INNER JOIN cmmncode code ON (res.res_beauty_sttus = code.cmmn_code_id)
+				            INNER JOIN pet pet ON (res.pet_no = pet.pet_no)
+				            INNER JOIN member mem ON (pet.mem_no = mem.mem_no)
+                            INNER JOIN employee emp ON (res.emp_no = emp.emp_no)
+				where fran.franchise_id = #{franchiseId,jdbcType=VARCHAR}
+					and res_beauty_sttus = 'COMN09DT001'
+				ORDER BY sort_priority ASC,               -- 우선순위로 정렬 (오늘 날짜가 가장 위)
+			            res.res_beauty_de DESC,          -- 날짜 순으로 내림차순 정렬
+			            TO_DATE(res.res_beauty_time, 'HH24:MI') ASC  -- 시간을 시간 형식으로 변환하여 오름차순 정렬
+				)A
+			)
+		where RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+  </select>
+  <select id="selectTotalRecordFran2" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM beautyres res
+		WHERE franchise_id = #{franchiseId,jdbcType=VARCHAR}
+            AND res_beauty_sttus = 'COMN09DT002'
+  </select>
+  <select id="selectResListByFran2" parameterType="HashMap" resultMap="BaseResultMap">
+  	select *
+		from(
+		    select A.*, ROWNUM AS RNUM
+            from(
+			  	select res.res_beauty_no, res.franchise_id, res.res_beauty_de, res.res_beauty_price, res.res_beauty_regist_de, res.res_beauty_sttus,
+			  		res.res_beauty_time, res.res_option, res.res_option_price, mem.mem_no, fran.franchise_nm, code.cmmn_code_nm, emp.emp_nm, mem.mem_nm,
+			  		CASE
+	                   WHEN res.res_beauty_de = TO_CHAR(SYSDATE, 'YYYY-MM-DD') THEN 1
+	                   ELSE 2
+	               	END AS sort_priority
+				from beautyres res
+				            INNER JOIN franchise fran ON (res.franchise_id = fran.franchise_id)
+                            INNER JOIN cmmncode code ON (res.res_beauty_sttus = code.cmmn_code_id)
+				            INNER JOIN pet pet ON (res.pet_no = pet.pet_no)
+				            INNER JOIN member mem ON (pet.mem_no = mem.mem_no)
+                            INNER JOIN employee emp ON (res.emp_no = emp.emp_no)
+				where fran.franchise_id = #{franchiseId,jdbcType=VARCHAR}
+					and res_beauty_sttus = 'COMN09DT002'
+				ORDER BY sort_priority ASC,               -- 우선순위로 정렬 (오늘 날짜가 가장 위)
+			            res.res_beauty_de DESC,          -- 날짜 순으로 내림차순 정렬
+			            TO_DATE(res.res_beauty_time, 'HH24:MI') ASC  -- 시간을 시간 형식으로 변환하여 오름차순 정렬
+				)A
+			)
+		where RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+  </select>
+  <select id="selectTotalRecordFran3" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM beautyres res
+		WHERE franchise_id = #{franchiseId,jdbcType=VARCHAR}
+            AND res_beauty_sttus = 'COMN09DT003'
+  </select>
+  <select id="selectResListByFran3" parameterType="HashMap" resultMap="BaseResultMap">
+  	select *
+		from(
+		    select A.*, ROWNUM AS RNUM
+            from(
+			  	select res.res_beauty_no, res.franchise_id, res.res_beauty_de, res.res_beauty_price, res.res_beauty_regist_de, res.res_beauty_sttus,
+			  		res.res_beauty_time, res.res_option, res.res_option_price, mem.mem_no, fran.franchise_nm, code.cmmn_code_nm, emp.emp_nm, mem.mem_nm,
+			  		CASE
+	                   WHEN res.res_beauty_de = TO_CHAR(SYSDATE, 'YYYY-MM-DD') THEN 1
+	                   ELSE 2
+	               	END AS sort_priority
+				from beautyres res
+				            INNER JOIN franchise fran ON (res.franchise_id = fran.franchise_id)
+                            INNER JOIN cmmncode code ON (res.res_beauty_sttus = code.cmmn_code_id)
+				            INNER JOIN pet pet ON (res.pet_no = pet.pet_no)
+				            INNER JOIN member mem ON (pet.mem_no = mem.mem_no)
+                            INNER JOIN employee emp ON (res.emp_no = emp.emp_no)
+				where fran.franchise_id = #{franchiseId,jdbcType=VARCHAR}
+					and res_beauty_sttus = 'COMN09DT003'
+				ORDER BY sort_priority ASC,               -- 우선순위로 정렬 (오늘 날짜가 가장 위)
+			            res.res_beauty_de DESC,          -- 날짜 순으로 내림차순 정렬
+			            TO_DATE(res.res_beauty_time, 'HH24:MI') ASC  -- 시간을 시간 형식으로 변환하여 오름차순 정렬
+				)A
+			)
+		where RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+  </select>
+  <select id="selectTotalRecordEmp" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM beautyres res
+		WHERE franchise_id = #{franchiseId,jdbcType=VARCHAR}
+            AND emp_no = #{empNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectResListByEmp" parameterType="HashMap" resultMap="BaseResultMap">
+  	select *
+		from(
+		    select A.*, ROWNUM AS RNUM
+            from(
+			  	select res.res_beauty_no, res.franchise_id, res.res_beauty_de, res.res_beauty_price, res.res_beauty_regist_de, res.res_beauty_sttus,
+			  		res.res_beauty_time, res.res_option, res.res_option_price, mem.mem_no, fran.franchise_nm, code.cmmn_code_nm, emp.emp_nm, mem.mem_nm,
+			  		CASE
+	                   WHEN res.res_beauty_de = TO_CHAR(SYSDATE, 'YYYY-MM-DD') THEN 1
+	                   ELSE 2
+	               	END AS sort_priority
+				from beautyres res
+				            INNER JOIN franchise fran ON (res.franchise_id = fran.franchise_id)
+                            INNER JOIN cmmncode code ON (res.res_beauty_sttus = code.cmmn_code_id)
+				            INNER JOIN pet pet ON (res.pet_no = pet.pet_no)
+				            INNER JOIN member mem ON (pet.mem_no = mem.mem_no)
+                            INNER JOIN employee emp ON (res.emp_no = emp.emp_no)
+				where fran.franchise_id = #{franchiseId,jdbcType=VARCHAR}
+					and emp_no = #{empNo,jdbcType=VARCHAR}
+				ORDER BY sort_priority ASC,               -- 우선순위로 정렬 (오늘 날짜가 가장 위)
+			            res.res_beauty_de DESC,          -- 날짜 순으로 내림차순 정렬
+			            TO_DATE(res.res_beauty_time, 'HH24:MI') ASC  -- 시간을 시간 형식으로 변환하여 오름차순 정렬
+				)A
+			)
+		where RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+  </select>
+  <select id="checkbeautyNo" parameterType="string">
+  	select count(RES_BEAUTY_NO)
+  	from BEAUTYRES
+  	where RES_BEAUTY_NO = #{resBeautyNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectResByPetNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+	SELECT RES_BEAUTY_NO, PET_NO, RES_BEAUTY_REGIST_DE, RES_BEAUTY_STTUS, FRANCHISE_ID,
+   				EMP_NO, RES_BEAUTY_DE, RES_BEAUTY_TIME, RES_BEAUTY_PRICE, RES_OPTION, RES_OPTION_PRICE
+	FROM BEAUTYRES
+	WHERE pet_no = #{petNo,jdbcType=VARCHAR}
+  </select>
+  <insert id="insertBeautyResExp" parameterType="BeautyresDefaultVO">
+  	INSERT INTO EXPENSE (
+		    FEXPS_NO,
+		    FRANCHISEE_ID,
+		    FEXPS_SE,
+		    FEXPS_NM,
+		    FEXPS_CN,
+		    FEXPS_DE,
+		    FEXPS_AMOUNT
+		)
+		VALUES(
+		    'FEXPS' || EXPENSE_SEQ.NEXTVAL,
+		    #{franchiseId,jdbcType=VARCHAR},
+		    'COMN16DT006',
+		    '미용예약 환불비',
+		    #{resOption,jdbcType=VARCHAR},
+		    SYSDATE,
+		    #{resBeautyPrice,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertBeautyResSell" parameterType="BeautyresDefaultVO">
+  	INSERT INTO FRANSELLING (
+		    FSEL_NO,
+		    FRANCHISEE_ID,
+		    FSEL_SE,
+		    FSEL_NM,
+		    FSEL_CN,
+		    FSEL_DE,
+		    FSEL_AMOUNT
+		)
+		VALUES(
+		    'FSEL' || FRANSELLING_SEQ.NEXTVAL,
+		    #{franchiseId,jdbcType=VARCHAR},
+		    'COMN18DT005',
+		    '미용예약 판매비',
+		    #{resOption,jdbcType=VARCHAR},
+		    SYSDATE,
+		    #{resBeautyPrice,jdbcType=NUMERIC})
+  </insert>
+  
+  <select id="selectBeautyReviewList" parameterType="string" resultMap="BaseResultMap">
+   SELECT
+    	A.RES_BEAUTY_NO
+		,A.PET_NO
+		,A.RES_BEAUTY_REGIST_DE
+		,A.RES_BEAUTY_STTUS
+		,A.EMP_NO
+		,A.RES_BEAUTY_DE
+		,A.RES_BEAUTY_TIME
+		,A.RES_BEAUTY_PRICE
+		,A.RES_OPTION
+		,C.FRANREVIEW_SJ
+		,C.FRANREVIEW_SE
+		,C.FRANREVIEW_CN
+		,C.FRANREVIEW_DE
+		,C.FRANREVIEW_IMAGE
+		,C.FRANREVIEW_SCORE
+        ,E.MEM_NO
+        ,E.MEM_NM
+    FROM BEAUTYRES A 
+    LEFT OUTER JOIN RESSETL B ON (A.RES_BEAUTY_NO = B.RES_BEAUTY_NO)
+    LEFT OUTER JOIN FRREVIEW C ON (B.RES_SETL_NO = C.FSM_SETL_NO)
+    INNER JOIN PET D ON(A.PET_NO = D.PET_NO)
+    INNER JOIN MEMBER E ON(D.MEM_NO = E.MEM_NO)
+    WHERE FRANCHISE_ID = #{franchiseId,jdbcType=VARCHAR}
+    AND C.FRANREVIEW_SE = '미용'
+</select>
+</mapper>

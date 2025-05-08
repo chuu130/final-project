@@ -1,0 +1,55 @@
+package kr.or.ddit.franchise.franchisee.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.commons.paging.PaginationInfo;
+import kr.or.ddit.commons.paging.SimpleCondition;
+import kr.or.ddit.vo.FranBoardVO;
+
+/**
+ * 가맹점게시판 매퍼
+ * @author jbk
+ */
+@Mapper
+public interface FranBoardMapper {
+
+	/**
+	 * 가맹점게시판 리스트를 조회하는 메소드 (Non Paging)
+	 * @return
+	 */
+	public List<FranBoardVO> selectFranBoardListNonPaging();
+
+
+	/**
+	 * 가맹점게시판 종 레코드수를 조회하는 메소드
+	 * @param paginationInfo
+	 * @return
+	 */
+	public int selectTotalRecord(PaginationInfo paginationInfo);
+
+
+	/**
+	 * 가맹점게시판 리스트를 조회하는 메소드
+	 * @param paginationInfo
+	 * @return
+	 */
+	public List<FranBoardVO> selectFranBoardList(PaginationInfo paginationInfo);
+
+
+	/**
+	 * 가맹점게시판을 상세조회하는 메소드
+	 * @param franBoardNo
+	 * @return
+	 */
+	public FranBoardVO selectFranBoard(int franBoardNo);
+
+
+	/**
+	 * 게시글을 수정하는 메소드
+	 * @param franBoard
+	 * @return
+	 */
+	public int updateFranBoard(FranBoardVO franBoard);
+}

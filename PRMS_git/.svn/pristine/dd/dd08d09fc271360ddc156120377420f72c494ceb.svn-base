@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>droplet | Error Page</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	
+	<!-- ================== BEGIN core-css ================== -->
+	<link href="assets/css/vendor.min.css" rel="stylesheet">
+	<link href="assets/css/app.min.css" rel="stylesheet">
+	<!-- ================== END core-css ================== -->
+	
+</head>
+<body class='pace-top'>
+	<!-- BEGIN #app -->
+	<div id="app" class="app app-full-height app-without-header">
+		<!-- BEGIN error -->
+		<div class="error-page">
+			<!-- BEGIN error-page-content -->
+			<div class="error-page-content">
+				<div class="error-code">404</div>
+				<h1>Oops!</h1> 
+				<h3>We can't seem to find the page you're looking for</h3>
+				<hr class="opacity-1">
+				<p class="mb-2">
+					Here are some helpful links instead:
+				</p>
+				<p class="mb-5">
+					<a href="index.html" class="link-secondary text-decoration-none">Home</a>
+					<span class="link-divider"></span>
+					<a href="page_search_results.html" class="link-secondary text-decoration-none">Search</a>
+					<span class="link-divider"></span>
+					<a href="email_inbox.html" class="link-secondary text-decoration-none">Email</a>
+					<span class="link-divider"></span>
+					<a href="calendar.html" class="link-secondary text-decoration-none">Calendar</a>
+					<span class="link-divider"></span>
+					<a href="settings.html" class="link-secondary text-decoration-none">Settings</a>
+					<span class="link-divider"></span>
+					<a href="helper.html" class="link-secondary text-decoration-none">Helper</a>
+				</p>
+				<a href="javascript:window.history.back();" class="btn btn-theme px-3 rounded-pill"><i class="fa fa-arrow-left me-1 ms-n1"></i> Go Back</a>
+			</div>
+			<!-- END error-page-content -->
+		</div>
+		<!-- END error -->
+		
+		<!-- BEGIN theme-panel -->
+		<div class="app-theme-panel">
+			<div class="app-theme-panel-container">
+				<a href="javascript:;" data-toggle="theme-panel-expand" class="app-theme-toggle-btn"><i class="bi bi-sliders"></i></a>
+				<div class="app-theme-panel-content">
+					<div class="fw-bold text-body mb-2">
+						Theme Color
+					</div>
+					<div class="app-theme-list">
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-pink" data-theme-class="theme-pink" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Pink"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-red" data-theme-class="theme-red" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Red"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-warning" data-theme-class="theme-warning" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Orange"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-yellow" data-theme-class="theme-yellow" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Yellow"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-lime" data-theme-class="theme-lime" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Lime"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-green" data-theme-class="theme-green" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Green"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-teal" data-theme-class="theme-teal" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Teal"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-info" data-theme-class="theme-info"  data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Cyan"></a></div>
+						<div class="app-theme-list-item active"><a href="javascript:;" class="app-theme-list-link bg-primary" data-theme-class=""  data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Default"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-purple" data-theme-class="theme-purple" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Purple"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-indigo" data-theme-class="theme-indigo" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Indigo"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-gray-200" data-theme-class="theme-gray-500" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Gray"></a></div>
+					</div>
+					<hr class="opacity-1">
+					<div class="row mt-10px">
+						<div class="col-8">
+							<div class="fw-bold text-body d-flex mb-1 align-items-center">
+								Dark Mode 
+								<i class="bi bi-moon-fill ms-2 my-n1 fs-5 text-body text-opacity-25"></i>
+							</div>
+							<div class="lh-sm">
+								<small class="text-body opacity-50">Adjust the appearance to reduce glare and give your eyes a break.</small>
+							</div>
+						</div>
+						<div class="col-4 d-flex">
+							<div class="form-check form-switch ms-auto mb-0">
+								<input type="checkbox" class="form-check-input" name="app-theme-dark-mode" data-toggle="theme-dark-mode" id="appThemeDarkMode" value="1">
+								<label class="form-check-label" for="appThemeDarkMode"></label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- END theme-panel -->
+		<!-- BEGIN btn-scroll-top -->
+		<a href="#" data-toggle="scroll-to-top" class="btn-scroll-top fade"><i class="fa fa-arrow-up"></i></a>
+		<!-- END btn-scroll-top -->
+	</div>
+	<!-- END #app -->
+	
+	<!-- ================== BEGIN core-js ================== -->
+	<script src="assets/js/vendor.min.js"></script>
+	<script src="assets/js/app.min.js"></script>
+	<!-- ================== END core-js ================== -->
+	
+	
+</body>
+</html>

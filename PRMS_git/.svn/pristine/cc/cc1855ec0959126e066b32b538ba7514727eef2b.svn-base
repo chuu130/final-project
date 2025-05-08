@@ -1,0 +1,108 @@
+package kr.or.ddit.franchise.franchisee.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import kr.or.ddit.commons.paging.PaginationInfo;
+import kr.or.ddit.commons.paging.PaginationRenderer;
+import kr.or.ddit.commons.paging.ThemeType2PaginationRenderer;
+import kr.or.ddit.franchise.franchisee.service.FranBoardService;
+import kr.or.ddit.vo.FranBoardPagingVO;
+import kr.or.ddit.vo.FranBoardVO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/main/franchisee/franBoard/api")
+public class FranBoardController {
+
+	private final FranBoardService franBoardService;
+
+//	private final SmartValidator validator;
+
+	/**
+	 * 가맹점게시판 정보를 조회한 후 반환하는 메소드
+	 * @param page
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("list")
+	public FranBoardPagingVO list(
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page
+			,@RequestParam(value = "searchWord", required = false, defaultValue = "") String searchWord
+	) {
+		PaginationInfo paginationInfo = new PaginationInfo(5,5);
+		paginationInfo.setPage(page);
+		paginationInfo.setSearchWord(searchWord);
+
+		// 페이징 처리된 게시판리스트를 조회한다.
+		List<FranBoardVO> franBoardList = franBoardService.retrieveFranBoardList(paginationInfo);
+
+		// 랜더링할 페이지 정보를 구한다.
+		PaginationRenderer renderer = new ThemeType2PaginationRenderer();
+		String pagingHTML = renderer.renderPagination(paginationInfo);
+
+		// 게시판리스트를 반환한다.
+		return new FranBoardPagingVO(franBoardList, pagingHTML);
+	}
+
+	/**
+	 * 가맹점게시판 상세정보를 조회한 후 반환하는 메소드
+	 * @return
+	 */
+	@GetMapping("detail/{franBoardNo}")
+	public FranBoardVO detail(
+		@PathVariable("franBoardNo") int franBoardNo
+	) {
+		return franBoardService.retrieveFranBoard(franBoardNo);
+	}
+
+	/**
+	 * @param franBoard
+	 * @param errors
+	 * @return
+	 */
+	@PutMapping("update")
+	public Map<String, Object> update(@RequestBody FranBoardVO franBoard, BindingResult errors) {
+
+		log.info("수정한 게시글 : {}", franBoard);
+
+		Map<String, Object> result = new HashMap<>();
+		result.put("target", franBoard);
+//		validator.validate(franBoard, errors, UpdateGroup.class);
+
+		if(errors.hasErrors()) {
+			result.put("success", false);
+			result.put("errors",
+					errors.getFieldErrors().stream()
+					.collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage))
+			);
+		} else {
+			try {
+				franBoardService.modifyFranBoard(franBoard);
+				result.put("success", true);
+				result.put("target", franBoardService.retrieveFranBoard(franBoard.getFranBoardNo()));
+			} catch (Exception e) {
+				result.put("success", false);
+				result.put("message", e.getMessage());
+			}
+		}
+
+		return result;
+	}
+
+}

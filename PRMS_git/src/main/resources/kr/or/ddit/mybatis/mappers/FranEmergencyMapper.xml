@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.franchise.franchisee.mapper.FranEmergencyMapper">
+	<insert id="insertFranEmer" parameterType="EmergencyDefaultVO">
+		<selectKey order="BEFORE" resultType="String" keyProperty="emerNo">
+			SELECT EMERGNECY_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT ALL
+			INTO EMERGENCY
+			(
+				EMER_NO
+				, FRANCHISE_ID
+				, EMER_AMOUNT
+				, EMER_REQST
+			)
+			VALUES
+			(
+				'EMER'||#{emerNo, jdbcType=VARCHAR}
+				, #{franchiseId, jdbcType=VARCHAR}
+				, #{emerAmount, jdbcType=INTEGER}
+				, #{emerReqst, jdbcType=VARCHAR}
+			)
+		<if test="emerDtList neq null">
+			<foreach collection="emerDtList" item="emer" index="idx">
+				INTO EMERGENCYDT
+				(
+					EDETAIL_NO
+					, EDETAIL_QY
+					, EDETAIL_PC
+					, EMER_NO
+					, FIV_ID
+				)
+				VALUES
+				(
+					'EMERDT'||TO_CHAR(EMERGNECYDT_SEQ.NEXTVAL)||(#{idx}+1)
+					, #{emer.edetailQy, jdbcType=INTEGER}
+					, #{emer.edetailPc, jdbcType=INTEGER}
+					, 'EMER'||#{emerNo, jdbcType=VARCHAR}
+					, #{emer.fivId, jdbcType=VARCHAR}
+				)
+			</foreach>
+		</if>
+		SELECT * FROM DUAL
+	</insert>
+
+	<sql id="searchFrag">
+		<trim prefix="AND" >
+        	<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(paging.simpleCondition.searchType)
+        				and @org.apache.commons.lang3.StringUtils@isNotBlank(paging.simpleCondition.searchWord)">
+        		<choose>
+        			<when test="paging.simpleCondition.searchType eq 'search'">
+						INSTR(EMER_PARTN, #{paging.simpleCondition.searchWord}) > 0
+        			</when>
+        		</choose>
+        	</if>
+        </trim>
+	</sql>
+
+	<select id="selectFranEmerFranInvApplyList">
+		WITH OTHEREMERGENCY AS (
+		    SELECT
+		        E.EMER_NO,
+		        E.EMER_DE,
+		        E.EMER_PARTN,
+		        (SELECT F.FRANCHISE_NM
+			    FROM FRANCHISE F INNER JOIN EMERGENCY E2 ON (F.FRANCHISE_ID = E2.EMER_REQST)
+			    WHERE EMER_NO = E.EMER_NO) FRANCHISE_NM,
+		        E.EMER_REJ_CN,
+		        E.EMER_AMOUNT
+		    FROM
+		        EMERGENCY E
+		    WHERE E.FRANCHISE_ID = #{franchiseId}
+			<include refid="searchFrag" />
+		    ORDER BY
+		        E.EMER_DE DESC
+		    )
+		SELECT A.*
+		    FROM(
+		    SELECT OTHEREMERGENCY.*, ROWNUM RNUM
+		    FROM OTHEREMERGENCY
+		    )A
+		WHERE RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+	</select>
+
+	<select id="selectTotalRecord">
+		SELECT COUNT(*)
+		FROM EMERGENCY
+		WHERE FRANCHISE_ID = #{franchiseId}
+		<include refid="searchFrag" />
+	</select>
+
+	<select id="selectEmerDtList">
+		SELECT
+		    E.EDETAIL_NO
+		    , E.EMER_NO
+		    , E.EDETAIL_QY
+		    , E.EDETAIL_PC
+		    , E.FIV_ID
+		    , (SELECT P.FRANPROD_NM
+		    FROM INVENTORY I
+		        INNER JOIN FRANPROD P ON (I.FRANPROD_ID = P.FRANPROD_ID)
+		    WHERE I.FIV_ID = E.FIV_ID) AS FRANPROD_NM
+		    , (SELECT P.FRANPROD_IMAGE
+		    FROM INVENTORY I
+		        INNER JOIN FRANPROD P ON (I.FRANPROD_ID = P.FRANPROD_ID)
+		    WHERE I.FIV_ID = E.FIV_ID) AS FRANPROD_IMAGE
+		FROM
+		    EMERGENCYDT E
+		WHERE EMER_NO = #{emerNo}
+	</select>
+
+	<update id="updateEmerApply">
+		UPDATE EMERGENCY
+		SET EMER_PARTN = #{emerPartn}
+		WHERE EMER_NO = #{emerNo}
+	</update>
+
+	<insert id="insertMyFranEmerApplyExp">
+		INSERT INTO EXPENSE (
+		    FEXPS_NO,
+		    FRANCHISEE_ID,
+		    FEXPS_SE,
+		    FEXPS_NM,
+		    FEXPS_CN,
+		    FEXPS_DE,
+		    FEXPS_AMOUNT
+		)
+		SELECT
+		    'FEXPS' || EXPENSE_SEQ.NEXTVAL,
+		    #{franchiseId},
+		    'COMN16DT003',
+		    '긴급재고 신청비',
+		    (SELECT LISTAGG(FRANPROD_NM || '(' || EDETAIL_QY || '개)', ', ') WITHIN GROUP (ORDER BY FRANPROD_NM)
+		     FROM EMERGENCYDT E INNER JOIN INVENTORY I ON (E.FIV_ID = I.FIV_ID)
+		                        INNER JOIN FRANPROD F ON (F.FRANPROD_ID = I.FRANPROD_ID)
+		     WHERE EMER_NO = 'EMER'||#{emerNo}),
+		    SYSDATE,
+		    #{emerAmount}
+		FROM EMERGENCY
+		WHERE EMER_NO = 'EMER'||#{emerNo}
+	</insert>
+
+	<insert id="insertOtherFranEmerApplySell">
+		INSERT INTO FRANSELLING (
+		    FSEL_NO,
+		    FRANCHISEE_ID,
+		    FSEL_SE,
+		    FSEL_NM,
+		    FSEL_CN,
+		    FSEL_DE,
+		    FSEL_AMOUNT
+		)
+		SELECT
+		    'FSEL' || FRANSELLING_SEQ.NEXTVAL,
+		    #{emerReqst},
+		    'COMN18DT002',
+		    '긴급재고 판매비',
+		    (SELECT LISTAGG(FRANPROD_NM || '(' || EDETAIL_QY || '개)', ', ') WITHIN GROUP (ORDER BY FRANPROD_NM)
+		     FROM EMERGENCYDT E INNER JOIN INVENTORY I ON (E.FIV_ID = I.FIV_ID)
+		                        INNER JOIN FRANPROD F ON (F.FRANPROD_ID = I.FRANPROD_ID)
+		     WHERE EMER_NO = 'EMER'||#{emerNo}),
+		    SYSDATE,
+		    #{emerAmount}
+		FROM EMERGENCY
+		WHERE EMER_NO = 'EMER'||#{emerNo}
+
+	</insert>
+
+	<insert id="insertMyFranEmerApplyReturnSell">
+		INSERT INTO FRANSELLING (
+		    FSEL_NO,
+		    FRANCHISEE_ID,
+		    FSEL_SE,
+		    FSEL_NM,
+		    FSEL_CN,
+		    FSEL_DE,
+		    FSEL_AMOUNT
+		)
+		SELECT
+		    'FSEL' || FRANSELLING_SEQ.NEXTVAL,
+		    FRANCHISE_ID,
+		    'COMN18DT003',
+		    '긴급재고 환불비',
+		    (SELECT LISTAGG(FRANPROD_NM || '(' || EDETAIL_QY || '개)', ', ') WITHIN GROUP (ORDER BY FRANPROD_NM)
+		     FROM EMERGENCYDT E INNER JOIN INVENTORY I ON (E.FIV_ID = I.FIV_ID)
+		                        INNER JOIN FRANPROD F ON (F.FRANPROD_ID = I.FRANPROD_ID)
+		    WHERE EMER_NO = #{emerNo}),
+		    SYSDATE,
+		    EMER_AMOUNT
+		FROM EMERGENCY
+		WHERE EMER_NO = #{emerNo}
+	</insert>
+
+	<insert id="insertOtherFranEmerApplyReturnExp">
+		INSERT INTO EXPENSE (
+		    FEXPS_NO,
+		    FRANCHISEE_ID,
+		    FEXPS_SE,
+		    FEXPS_NM,
+		    FEXPS_CN,
+		    FEXPS_DE,
+		    FEXPS_AMOUNT
+		)
+		SELECT
+		    'FEXPS' || EXPENSE_SEQ.NEXTVAL,
+		    EMER_REQST,
+		    'COMN16DT004',
+		    '긴급재고 환불비',
+		    (SELECT LISTAGG(FRANPROD_NM || '(' || EDETAIL_QY || '개)', ', ') WITHIN GROUP (ORDER BY FRANPROD_NM)
+		     FROM EMERGENCYDT E INNER JOIN INVENTORY I ON (E.FIV_ID = I.FIV_ID)
+		                        INNER JOIN FRANPROD F ON (F.FRANPROD_ID = I.FRANPROD_ID)
+		    WHERE EMER_NO = #{emerNo}),
+		    SYSDATE,
+		    EMER_AMOUNT
+		FROM EMERGENCY
+		WHERE EMER_NO = #{emerNo}
+	</insert>
+
+	<select id="selectYourEmpIdInfo">
+		SELECT EMP_ID
+		FROM EMPLOYEE
+		WHERE EMP_NO = (SELECT EMP_NO
+		                FROM FRANCHISE
+		                WHERE FRANCHISE_ID = #{reqFranchiseId})
+	</select>
+
+
+
+
+</mapper>

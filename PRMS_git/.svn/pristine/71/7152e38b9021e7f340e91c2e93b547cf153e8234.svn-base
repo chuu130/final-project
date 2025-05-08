@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.commons.def.mapper.MycouponDefaultMapper">
+	<resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.MycouponDefaultVO">
+		<id column="MYCOUPON_NO" jdbcType="VARCHAR" property="mycouponNo" />
+		<id column="MEM_NO" jdbcType="VARCHAR" property="memNo" />
+		<id column="COUPON_NO" jdbcType="VARCHAR" property="couponNo" />
+		<result column="COUPON_DELYN" jdbcType="VARCHAR" property="couponDelyn" />
+		<association property="coupon" javaType="CouponDefaultVO" autoMapping="true" />
+	</resultMap>
+	<delete id="deleteMycoupon" parameterType="map">
+		delete from MYCOUPON
+		where MYCOUPON_NO = #{mycouponNo,jdbcType=VARCHAR}
+		and MEM_NO =
+		#{memNo,jdbcType=VARCHAR}
+		and COUPON_NO = #{couponNo,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insertMycoupon"
+		parameterType="kr.or.ddit.vo.def.MycouponDefaultVO">
+		INSERT INTO MYCOUPON (MYCOUPON_NO, MEM_NO, COUPON_NO, COUPON_DELYN)
+		VALUES (TO_CHAR(MYCOUPON_SEQ.nextval), #{memNo,jdbcType=VARCHAR},
+		#{couponNo,jdbcType=VARCHAR}, #{couponDelyn,jdbcType=VARCHAR})
+	</insert>
+	<update id="updateMycoupon"
+		parameterType="kr.or.ddit.vo.def.MycouponDefaultVO">
+		update MYCOUPON
+		set COUPON_DELYN =
+		#{couponDelyn,jdbcType=VARCHAR}
+		where MYCOUPON_NO =
+		#{mycouponNo,jdbcType=VARCHAR}
+		and MEM_NO = #{memNo,jdbcType=VARCHAR}
+		and COUPON_NO = #{couponNo,jdbcType=VARCHAR}
+	</update>
+	<select id="selectMycoupon" parameterType="map"
+		resultMap="BaseResultMap">
+		select MYCOUPON_NO, MEM_NO, COUPON_NO, COUPON_DELYN
+		from
+		MYCOUPON
+		where MYCOUPON_NO = #{mycouponNo,jdbcType=VARCHAR}
+		and MEM_NO =
+		#{memNo,jdbcType=VARCHAR}
+		and COUPON_NO = #{couponNo,jdbcType=VARCHAR}
+	</select>
+	<select id="selectMycouponList" resultMap="BaseResultMap">
+		select MYCOUPON_NO,
+		MEM_NO, COUPON_NO, COUPON_DELYN
+		from MYCOUPON
+	</select>
+	<select id="selectMycouponMemNo" parameterType="string" resultMap="BaseResultMap">
+		select a.*, b.*
+		from MYCOUPON a left outer join coupon b on (a.coupon_no = b.coupon_no)
+		where MEM_NO = #{memNo,jdbcType=VARCHAR}
+	</select>
+	<select id="mycheck" parameterType="MycouponDefaultVO">
+    SELECT COUNT(COUPON_NO)
+    FROM MYCOUPON
+    WHERE COUPON_NO = #{couponNo, jdbcType=VARCHAR}
+    AND MEM_NO = #{memNo, jdbcType=VARCHAR}
+	</select>
+	<select id="couponcheck" parameterType="string">
+		select COUNT(COUPON_NO)
+		from mycoupon
+		where coupon_no = 'CP000004'
+		and mem_NO= #{memNo,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

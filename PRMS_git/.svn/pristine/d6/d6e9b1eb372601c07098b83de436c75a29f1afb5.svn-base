@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.headquarter.common.mapper.AdminInvMapper">
+
+
+
+	<select id="selectInvTotalRecord" resultType="int">
+		SELECT COUNT(*)
+		FROM PARTPROD INNER JOIN ADMININV ON (PARTPROD.PROD_ID = ADMININV.PROD_ID)
+	</select>
+
+	<select id="selectAdminInvProdList" resultType="AdminInvVO">
+		SELECT F.*
+		FROM
+		(
+			SELECT ROWNUM RNUM, E.*
+			FROM
+				(
+					select B.prod_id
+						, B.admininv_Nm
+						, B.admininv_Qy
+						, A.partprod_image "partprodImage"
+						, C.partners_corNm "partnersCornm"
+						, d.cmmn_code_Nm "cmmnCodeNm"
+						, A.partprod_pc "partprodPc"
+					from partprod A, admininv B, partners C, cmmncode D
+						where A.prod_id = B.prod_id and a.partners_id = c.partners_id and A.partprod_se = d.cmmn_code_id
+       				 ORDER BY A.PROD_ID DESC
+       			 )  E
+       	) F
+
+	</select>
+
+	<select id="selectProdDetail" resultType="AdminInvDataDetailVO">
+<!-- 		select B.prod_id -->
+<!-- 						, B.admininv_Nm -->
+<!-- 						, B.admininv_Qy -->
+<!-- 						, A.partprod_image "partprod.partprodImage" -->
+<!-- 						, C.partners_corNm "partners.partnersCornm" -->
+<!-- 						, d.cmmn_code_Nm "cmmncode.cmmnCodeNm" -->
+<!-- 						, A.partprod_pc "partprod.partprodPc" -->
+<!-- 					from partprod A, admininv B, partners C, cmmncode D -->
+<!-- 						where A.prod_id = B.prod_id and a.partners_id = c.partners_id and A.partprod_se = d.cmmn_code_id  -->
+<!--                         AND B.PROD_ID = #{prodId} -->
+			select B.prod_id
+						, B.admininv_Nm
+						, B.admininv_Qy
+						, A.partprod_image
+						, C.partners_corNm
+						, d.cmmn_code_Nm
+						, A.partprod_pc
+                        , E.PROD_SLE_PC
+                        , F.WAR_QY
+                        , F.WAR_DE
+					from partprod A, admininv B, partners C, cmmncode D , PROD E, WAREHOUSING F
+						where A.prod_id = B.prod_id
+                        and a.partners_id = c.partners_id
+                        and A.partprod_se    = d.cmmn_code_id
+                        AND B.PROD_ID = E.PROD_ID
+                        AND A.PROD_ID = F.PROD_ID
+                        AND B.PROD_ID = #{prodId}
+                         ORDER BY F.WAR_DE 
+	</select>
+
+
+	<update id="updateAdminInvQy" parameterType="AdminInvVO">
+		update admininv set admininv_qy = #{admininvQy} where prod_id = #{prodId}
+	</update>
+
+<!-- 	<resultMap type="AdminInvDataVO" id="adminInvDataMap" autoMapping="true"> -->
+<!-- 		<id property="prodId" column="PROD_ID"/> -->
+<!-- 		<association property="amdininv" javaType="AdmininvDefaultVO" autoMapping="true" /> -->
+<!-- 		<association property="partners" javaType="PartnersDefaultVO" autoMapping="true" > -->
+<!-- 			<id property="partnersId" column="PARTNERS_ID"/> -->
+<!-- 		</association> -->
+<!-- 		<association property="cmmncode" javaType="CmmncodeDefaultVO" autoMapping="true" > -->
+<!-- 			<id property="partprodSe" column=""/> -->
+<!-- 		</association> -->
+<!-- 	</resultMap> -->
+
+
+	<select id="selectDataTable" resultType="AdminInvDataVO">
+		select B.prod_id
+						, B.admininv_Nm
+						, B.admininv_Qy
+						, A.partprod_image
+						, C.PROD_SLE_PC
+						, d.cmmn_code_Nm
+						, A.partprod_pc
+					from partprod A INNER JOIN admininv B ON (A.PROD_ID = B.PROD_ID)
+					INNER JOIN PROD C ON (B.PROD_ID = C.PROD_ID)
+                    INNER JOIN cmmncode D ON (A.PARTPROD_SE = D.CMMN_CODE_ID)
+
+
+	</select>
+
+
+	<select id="selectDataTableDropdown" resultType="AdminInvDataVO">
+		select B.prod_id
+						, B.admininv_Nm
+						, B.admininv_Qy
+						, A.partprod_image
+						, C.partners_corNm
+						, d.cmmn_code_Nm
+						, A.partprod_pc
+					from partprod A INNER JOIN admininv B ON (A.PROD_ID = B.PROD_ID)
+                    INNER JOIN partners C ON (A.PARTNERS_ID = C.PARTNERS_ID)
+                    INNER JOIN cmmncode D ON (A.PARTPROD_SE = D.CMMN_CODE_ID)
+                    AND INSTR(D.CMMN_CODE_NM, #{name}) >0
+	</select>
+
+	<select id="CheckAdminIv" parameterType="string">
+		select count(prod_id)
+		from admininv
+		where prod_id = #{prodId}
+	</select>
+
+</mapper>

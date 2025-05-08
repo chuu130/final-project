@@ -1,0 +1,14 @@
+.page-header {
+	color: var(--#{$prefix}heading-color,inherit);
+	padding: 0;
+	border: none;
+	margin-bottom: $spacer;
+	font-weight: $font-weight-bold;
+	font-size: $font-size-base * 2;
+	
+	& small {
+		font-size: $font-size-base;
+		color: var(--#{$prefix}tertiary-color);
+		font-weight: $font-weight-base;
+	}
+}

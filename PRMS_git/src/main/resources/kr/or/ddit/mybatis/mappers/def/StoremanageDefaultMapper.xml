@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.StoremanageDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.StoremanageDefaultVO">
+    <id column="STOREMANAGE_NO" jdbcType="VARCHAR" property="storemanageNo" />
+    <result column="STOREMANAGE_CN" jdbcType="VARCHAR" property="storemanageCn" />
+    <result column="STOREMANAGE_RESN" jdbcType="VARCHAR" property="storemanageResn" />
+    <result column="STOREMANAGE_REGIST" jdbcType="TIMESTAMP" property="storemanageRegist" />
+    <result column="STOREMANAGE_DE" jdbcType="TIMESTAMP" property="storemanageDe" />
+    <result column="STOREMANAGE_STTUS" jdbcType="VARCHAR" property="storemanageSttus" />
+    <result column="STOREMANAGE_PC" jdbcType="NUMERIC" property="storemanagePc" />
+    <result column="STOREMANAGE_ATCH" jdbcType="VARCHAR" property="storemanageAtch" />
+    <result column="FRANCHISE_ID" jdbcType="VARCHAR" property="franchiseId" />
+	<collection property="franlist" ofType="FranchiseDefaultVO">
+	 <id column="FRANCHISE_ID" jdbcType="VARCHAR" property="franchiseId" />
+	 <result column="FRANCHISE_NM" jdbcType="VARCHAR" property="franchiseNm" />
+	</collection>
+
+  </resultMap>
+  <delete id="deleteStoremanage" parameterType="java.lang.String">
+    delete from STOREMANAGE
+    where STOREMANAGE_NO = #{storemanageNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertStoremanage" parameterType="kr.or.ddit.vo.def.StoremanageDefaultVO">
+  	<selectKey order="BEFORE" resultType="string" keyProperty="storemanageNo">
+		SELECT STOREMANAGE_SEQ.NEXTVAL FROM DUAL
+  	</selectKey>
+    insert into STOREMANAGE (STOREMANAGE_NO, STOREMANAGE_CN, STOREMANAGE_RESN,
+      STOREMANAGE_REGIST, STOREMANAGE_DE, STOREMANAGE_STTUS,
+      STOREMANAGE_PC, STOREMANAGE_ATCH, FRANCHISE_ID
+      )
+    values (#{storemanageNo,jdbcType=VARCHAR}
+    , #{storemanageCn,jdbcType=VARCHAR}
+    , #{storemanageResn,jdbcType=VARCHAR}
+    , #{storemanageRegist,jdbcType=TIMESTAMP}
+    <if test="storemanageDe != null">
+	, #{storemanageDe,jdbcType=TIMESTAMP}
+	</if>
+	<if test="storemanageDe == null">
+	,SYSDATE
+	</if>
+    , 'N'
+    , #{storemanagePc,jdbcType=NUMERIC}
+    , #{storemanageAtch,jdbcType=VARCHAR}
+    , #{franchiseId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateStoremanage" parameterType="kr.or.ddit.vo.def.StoremanageDefaultVO">
+    update STOREMANAGE
+    set STOREMANAGE_CN = #{storemanageCn,jdbcType=VARCHAR},
+      STOREMANAGE_RESN = #{storemanageResn,jdbcType=VARCHAR},
+      STOREMANAGE_REGIST = #{storemanageRegist,jdbcType=TIMESTAMP},
+      STOREMANAGE_DE = #{storemanageDe,jdbcType=TIMESTAMP},
+      STOREMANAGE_STTUS = #{storemanageSttus,jdbcType=VARCHAR},
+      STOREMANAGE_PC = #{storemanagePc,jdbcType=NUMERIC},
+      STOREMANAGE_ATCH = #{storemanageAtch,jdbcType=VARCHAR},
+      FRANCHISE_ID = #{franchiseId,jdbcType=VARCHAR}
+    where STOREMANAGE_NO = #{storemanageNo,jdbcType=VARCHAR}
+  </update>
+  <select id="selectStoremanage" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select STOREMANAGE_NO, STOREMANAGE_CN, STOREMANAGE_RESN, STOREMANAGE_REGIST, STOREMANAGE_DE,
+    STOREMANAGE_STTUS, STOREMANAGE_PC, STOREMANAGE_ATCH, FRANCHISE_ID
+    from STOREMANAGE
+    where STOREMANAGE_NO = #{storemanageNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectStoremanageList" parameterType="string">
+    select STOREMANAGE_NO, STOREMANAGE_CN, STOREMANAGE_RESN, STOREMANAGE_REGIST, STOREMANAGE_DE,
+    STOREMANAGE_STTUS, STOREMANAGE_PC, STOREMANAGE_ATCH, FRANCHISE_ID
+    from STOREMANAGE
+    WHERE FRANCHISE_ID = #{franchiseId}
+  </select>
+  <select id="CHeckStoreManage" parameterType="string">
+	select count(STOREMANAGE_NO)
+	from STOREMANAGE
+	where STOREMANAGE_NO = #{storemanageNo,jdbcType=VARCHAR}
+  </select>
+  <select id="StoremanageList" resultMap="BaseResultMap">
+   select *
+   from  storemanage a inner join franchise b on ( a.franchise_id = b. franchise_id)
+  </select>
+</mapper>

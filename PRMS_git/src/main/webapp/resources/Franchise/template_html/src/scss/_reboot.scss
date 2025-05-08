@@ -1,0 +1,9 @@
+body {
+	@if ($enable-rtl) {
+		direction: rtl;
+	}
+	&:not(.app-init) * {
+		transition: none !important;
+		animation: none !important;
+	}
+}

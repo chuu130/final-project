@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.ExchangeDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.ExchangeDefaultVO">
+    <id column="EXCHNG_RTNGUD_ID" jdbcType="VARCHAR" property="exchngRtngudId" />
+    <id column="ORDER_DTLS_ID" jdbcType="VARCHAR" property="orderDtlsId" />
+    <result column="EXCHNG_RTNGUD_RESN" jdbcType="VARCHAR" property="exchngRtngudResn" />
+    <result column="EXCHNG_RTNGUD_DE" jdbcType="TIMESTAMP" property="exchngRtngudDe" />
+    <result column="EXCHNG_RTNGUD_SE" jdbcType="VARCHAR" property="exchngRtngudSe" />
+    <result column="EXCHNG__DE" jdbcType="TIMESTAMP" property="exchngDe" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from EXCHANGE
+    where EXCHNG_RTNGUD_ID = #{exchngRtngudId,jdbcType=VARCHAR}
+      and ORDER_PROD_DETAIL = #{orderProdDetail,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.ExchangeDefaultVO">
+    insert into EXCHANGE (EXCHNG_RTNGUD_ID, ORDER_PROD_DETAIL, 
+      EXCHNG_RTNGUD_RESN, EXCHNG_RTNGUD_DE, EXCHNG_RTNGUD_SE, 
+      EXCHNG__DE)
+    values (#{exchngRtngudId,jdbcType=VARCHAR}, #{orderProdDetail,jdbcType=VARCHAR}, 
+      #{exchngRtngudResn,jdbcType=VARCHAR}, #{exchngRtngudDe,jdbcType=TIMESTAMP}, #{exchngRtngudSe,jdbcType=VARCHAR}, 
+      #{exchngDe,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.ExchangeDefaultVO">
+    update EXCHANGE
+    set EXCHNG_RTNGUD_RESN = #{exchngRtngudResn,jdbcType=VARCHAR},
+      EXCHNG_RTNGUD_DE = #{exchngRtngudDe,jdbcType=TIMESTAMP},
+      EXCHNG_RTNGUD_SE = #{exchngRtngudSe,jdbcType=VARCHAR},
+      EXCHNG__DE = #{exchngDe,jdbcType=TIMESTAMP}
+    where EXCHNG_RTNGUD_ID = #{exchngRtngudId,jdbcType=VARCHAR}
+      and ORDER_PROD_DETAIL = #{orderProdDetail,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select EXCHNG_RTNGUD_ID, ORDER_PROD_DETAIL, EXCHNG_RTNGUD_RESN, EXCHNG_RTNGUD_DE, 
+    EXCHNG_RTNGUD_SE, EXCHNG__DE
+    from EXCHANGE
+    where EXCHNG_RTNGUD_ID = #{exchngRtngudId,jdbcType=VARCHAR}
+      and ORDER_PROD_DETAIL = #{orderProdDetail,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select EXCHNG_RTNGUD_ID, ORDER_PROD_DETAIL, EXCHNG_RTNGUD_RESN, EXCHNG_RTNGUD_DE, 
+    EXCHNG_RTNGUD_SE, EXCHNG__DE
+    from EXCHANGE
+  </select>
+</mapper>

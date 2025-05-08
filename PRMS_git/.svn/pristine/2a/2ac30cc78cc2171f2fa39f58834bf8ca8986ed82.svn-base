@@ -1,0 +1,198 @@
+@keyframes appSidebarSubMenuSlideInRight {
+	to { transform: translate3d(0, 0, 0); }
+}
+
+.app-sidebar {
+	width: $app-sidebar-width;
+	position: fixed;
+	top: $app-header-height;
+	bottom: 0;
+	z-index: $app-sidebar-zindex;
+	padding: 0;
+	
+	@if $enable-rtl {
+		right: 0;
+	} @else {
+		left: 0;
+	}
+	
+	@include media-breakpoint-down(md) {
+		top: 0;
+		z-index: $app-sidebar-mobile-zindex;
+		background: var(--#{$prefix}app-sidebar-mobile-bg);
+		
+		@if $enable-rtl {
+			right: -$app-sidebar-width;
+		} @else {
+			left: -$app-sidebar-width;
+		}
+	}
+	
+	& .app-sidebar-content {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		
+		& .menu {
+			position: relative;
+			
+			& .menu-profile {
+				padding: $spacer;
+				
+				& .menu-profile-link {
+					color: var(--#{$prefix}body-color);
+					text-decoration: none;
+					
+					& .menu-profile-image {
+						width: rem(60px);
+						height: rem(60px);
+						margin-bottom: $spacer;
+						
+						& .menu-profile-img {
+							width: 100%;
+							height: 100%;
+							background-size: cover;
+							background-position: center;
+							border-radius: rem(60px);
+						}
+					}
+					& .menu-profile-info {
+						& small {
+							color: rgba(var(--#{$prefix}body-color-rgb), .5);
+						}
+					}
+				}
+			}
+			
+			& .menu-header {
+				padding: 0;
+				padding: $spacer $spacer $spacer * 0.5;
+				font-size: $font-size-base * .75;
+				font-weight: $font-weight-bold;
+				color: var(--#{$prefix}body-color);
+				font-weight: $font-weight-bold;
+				font-size: $font-size-base * .85;
+			}
+			& .menu-item {
+				margin-bottom: $spacer * .15;
+				padding: 0 $spacer 0 0;
+				
+				& .menu-link {
+					text-decoration: none;
+					position: relative;
+					padding: $spacer * .5 $spacer * 1.25;
+					line-height: 1.45;
+					border-radius: 0 $spacer * 1.25 $spacer * 1.25 0;
+					color: var(--#{$prefix}app-sidebar-color);
+					display: flex;
+					align-items: center;
+					justify-content: flex-end;
+					transition: all .2s ease-in-out;
+					
+					& .menu-icon {
+						width: rem(20px);
+						height: rem(20px);
+						margin: rem(-4px) 0;
+						position: relative;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						font-size: $font-size-base * 1.2;
+						opacity: .25;
+						
+						@if $enable-rtl {
+							margin-left: $spacer;
+						} @else {
+							margin-right: $spacer;
+						}
+					}
+					& .menu-caret {
+						margin: rem(-5px) 0;
+					}
+					& .menu-text {
+						flex: 1;
+					}
+					&:hover,
+					&:focus {
+						color: var(--#{$prefix}app-sidebar-link-hover-color);
+						background: var(--#{$prefix}app-sidebar-link-hover-bg);
+					}
+				}
+				& .menu-submenu {
+					background: none;
+					display: none;
+					padding: $spacer * .15 0;
+					
+					& .menu-item {
+						position: relative;
+						padding: 0;
+						
+						& .menu-link {
+							@if $enable-rtl {
+								padding-right: $spacer * 3.5;
+							} @else {
+								padding-left: $spacer * 3.5;
+							}
+						}
+						& .menu-item {
+							& .menu-link {
+								@if $enable-rtl {
+									padding-right: $spacer * 4.75;
+								} @else {
+									padding-left: $spacer * 4.75;
+								}
+							}
+						}
+					}
+				}
+				&.active {
+					&:not(.has-sub) > .menu-link {
+					 	font-weight: $font-weight-bold;
+						color: var(--#{$prefix}app-sidebar-link-active-color);
+						background: var(--#{$prefix}app-sidebar-link-active-bg);
+					}
+					& > .menu-link {
+						& .menu-icon {
+							opacity: 1;
+						}
+					}
+					&.has-sub {
+						& > .menu-submenu {
+							display: block;
+						}
+					}
+				}
+				&.expand {
+					& > .menu-submenu {
+						display: block;
+						
+						& > .menu-item {
+							animation: appSidebarSubMenuSlideInRight 0.3s both cubic-bezier(0.7, 0, 0.3, 1);
+							
+							@if $enable-rtl {
+								transform: translate3d(100%, 0, 0);
+							} @else {
+								transform: translate3d(-100%, 0, 0);
+							}
+						}
+					}
+				}
+			}
+			
+			@for $i from 2 through 50 {
+				$time: 15 + (15 * $i);
+				$delay: $time * 1ms;
+			
+				& .collapse.expand > .menu-item,
+				& .menu-item > .menu-submenu > .menu-item {
+					&:nth-child(#{$i}) {
+						animation-delay: $delay;
+					}
+				}
+			}
+		}
+	}
+	& .app-sidebar-mobile-backdrop {
+		display: none;
+	}
+}

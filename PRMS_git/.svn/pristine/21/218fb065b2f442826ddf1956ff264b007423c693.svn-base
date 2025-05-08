@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.franchise.franchisee.mapper.FranCalendarMapper">
+	<resultMap id="BaseResultMap" type="FranCalendarVO">
+		<id column="CAL_NO" jdbcType="NUMERIC" property="calNo" />
+		<result column="TITLE" jdbcType="VARCHAR" property="title" />
+		<result column="START" jdbcType="DATE" property="start" />
+		<result column="END" jdbcType="DATE" property="end" />
+		<result column="COLOR" jdbcType="VARCHAR" property="color" />
+		<result column="TEXTCOLOR" jdbcType="VARCHAR" property="textColor" />
+		<result column="FRANCHISE_ID" jdbcType="VARCHAR" property="franchiseId" />
+		<association property="franchise" javaType="FranchiseDefaultVO" autoMapping="true" />
+	</resultMap>
+
+	<select id="selectFranCalendarList">
+		select *
+		from francalendar
+	</select>
+
+	<insert id="insertFranCalendar" parameterType="kr.or.ddit.vo.FranCalendarVO">
+		INSERT INTO FRANCALENDAR(
+			TITLE,
+			"START",
+			"END",
+			COLOR,
+			TEXTCOLOR,
+			CAL_NO,
+			FRANCHISE_ID)
+		VALUES (
+			#{title, jdbcType=VARCHAR},
+			#{start, jdbcType=TIMESTAMP},
+			#{end, jdbcType=TIMESTAMP},
+			#{color, jdbcType=VARCHAR},
+			#{textColor, jdbcType=VARCHAR},
+			FRANCALENDAR_SEQ.nextval,
+			#{franchiseId, jdbcType=VARCHAR}
+		)
+
+	</insert>
+	<select id="checkFcalendar" parameterType="int">
+		select count(CAL_NO)
+		from FRANCALENDAR
+		where CAL_NO = #{calNo}
+	</select>
+
+	<delete id="deleteAll">
+		DELETE FROM francalendar
+	</delete>
+
+	<select id="selectFrancalendar" parameterType="int" resultMap="BaseResultMap">
+		select a.*, b.*
+		from francalendar a inner join franchise b on (a.franchise_id = b.franchise_id)
+		where cal_no = #{calNo}
+	</select>
+
+	<update id="updatefrancal" parameterType="FranCalendarVO">
+		update francalendar
+		set
+			TITLE = #{title, jdbcType=VARCHAR},
+			"START" = #{start, jdbcType=TIMESTAMP},
+			"END" = #{end, jdbcType=TIMESTAMP}
+		where cal_no = #{calNo}
+	</update>
+
+	<delete id="deletefrancal" parameterType="int">
+		delete from francalendar
+		where cal_no = #{calNo}
+	</delete>
+
+	<select id="selectFranCalendarListed" parameterType="string">
+		select *
+		from francalendar
+		where FRANCHISE_ID = ${franchiseId}
+	</select>
+</mapper>

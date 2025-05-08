@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.EmergencydtDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.EmergencydtDefaultVO">
+    <id column="EDETAIL_NO" jdbcType="VARCHAR" property="edetailNo" />
+    <result column="EDETAIL_QY" jdbcType="NUMERIC" property="edetailQy" />
+    <result column="EDETAIL_PC" jdbcType="NUMERIC" property="edetailPc" />
+    <result column="EMER_NO" jdbcType="VARCHAR" property="emerNo" />
+    <result column="FIV_ID" jdbcType="VARCHAR" property="fivId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from EMERGENCYDT
+    where EDETAIL_NO = #{edetailNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.EmergencydtDefaultVO">
+    insert into EMERGENCYDT (EDETAIL_NO, EDETAIL_QY, EDETAIL_PC, 
+      EMER_NO, FIV_ID)
+    values (#{edetailNo,jdbcType=VARCHAR}, #{edetailQy,jdbcType=NUMERIC}, #{edetailPc,jdbcType=NUMERIC}, 
+      #{emerNo,jdbcType=VARCHAR}, #{fivId,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.EmergencydtDefaultVO">
+    update EMERGENCYDT
+    set EDETAIL_QY = #{edetailQy,jdbcType=NUMERIC},
+      EDETAIL_PC = #{edetailPc,jdbcType=NUMERIC},
+      EMER_NO = #{emerNo,jdbcType=VARCHAR},
+      FIV_ID = #{fivId,jdbcType=VARCHAR}
+    where EDETAIL_NO = #{edetailNo,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select EDETAIL_NO, EDETAIL_QY, EDETAIL_PC, EMER_NO, FIV_ID
+    from EMERGENCYDT
+    where EDETAIL_NO = #{edetailNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select EDETAIL_NO, EDETAIL_QY, EDETAIL_PC, EMER_NO, FIV_ID
+    from EMERGENCYDT
+  </select>
+</mapper>

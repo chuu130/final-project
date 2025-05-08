@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.PartprodDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.PartprodDefaultVO">
+    <id column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+    <result column="PARTNERS_ID" jdbcType="VARCHAR" property="partnersId" />
+    <result column="PARTPROD_NM" jdbcType="VARCHAR" property="partprodNm" />
+    <result column="PARTPROD_IMAGE" jdbcType="VARCHAR" property="partprodImage" />
+    <result column="PARTPROD_SE" jdbcType="VARCHAR" property="partprodSe" />
+    <result column="PARTPROD_PC" jdbcType="NUMERIC" property="partprodPc" />
+  </resultMap>
+  <delete id="deletePartProd" parameterType="java.lang.String">
+    delete from PARTPROD
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertPartProd" parameterType="kr.or.ddit.vo.def.PartprodDefaultVO">
+    insert into PARTPROD (PROD_ID, PARTNERS_ID, PARTPROD_NM,
+      PARTPROD_IMAGE, PARTPROD_SE, PARTPROD_PC
+      )
+    values (#{prodId,jdbcType=VARCHAR}, #{partnersId,jdbcType=VARCHAR}, #{partprodNm,jdbcType=VARCHAR},
+      #{partprodImage,jdbcType=VARCHAR}, #{partprodSe,jdbcType=VARCHAR}, #{partprodPc,jdbcType=NUMERIC}
+      )
+  </insert>
+  <update id="updatePartProd" parameterType="kr.or.ddit.vo.def.PartprodDefaultVO">
+    update PARTPROD
+    set PARTNERS_ID = #{partnersId,jdbcType=VARCHAR},
+      PARTPROD_NM = #{partprodNm,jdbcType=VARCHAR},
+      PARTPROD_IMAGE = #{partprodImage,jdbcType=VARCHAR},
+      PARTPROD_SE = #{partprodSe,jdbcType=VARCHAR},
+      PARTPROD_PC = #{partprodPc,jdbcType=NUMERIC}
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectPartProd" parameterType="string">
+    select PROD_ID, PARTNERS_ID, PARTPROD_NM, PARTPROD_IMAGE, PARTPROD_SE, PARTPROD_PC
+    from PARTPROD
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectPartProdList" resultMap="BaseResultMap">
+    select ROWNUM AS RNUM, a.*
+	from PARTPROD a
+  </select>
+  <select id="selectPartProdListPaging" resultType="PartprodDefaultVO">
+	SELECT * FROM (
+	    SELECT ROWNUM RNUM, a.*
+	    FROM PartProd a
+	    ORDER BY RNUM DESC
+	)
+	WHERE RNUM >= #{firstRecord} AND RNUM <![CDATA[<=]]> #{lastRecord}
+  </select>
+  <select id="countedPartProd">
+  	select count(prod_id)
+  	from partprod
+  </select>
+</mapper>

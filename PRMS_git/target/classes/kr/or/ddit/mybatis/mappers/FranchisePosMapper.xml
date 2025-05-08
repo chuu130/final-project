@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.franchise.common.mapper.FranchisePosMapper">
+	
+	<select id="selectFranchiseProdList" resultType="FranchisePosVO">
+		SELECT A.FRANPROD_NM
+				, A.FRANPROD_PC
+				, A.FRANPROD_IMAGE
+				, A.FRANPROD_ID
+				, A.FRANPROD_DC
+				, C.FIV_QY "inventory.fivQy"
+				, F.CMMN_CODE_NM "cmmncode.cmmnCodeNm"
+			FROM FRANPROD A INNER JOIN PROD B ON (A.PROD_ID = B.PROD_ID)
+			INNER JOIN INVENTORY C ON (A.FRANPROD_ID = C.FRANPROD_ID)
+			INNER JOIN ADMININV D ON (B.PROD_ID = D.PROD_ID)
+			INNER JOIN PARTPROD E ON (D.PROD_ID = E.PROD_ID)
+			INNER JOIN CMMNCODE F ON (E.PARTPROD_SE = F.CMMN_CODE_ID)
+			AND A.FRANCHISE_ID = #{franId}
+		GROUP BY A.FRANPROD_NM, A.FRANPROD_PC, A.FRANPROD_IMAGE, A.FRANPROD_ID, A.FRANPROD_DC, C.FIV_QY, F.CMMN_CODE_NM
+	</select>
+	
+	<select id="selectFranchiseProdDetail" resultType="FranchisePosVO">
+		SELECT A.FRANPROD_NM, A.FRANPROD_PC, A.FRANPROD_IMAGE, A.FRANPROD_ID, A.FRANPROD_DC, C.FIV_QY "inventory.fivQy", F.CMMN_CODE_NM "cmmncode.cmmnclCodeNm"
+			FROM FRANPROD A INNER JOIN PROD B ON (A.PROD_ID = B.PROD_ID)
+			INNER JOIN INVENTORY C ON (A.FRANPROD_ID = C.FRANPROD_ID)
+			INNER JOIN ADMININV D ON (B.PROD_ID = D.PROD_ID)
+			INNER JOIN PARTPROD E ON (D.PROD_ID = E.PROD_ID)
+			INNER JOIN CMMNCODE F ON (E.PARTPROD_SE = F.CMMN_CODE_ID)
+		AND A.FRANPROD_ID = #{franProdId}
+		GROUP BY A.FRANPROD_NM, A.FRANPROD_PC, A.FRANPROD_IMAGE, A.FRANPROD_ID, A.FRANPROD_DC, C.FIV_QY, F.CMMN_CODE_NM
+	</select>
+	
+	
+	<insert id="insertProdSetl">
+		INSERT INTO FRANPRODSETL(FRANPROD_SETL_NO, FRANPROD_SETL_DE, FRANCHISE_ID, FRANCHISE_SETL_PC)
+		VALUES(#{franId} || TO_CHAR(FRANPRODSETL_SEQ.NEXTVAL), SYSDATE, #{franId}, #{totalPc})
+	</insert>
+	
+	<insert id="insertPaymentDetail">
+		INSERT INTO SETLDT(
+		FSM_DTLS_NO
+		, FSM_DTLS_NM
+		, FSM_DTLS_QY
+		, FSM_DTLS_PC
+		, FRANPROD_ID
+		, FRANPROD_SETL_NO
+		)
+		VALUES(
+		(SELECT MAX(FRANPROD_SETL_NO)
+		FROM FRANPRODSETL
+		WHERE FRANCHISE_ID = #{franId}) || TO_CHAR(SETLDT_SEQ.NEXTVAL)
+		,'상품결제'
+		,#{prodQty}
+		,#{prodTotalPc}
+		,#{prodId}
+		,(SELECT MAX(FRANPROD_SETL_NO)
+		FROM FRANPRODSETL
+		WHERE FRANCHISE_ID = #{franId})
+		
+		)
+	</insert>
+	
+	
+	<resultMap type="SetlDtVO" id="setlDtMap" autoMapping="true">
+		<id property="franprodSetlNo" column="FRANPROD_SETL_NO"/>
+		<association property="franprodsetl" javaType="FranprodsetlDefaultVO" autoMapping="true" />
+		<association property="cancle" javaType="CancleDefaultVO" autoMapping="true"></association>
+		<collection property="franprod" ofType="FranprodDefaultVO" autoMapping="true">
+			<id property="franprodId" column="FRANPROD_ID"/>
+		</collection>
+	</resultMap>
+	
+	<select id="selectPosHistoryList" resultMap="setlDtMap">
+		    
+		    SELECT A.FSM_DTLS_NO
+		    , B.FRANPROD_SETL_NO
+		    ,B.FRANPROD_SETL_DE
+		    ,B.FRANCHISE_SETL_PC
+            ,C.FRANPROD_NM
+            ,C.FRANPROD_IMAGE
+            ,C.FRANPROD_PC
+            ,A.FSM_DTLS_QY
+		FROM SETLDT A INNER JOIN FRANPRODSETL B ON (A.FRANPROD_SETL_NO = B.FRANPROD_SETL_NO)
+            INNER JOIN FRANPROD C ON (A.FRANPROD_ID = C.FRANPROD_ID)
+		    WHERE B.FRANCHISE_ID = #{franId}
+		    AND B.FRANCHISE_REFUND_YN ='N'
+		    GROUP BY  A.FSM_DTLS_NO
+		    , B.FRANPROD_SETL_NO
+		    ,B.FRANPROD_SETL_DE
+		    ,B.FRANCHISE_SETL_PC
+            ,C.FRANPROD_NM
+            ,C.FRANPROD_IMAGE
+            ,C.FRANPROD_PC
+            ,A.FSM_DTLS_QY
+            ORDER BY B.FRANPROD_SETL_NO DESC
+		    
+		    
+	</select>
+	
+	<insert id="insertPosCancle">
+		INSERT INTO CANCLE(CANCLE_NO, FRANPROD_SETL_NO, CANCLE_DE)
+		VALUES(CANCLE_SEQ.NEXTVAL, #{franprodSetlNo}, SYSDATE)
+	</insert>
+	
+	
+	<update id="updatePosCancleYn">
+		UPDATE FRANPRODSETL
+		SET FRANCHISE_REFUND_YN ='Y'
+		WHERE FRANPROD_SETL_NO = #{franprodSetlNo}
+	</update>
+	
+	
+	
+	
+	
+	<select id="selectPosCancleList" resultMap="setlDtMap">
+		 SELECT A.FSM_DTLS_NO
+		    , B.FRANPROD_SETL_NO
+		    ,B.FRANPROD_SETL_DE
+		    ,B.FRANCHISE_SETL_PC
+            ,C.FRANPROD_NM
+            ,C.FRANPROD_IMAGE
+            ,C.FRANPROD_PC
+            ,A.FSM_DTLS_QY
+            ,D.CANCLE_DE
+		FROM SETLDT A INNER JOIN FRANPRODSETL B ON (A.FRANPROD_SETL_NO = B.FRANPROD_SETL_NO)
+            INNER JOIN FRANPROD C ON (A.FRANPROD_ID = C.FRANPROD_ID)
+            INNER JOIN CANCLE D ON (D.FRANPROD_SETL_NO = B.FRANPROD_SETL_NO)
+		    WHERE B.FRANCHISE_ID = #{franId}
+		    AND B.FRANCHISE_REFUND_YN ='Y'
+		    GROUP BY  A.FSM_DTLS_NO
+		    , B.FRANPROD_SETL_NO
+		    ,B.FRANPROD_SETL_DE
+		    ,B.FRANCHISE_SETL_PC
+            ,C.FRANPROD_NM
+            ,C.FRANPROD_IMAGE
+            ,C.FRANPROD_PC
+            ,A.FSM_DTLS_QY
+            ,D.CANCLE_DE
+            ORDER BY B.FRANPROD_SETL_NO DESC
+	</select>
+	
+	
+	<select id="selectPosDate" resultMap="setlDtMap">
+		SELECT B.FRANPROD_SETL_NO
+            ,A.FSM_DTLS_NO
+		    ,B.FRANPROD_SETL_DE
+		    ,B.FRANCHISE_SETL_PC
+            ,C.FRANPROD_NM
+            ,C.FRANPROD_IMAGE
+            ,C.FRANPROD_PC
+            ,A.FSM_DTLS_QY
+		FROM SETLDT A INNER JOIN FRANPRODSETL B ON (A.FRANPROD_SETL_NO = B.FRANPROD_SETL_NO)
+            INNER JOIN FRANPROD C ON (A.FRANPROD_ID = C.FRANPROD_ID)
+		    WHERE B.FRANCHISE_ID = #{franId}
+            AND TO_CHAR(B.FRANPROD_SETL_DE, 'YYYY-MM-DD') = #{date}
+            AND B.FRANCHISE_REFUND_YN = 'N'
+		    GROUP BY  B.FRANPROD_SETL_NO
+             ,A.FSM_DTLS_NO
+		    ,B.FRANPROD_SETL_DE
+		    ,B.FRANCHISE_SETL_PC
+            ,C.FRANPROD_NM
+            ,C.FRANPROD_IMAGE
+            ,C.FRANPROD_PC
+            ,A.FSM_DTLS_QY
+            ORDER BY B.FRANPROD_SETL_NO ASC
+	</select>
+	
+	
+	<select id="selectPosCancleDate" resultMap="setlDtMap">
+		SELECT B.FRANPROD_SETL_NO
+            ,A.FSM_DTLS_NO
+		    ,B.FRANPROD_SETL_DE
+		    ,B.FRANCHISE_SETL_PC
+            ,C.FRANPROD_NM
+            ,C.FRANPROD_IMAGE
+            ,C.FRANPROD_PC
+            ,A.FSM_DTLS_QY
+            ,D.CANCLE_DE
+		FROM SETLDT A INNER JOIN FRANPRODSETL B ON (A.FRANPROD_SETL_NO = B.FRANPROD_SETL_NO)
+            INNER JOIN FRANPROD C ON (A.FRANPROD_ID = C.FRANPROD_ID)
+            INNER JOIN CANCLE D ON (D.FRANPROD_SETL_NO = B.FRANPROD_SETL_NO)
+		    WHERE B.FRANCHISE_ID = #{franId}
+            AND TO_CHAR(B.FRANPROD_SETL_DE, 'YYYY-MM-DD') = #{date}
+            AND B.FRANCHISE_REFUND_YN = 'Y'
+		    GROUP BY  B.FRANPROD_SETL_NO
+             ,A.FSM_DTLS_NO
+		    ,B.FRANPROD_SETL_DE
+		    ,B.FRANCHISE_SETL_PC
+            ,C.FRANPROD_NM
+            ,C.FRANPROD_IMAGE
+            ,C.FRANPROD_PC
+            ,A.FSM_DTLS_QY
+            ,D.CANCLE_DE
+            ORDER BY B.FRANPROD_SETL_NO ASC
+	</select>
+	
+	<select id="selectSetlPK">
+		SELECT MAX(FRANPROD_SETL_NO)
+		FROM FRANPRODSETL
+		WHERE FRANCHISE_ID = #{franId}
+	</select>
+	
+	<insert id="insertFranPosSelling" >
+	
+		INSERT INTO FRANSELLING (
+		    FSEL_NO,
+		    FRANCHISEE_ID,
+		    FSEL_SE,
+		    FSEL_NM,
+		    FSEL_CN,
+		    FSEL_DE,
+		    FSEL_AMOUNT
+		)
+		SELECT
+		    'FSEL' || FRANSELLING_SEQ.NEXTVAL,
+		    #{franId},
+		    'COMN18DT006',
+		    '포스기상품 판매비',
+		    (SELECT LISTAGG(FRANPROD_NM || '(' || FSM_DTLS_QY || '개)', ', ') WITHIN GROUP (ORDER BY FRANPROD_NM)
+                 FROM SETLDT E INNER JOIN FRANPROD F ON (E.FRANPROD_ID = F.FRANPROD_ID)
+                 WHERE FRANPROD_SETL_NO = #{franSetlNo}
+		    ),
+		    SYSDATE,
+		    #{totalPc}
+            FROM FRANPRODSETL
+            WHERE FRANPROD_SETL_NO = #{franSetlNo}
+		
+	</insert>
+	
+	
+	<select id="selectExpensePK" resultType="FranprodsetlDefaultVO">
+		SELECT FRANCHISE_ID
+			, FRANCHISE_SETL_PC
+		FROM FRANPRODSETL 
+		WHERE FRANPROD_SETL_NO = #{franSetlNo}
+       
+	</select>
+	
+	
+	<insert id="insertFranPosExpense">
+		INSERT INTO EXPENSE (
+		    FEXPS_NO,
+		    FRANCHISEE_ID,
+		    FEXPS_SE,
+		    FEXPS_NM,
+		    FEXPS_CN,
+		    FEXPS_DE,
+		    FEXPS_AMOUNT
+		)
+		SELECT
+		    'FEXPS' || EXPENSE_SEQ.NEXTVAL,
+		    #{franId},
+		    'COMN16DT007',
+		    '포스기상품 환불비',
+		    (SELECT LISTAGG(FRANPROD_NM || '(' || FSM_DTLS_QY || '개)', ', ') WITHIN GROUP (ORDER BY FRANPROD_NM)
+		                 FROM SETLDT E INNER JOIN FRANPROD F ON (E.FRANPROD_ID = F.FRANPROD_ID)
+		                 WHERE FRANPROD_SETL_NO = #{franSetlNo}),
+		    SYSDATE,
+		    #{totalPc}
+		FROM FRANPRODSETL
+		WHERE FRANPROD_SETL_NO = #{franSetlNo}
+	
+	</insert>
+	
+	
+	
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.market.member.mapper.ReviewStatusMapper">
+
+  <insert id="insertReviewStatNo" parameterType="kr.or.ddit.vo.def.ReviewstatusDefaultVO">
+    <selectKey order="BEFORE" resultType="string" keyProperty="reviewReport">
+	SELECT REVIEWSTATUS_SEQ.NEXTVAL FROM DUAL
+  	</selectKey>
+    insert into REVIEWSTATUS 
+    (REVIEW_REPORT
+    , REVIEW_REPORT_DE
+    , REVIEW_REPORT_RESN
+    , REVIEW_NO
+    , REVIEW_MEM
+    , REVIEW_COUNT)
+    values (
+    #{reviewReport,jdbcType=VARCHAR}
+    <if test="reviewReportDe != null">
+    , #{reviewReportDe,jdbcType=TIMESTAMP}
+    </if>
+    <if test="reviewReportDe == null">
+    ,SYSDATE
+    </if>
+    , #{reviewReportResn,jdbcType=VARCHAR}
+    , #{reviewNo,jdbcType=VARCHAR}
+    , #{reviewMem,jdbcType=VARCHAR}
+    , 0)
+  </insert>
+  
+  <update id="updateReviewStatNo" parameterType="kr.or.ddit.vo.def.ReviewstatusDefaultVO">
+    update REVIEWSTATUS
+    set REVIEW_REPORT_DE = #{reviewReportDe,jdbcType=TIMESTAMP},
+      REVIEW_REPORT_RESN = #{reviewReportResn,jdbcType=VARCHAR},
+      REVIEW_NO = #{reviewNo,jdbcType=VARCHAR}
+      REVIEW_MEM = #{reviewMem,jdbcType=VARCHAR}
+    where REVIEW_REPORT = #{reviewReport,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectReviewStatNo" parameterType="java.lang.String" resultType="kr.or.ddit.vo.def.ReviewstatusDefaultVO">
+    select REVIEW_REPORT
+    , REVIEW_REPORT_DE
+    , REVIEW_REPORT_RESN
+    , REVIEW_NO
+    , REVIEW_MEM
+    from REVIEWSTATUS
+    where REVIEW_REPORT = #{reviewReport,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectAllreviewStat" resultType="kr.or.ddit.vo.def.ReviewstatusDefaultVO">
+    select REVIEW_REPORT
+    , REVIEW_REPORT_DE
+    , REVIEW_REPORT_RESN
+    , REVIEW_NO
+    , REVIEW_MEM
+    from REVIEWSTATUS
+  </select>
+  
+   <select id="selectReviewNo" resultType="kr.or.ddit.vo.def.ReviewstatusDefaultVO">
+  	select REVIEW_REPORT
+  	, REVIEW_REPORT_DE
+  	, REVIEW_REPORT_RESN
+  	, REVIEW_NO
+  	, REVIEW_MEM
+	from REVIEWSTATUS
+	where REVIEW_NO = #{reviewNo,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="checkReviewExist" parameterType="Map" resultType="Integer">
+    SELECT COUNT(1)
+	FROM REVIEWSTATUS
+	WHERE REVIEW_NO = #{reviewNo}
+	AND REVIEW_MEM = #{reviewMem}
+  </select>
+  
+  <select id="getReportCount" parameterType="Map" resultType="Integer">
+    SELECT SUM(REVIEW_COUNT)
+	FROM REVIEWSTATUS
+	WHERE REVIEW_NO = #{reviewNo}
+   </select>
+  
+  
+   <update id="incrementReportCount" parameterType="Map">
+     UPDATE REVIEWSTATUS
+     SET REVIEW_COUNT = REVIEW_COUNT + 1
+     WHERE REVIEW_NO = #{reviewNo}
+   </update>
+  
+   <delete id="deleteReviewStatNo" parameterType="kr.or.ddit.vo.ReviewVO">
+    delete from REVIEWSTATUS
+    where REVIEW_REPORT = #{reviewReport,jdbcType=VARCHAR}
+  </delete>
+</mapper>

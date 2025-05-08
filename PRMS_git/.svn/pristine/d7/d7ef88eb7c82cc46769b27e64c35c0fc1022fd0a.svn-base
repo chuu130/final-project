@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.headquarter.master.mapper.MasterIndexMapper">
+
+	<!-- 금년 본사 총매출을 조회하는 쿼리 -->
+	<select id="selectTotalRevenue" resultType="long">
+		SELECT (SELECT NVL(SUM(SELNG_AMOUNT),0)
+        	    FROM SELLING
+           		WHERE
+	                SUBSTR(TO_CHAR(SELNG_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4))
+              -(SELECT NVL(SUM(ADMINEXP_AMOUNT),0)
+            	 FROM ADMINEXP
+            	 WHERE
+                	SUBSTR(TO_CHAR(ADMINEXP_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+                	AND INSTR(ADMINEXP_NM, '환불') > 0 OR INSTR(ADMINEXP_NM,'반품') > 0) TOTAL
+				 FROM DUAL
+	</select>
+
+
+	<!-- 금년 쇼핑몰 총매출을 조회하는 쿼리 -->
+	<select id="selectOnlineProdTotalRevenue" resultType="long">
+		SELECT
+		    (SELECT NVL(SUM(SELNG_AMOUNT),0)
+		     FROM SELLING
+		    WHERE
+		        SUBSTR(TO_CHAR(SELNG_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+		        AND INSTR(SELNG_NM,'쇼핑몰') > 0)
+		  - (SELECT NVL(SUM(ADMINEXP_AMOUNT),0)
+		     FROM ADMINEXP
+		     WHERE
+		         SUBSTR(TO_CHAR(ADMINEXP_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+		        AND INSTR(ADMINEXP_NM, '쇼핑몰') > 0) TOTAL
+		FROM DUAL
+	</select>
+
+
+	<!-- 금년 전체가맹점 매출정보(상품, 미용, 호텔)를 조회하는 쿼리 -->
+	<select id="selectFranRevenue" resultType="long">
+		SELECT NVL(SUM(FSEL_AMOUNT),0)
+		FROM FRANSELLING
+		WHERE
+		    INSTR(FSEL_NM,'판매') > 0
+		    AND SUBSTR(TO_CHAR(FSEL_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+	</select>
+
+
+	<!-- 금년 전체가맹점 환불정보(상품, 미용, 호텔)을 조회하는 쿼리 -->
+	<select id="selectFranRefundRevenue" resultType="long">
+		SELECT NVL(SUM(FEXPS_AMOUNT),0)
+		FROM EXPENSE
+		WHERE
+		    INSTR(FEXPS_NM,'환불') > 0 OR INSTR(FEXPS_NM,'반품') > 0
+		    AND SUBSTR(TO_CHAR(FEXPS_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+	</select>
+
+
+	<!-- 금년 본사매출중, 가맹점 재고발주 비용을 조회하는 쿼리 -->
+	<select id="selectHeadFranProdRevenue" resultType="long">
+		SELECT NVL(SUM(SELNG_AMOUNT),0)
+		FROM SELLING
+		WHERE
+		    INSTR(SELNG_NM,'재고판매') > 0
+		    AND SUBSTR(TO_CHAR(SELNG_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+	</select>
+
+
+	<!-- 금년 본사지출중, 가맹점 재고환불 비용을 조회하는 쿼리 -->
+	<select id="selectHeadFranProdRefund" resultType="long">
+		SELECT NVL(SUM(ADMINEXP_AMOUNT),0)
+		FROM ADMINEXP
+		WHERE
+            SUBSTR(TO_CHAR(ADMINEXP_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+		    AND INSTR(ADMINEXP_NM,'재고신청') > 0 OR INSTR(ADMINEXP_NM,'재고반품') > 0 OR INSTR(ADMINEXP_NM,'발주취소') > 0
+	</select>
+
+
+	<!-- 금년 본사매출중, 가맹비를 조회하는 쿼리 -->
+	<select id="selectHeadFranMakerRevenue" resultType="long">
+		SELECT NVL(SUM(SELNG_AMOUNT),0)
+		FROM SELLING
+		WHERE
+		    INSTR(SELNG_NM,'가맹비') > 0
+		    AND SUBSTR(TO_CHAR(SELNG_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+	</select>
+
+
+	<!-- 금년 본사매출중, 가맹계약비를 조회하는 쿼리 -->
+	<select id="selectHeadFranStartRevenue" resultType="long">
+		SELECT NVL(SUM(SELNG_AMOUNT),0)
+		FROM SELLING
+		WHERE
+		    INSTR(SELNG_NM,'가맹계약') > 0
+		    AND SUBSTR(TO_CHAR(SELNG_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+	</select>
+
+
+	<!-- 오늘 가맹점 발주현황을 조회하는 쿼리 -->
+	<select id="selectTodayInvRequest" resultType="hashmap">
+		WITH FIREQSTTUSVIEW AS(
+			SELECT FIREQ_STTUS, COUNT(*) COUNT
+			FROM INVREQUEST
+			WHERE
+			    SUBSTR(TO_CHAR(FIREQ_DE),1,10) = SUBSTR(TO_CHAR(SYSDATE),1,10)
+			    AND FIREQ_STTUS != 'P'
+			GROUP BY FIREQ_STTUS
+
+			UNION ALL
+
+			SELECT FIREQ_STTUS, COUNT(*) COUNT
+			FROM INVREQUEST
+			WHERE
+			    FIREQ_STTUS = 'P'
+			GROUP BY FIREQ_STTUS
+		) SELECT *
+		  FROM FIREQSTTUSVIEW
+	</select>
+
+
+	<!-- 오늘 쇼핑몰 주문현황을 조회하는 쿼리 -->
+	<select id="selectTodayOnlineRequest" resultType="hashmap">
+		WITH DLVYSTTUSVIEW AS (
+			SELECT DLVY_STTUS, COUNT(*) COUNT
+			FROM DELIVERY A INNER JOIN MEMORDER B ON (A.ORDER_DTLS_ID = B.ORDER_DTLS_ID)
+			WHERE
+			    DLVY_STTUS = '입금확인' OR  DLVY_STTUS = '배송중'
+			GROUP BY DLVY_STTUS
+
+			UNION ALL
+
+			SELECT DLVY_STTUS, COUNT(*) COUNT
+			FROM DELIVERY A INNER JOIN MEMORDER B ON (A.ORDER_DTLS_ID = B.ORDER_DTLS_ID)
+			WHERE
+			    SUBSTR(TO_CHAR(ORDER_DE,'YYYY-MM-DD'),1,10) = SUBSTR(TO_CHAR(SYSDATE,'YYYY-MM-DD'),1,10)
+			    AND (DLVY_STTUS = '배송완료' OR  DLVY_STTUS = '취소완료')
+			GROUP BY DLVY_STTUS
+		) SELECT *
+		  FROM DLVYSTTUSVIEW
+	</select>
+
+
+	<!-- 금년 온라인 상품별 판매량을 조회하는 쿼리 -->
+	<select id="selectOnlineProdCount" resultType="MasterProdSalseVO">
+		SELECT
+		    PROD_ID
+		   , COUNT(PROD_ID) SUM_COUNT
+		FROM
+		    MEMORDER A LEFT OUTER JOIN ORDERDT B ON (A.ORDER_DTLS_ID = B.ORDER_DTLS_ID)
+		    INNER JOIN DELIVERY C ON (A.ORDER_DTLS_ID = C.ORDER_DTLS_ID)
+		WHERE
+		    FRANCHISEE_ID IS NULL
+		    AND SUBSTR(TO_CHAR(ORDER_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+		    AND DLVY_STTUS != '배송완료'
+		GROUP BY PROD_ID
+	</select>
+
+
+	<!-- 금년 가맹점 발주승인된 상품 수량을 조회하는 쿼리 -->
+	<select id="selectFranProdInvCount" resultType="MasterProdSalseVO">
+		SELECT
+		    PROD_ID
+		    , COUNT(PROD_ID) SUM_COUNT
+		FROM
+		    INVREQUEST A LEFT OUTER JOIN FIORDER B ON (A.FIREQ_ID = B.FIREQ_ID)
+		WHERE
+		    (SUBSTR(TO_CHAR(FIREQ_RESULT_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4) OR SUBSTR(TO_CHAR(FIREQ_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4))
+		    AND FIREQ_STTUS = 'Y'
+		GROUP BY PROD_ID
+	</select>
+
+	<!-- 위의 두 쿼리를 통합하여, TOP5 판매량 상품을 조회한다. (UNION ALL로 두쿼리 통합후, 그룹으로 묶음) -->
+	<select id="selectTop5ProdList" resultType="MasterProdSalseVO">
+		WITH PRODSALEVIEW AS (
+		    SELECT
+		        PROD_ID
+		       , COUNT(PROD_ID) SUM_COUNT
+		    FROM
+		        MEMORDER A LEFT OUTER JOIN ORDERDT B ON (A.ORDER_DTLS_ID = B.ORDER_DTLS_ID)
+		        INNER JOIN DELIVERY C ON (A.ORDER_DTLS_ID = C.ORDER_DTLS_ID)
+		    WHERE
+		        FRANCHISEE_ID IS NULL
+		        AND SUBSTR(TO_CHAR(ORDER_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+		        AND DLVY_STTUS != '배송완료'
+		    GROUP BY PROD_ID
+
+		    UNION ALL
+
+		    SELECT
+		        PROD_ID
+		        , COUNT(PROD_ID) SUM_COUNT
+		    FROM
+		        INVREQUEST A LEFT OUTER JOIN FIORDER B ON (A.FIREQ_ID = B.FIREQ_ID)
+		    WHERE
+		        (SUBSTR(TO_CHAR(FIREQ_RESULT_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4) OR SUBSTR(TO_CHAR(FIREQ_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4))
+		        AND FIREQ_STTUS = 'Y'
+		    GROUP BY PROD_ID
+		) SELECT PROD_ID, PROD_SLE_NM, SUM_COUNT
+		  FROM (
+		        SELECT A.PROD_ID, PROD_SLE_NM ,SUM(SUM_COUNT) SUM_COUNT
+		        FROM
+                    PRODSALEVIEW A INNER JOIN PROD B ON (A.PROD_ID = B.PROD_ID)
+		        GROUP BY A.PROD_ID, PROD_SLE_NM
+		        ORDER BY SUM_COUNT DESC
+		  ) C
+		  WHERE ROWNUM BETWEEN 1 AND 5
+	</select>
+
+
+
+	<!-- 월별 쇼핑몰 판매금액 + 환불금액 리스트를 조회하는 쿼리 -->
+	<select id="selectOnlineMonthTotal" resultType="MonthRevenue">
+		SELECT TO_CHAR(TO_NUMBER(SUBSTR(A.MONTHDT,6,2))) || '월' MONTH_DT, TOTAL_SELNG_AMOUNT SELLING, NVL(TOTAL_ADMINEXP_AMOUNT,0) REFUND
+		FROM (
+		    WITH ONLINEREVENUEMONTHVIEW AS (
+		    SELECT
+		        SUBSTR(TO_CHAR(SELNG_DE,'YYYY-MM-DD'),1,7) MONTHDT
+		        , SELNG_AMOUNT
+		    FROM SELLING
+		        WHERE  SUBSTR(TO_CHAR(SELNG_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+		        AND INSTR(SELNG_NM,'쇼핑몰') > 0
+		) SELECT MONTHDT, SUM(SELNG_AMOUNT) TOTAL_SELNG_AMOUNT
+		FROM ONLINEREVENUEMONTHVIEW
+		GROUP BY MONTHDT
+		) A LEFT OUTER JOIN (WITH ONLINEREFUNDMONTHVIEW AS (
+		    SELECT
+		        SUBSTR(TO_CHAR(ADMINEXP_DE,'YYYY-MM-DD'),1,7) MONTHDT
+		        , ADMINEXP_AMOUNT
+		    FROM ADMINEXP
+		        WHERE  SUBSTR(TO_CHAR(ADMINEXP_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+		        AND INSTR(ADMINEXP_NM,'쇼핑몰') > 0
+		) 	SELECT MONTHDT, SUM(ADMINEXP_AMOUNT) TOTAL_ADMINEXP_AMOUNT
+			FROM ONLINEREFUNDMONTHVIEW
+			GROUP BY MONTHDT) B ON (A.MONTHDT = B.MONTHDT)
+		ORDER BY MONTH_DT ASC
+	</select>
+
+
+	<!-- 월별 가맹점으로부터 얻은 수익을 조회하는 쿼리 -->
+	<select id="selectFranMonthTotal" resultType="MonthRevenue">
+		SELECT TO_CHAR(TO_NUMBER(SUBSTR(A.MONTHDT,6,2))) || '월' MONTH_DT, TOTAL_SELNG_AMOUNT SELLING, NVL(TOTAL_REFUND_AMOUNT,0) REFUND
+		FROM
+		(WITH FRANREVENUEMONTHVIEW AS (
+		    SELECT
+		        SUBSTR(TO_CHAR(SELNG_DE,'YYYY-MM-DD'),1,7) MONTHDT
+		        , SELNG_AMOUNT
+		    FROM SELLING
+		        WHERE  SUBSTR(TO_CHAR(SELNG_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+		        AND INSTR(SELNG_NM,'쇼핑몰') = 0
+		) SELECT MONTHDT, SUM(SELNG_AMOUNT) TOTAL_SELNG_AMOUNT
+		FROM FRANREVENUEMONTHVIEW
+		GROUP BY MONTHDT
+		ORDER BY MONTHDT ASC
+		) A LEFT OUTER JOIN
+		(WITH FRANREFUNDMONTHVIEW AS (
+		    SELECT
+		        SUBSTR(TO_CHAR(ADMINEXP_DE,'YYYY-MM-DD'),1,7) MONTHDT
+		        , ADMINEXP_AMOUNT
+		    FROM ADMINEXP
+		        WHERE  SUBSTR(TO_CHAR(ADMINEXP_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+		        AND INSTR(ADMINEXP_NM,'쇼핑몰') = 0
+		) SELECT MONTHDT, SUM(ADMINEXP_AMOUNT) TOTAL_REFUND_AMOUNT
+			FROM FRANREFUNDMONTHVIEW
+			GROUP BY MONTHDT
+			ORDER BY MONTHDT ASC
+		) B ON (A.MONTHDT = B.MONTHDT)
+		ORDER BY MONTH_DT ASC
+	</select>
+
+
+	<!-- 올해 본사 월별매출을 조회하는 쿼리 -->
+	<select id="selectThisYearMonthRevenue" resultType="MonthRevenue">
+		SELECT TO_CHAR(TO_NUMBER(SUBSTR(A.MONTHDT,6,2))) || '월' MONTH_DT, TOTAL_SELNG_AMOUNT SELLING, NVL(TOTAL_ADMINEXP_AMOUNT,0) REFUND
+		FROM (
+		    WITH ONLINEREVENUEMONTHVIEW AS (
+		    SELECT
+		        SUBSTR(TO_CHAR(SELNG_DE,'YYYY-MM-DD'),1,7) MONTHDT
+		        , SELNG_AMOUNT
+		    FROM SELLING
+		        WHERE  SUBSTR(TO_CHAR(SELNG_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+		) SELECT MONTHDT, SUM(SELNG_AMOUNT) TOTAL_SELNG_AMOUNT
+		FROM ONLINEREVENUEMONTHVIEW
+		GROUP BY MONTHDT
+		) A LEFT OUTER JOIN (WITH ONLINEREFUNDMONTHVIEW AS (
+		    SELECT
+		        SUBSTR(TO_CHAR(ADMINEXP_DE,'YYYY-MM-DD'),1,7) MONTHDT
+		        , ADMINEXP_AMOUNT
+		    FROM ADMINEXP
+		        WHERE  SUBSTR(TO_CHAR(ADMINEXP_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+		) 	SELECT MONTHDT, SUM(ADMINEXP_AMOUNT) TOTAL_ADMINEXP_AMOUNT
+			FROM ONLINEREFUNDMONTHVIEW
+			GROUP BY MONTHDT) B ON (A.MONTHDT = B.MONTHDT)
+		ORDER BY MONTH_DT ASC
+	</select>
+
+
+	<!-- 작년 본사 월별매출을 조회하는 쿼리 -->
+	<select id="selectLastYearMonthRevenue" resultType="MonthRevenue">
+		SELECT TO_CHAR(TO_NUMBER(SUBSTR(A.MONTHDT,6,2))) || '월' MONTH_DT, TOTAL_SELNG_AMOUNT SELLING, NVL(TOTAL_ADMINEXP_AMOUNT,0) REFUND
+		FROM (
+		    WITH ONLINEREVENUEMONTHVIEW AS (
+		    SELECT
+		        SUBSTR(TO_CHAR(SELNG_DE,'YYYY-MM-DD'),1,7) MONTHDT
+		        , SELNG_AMOUNT
+		    FROM SELLING
+		        WHERE  SUBSTR(TO_CHAR(SELNG_DE),1,4) = SUBSTR(TO_CHAR(ADD_MONTHS(SYSDATE,-12)),1,4)
+		) SELECT MONTHDT, SUM(SELNG_AMOUNT) TOTAL_SELNG_AMOUNT
+		FROM ONLINEREVENUEMONTHVIEW
+		GROUP BY MONTHDT
+		) A LEFT OUTER JOIN (WITH ONLINEREFUNDMONTHVIEW AS (
+		    SELECT
+		        SUBSTR(TO_CHAR(ADMINEXP_DE,'YYYY-MM-DD'),1,7) MONTHDT
+		        , ADMINEXP_AMOUNT
+		    FROM ADMINEXP
+		        WHERE  SUBSTR(TO_CHAR(ADMINEXP_DE),1,4) = SUBSTR(TO_CHAR(ADD_MONTHS(SYSDATE,-12)),1,4)
+		) 	SELECT MONTHDT, SUM(ADMINEXP_AMOUNT) TOTAL_ADMINEXP_AMOUNT
+			FROM ONLINEREFUNDMONTHVIEW
+			GROUP BY MONTHDT) B ON (A.MONTHDT = B.MONTHDT)
+		ORDER BY MONTH_DT ASC
+	</select>
+
+
+	<!-- 오늘 창업상담일정을 조회하는 쿼리 -->
+	<select id="selectTodayFound" resultType="hashmap">
+		SELECT
+		    COUNT(FOUND_INDE) FOUND_INDE
+		    , COUNT(FOUND_CKDE) FOUND_CKDE
+		    , COUNT(FOUND_ASDE) FOUND_ASDE
+		FROM FOUND
+		WHERE
+		    SUBSTR(TO_CHAR(FOUND_INDE,'YYYY-MM-DD'),1,10) = SUBSTR(TO_CHAR(SYSDATE,'YYYY-MM-DD'),1,10)
+		    OR SUBSTR(TO_CHAR(FOUND_CKDE,'YYYY-MM-DD'),1,10) = SUBSTR(TO_CHAR(SYSDATE,'YYYY-MM-DD'),1,10)
+		    OR SUBSTR(TO_CHAR(FOUND_ASDE,'YYYY-MM-DD'),1,10) = SUBSTR(TO_CHAR(SYSDATE,'YYYY-MM-DD'),1,10)
+	</select>
+
+</mapper>

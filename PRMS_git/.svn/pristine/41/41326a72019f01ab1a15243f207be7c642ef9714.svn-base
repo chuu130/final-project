@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.ProdDefaultMapper">
+  <resultMap id="BaseResultMap" type="ProdDefaultVO">
+    <id column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+    <result column="PROD_SLE_NM" jdbcType="VARCHAR" property="prodSleNm" />
+    <result column="PROD_SLE_PC" jdbcType="NUMERIC" property="prodSlePc" />
+    <result column="PROD_REGIST_DE" jdbcType="TIMESTAMP" property="prodRegistDe" />
+    <result column="PROD_DC" jdbcType="VARCHAR" property="prodDc" />
+    <result column="PROD_IMAGE" jdbcType="VARCHAR" property="prodImage" />
+    <result column="EMP_NO" jdbcType="VARCHAR" property="empNo" />
+    <result column="CMMN_CODE_ID" jdbcType="VARCHAR" property="cmmnCodeId" />
+  </resultMap>
+  <delete id="deleteProd" parameterType="java.lang.String">
+    delete from PROD
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertProd" parameterType="ProdDefaultVO">
+    insert into PROD (PROD_ID, PROD_SLE_NM, PROD_SLE_PC,
+      PROD_REGIST_DE, PROD_DC, PROD_ATCHFILE,
+      EMP_NO, CMMN_CODE_ID)
+    values (#{prodId,jdbcType=VARCHAR}, #{prodSleNm,jdbcType=VARCHAR}, #{prodSlePc,jdbcType=NUMERIC},
+      #{prodRegistDe,jdbcType=TIMESTAMP}, #{prodDc,jdbcType=VARCHAR}, #{prodAtchfile,jdbcType=VARCHAR},
+      #{empNo,jdbcType=VARCHAR}, #{cmmnCodeId,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateProd" parameterType="ProdDefaultVO">
+    update PROD
+    set PROD_SLE_NM = #{prodSleNm},
+      PROD_SLE_PC = #{prodSlePc},
+      PROD_REGIST_DE = #{prodRegistDe,jdbcType=TIMESTAMP},
+      PROD_DC = #{prodDc},
+      PROD_ATCHFILE = #{prodAtchfile},
+      EMP_NO = #{empNo},
+      CMMN_CODE_ID = #{cmmnCodeId}
+    where PROD_ID = #{prodId}
+  </update>
+<!--   PROD_ATCHFILE 제외-->
+  <select id="selectProd" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select PROD_ID, PROD_SLE_NM, PROD_SLE_PC, PROD_REGIST_DE, PROD_DC ,PROD_IMAGE,
+    EMP_NO, CMMN_CODE_ID
+    from PROD
+    where PROD_ID = #{prodId}
+  </select>
+  <select id="selectProdList" resultMap="BaseResultMap">
+    select PROD_ID, PROD_SLE_NM, PROD_SLE_PC, PROD_REGIST_DE, PROD_DC, PROD_ATCHFILE,
+    EMP_NO, CMMN_CODE_ID
+    from PROD
+    
+     
+  </select>
+</mapper>

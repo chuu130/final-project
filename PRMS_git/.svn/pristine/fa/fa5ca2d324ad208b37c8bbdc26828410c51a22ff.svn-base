@@ -1,0 +1,40 @@
+package kr.or.ddit.franchise.franchisee.mapper;
+
+import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
+import org.springframework.transaction.annotation.Transactional;
+
+import kr.or.ddit.vo.FranBoardVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@SpringJUnitWebConfig(locations = "file:src/main/resources/kr/or/ddit/spring/*-context.xml")
+@Transactional
+class FranBoardMapperTest {
+
+	@Autowired
+	FranBoardMapper mapper;
+
+	@Test
+	void testSelectFranBoardListNonPaging() {
+		mapper.selectFranBoardListNonPaging();
+	}
+
+	@Test
+	void testUpdateFranBoard() {
+		FranBoardVO franboard = new FranBoardVO();
+		franboard.setFranBoardNo(90000);
+		franboard.setFranBoardTitle("수정한 제목1");
+		franboard.setFranBoardCont("수정한 게시글1");
+
+		assertEquals(mapper.updateFranBoard(franboard), 1);
+
+		FranBoardVO utdBoard = mapper.selectFranBoard(90000);
+		log.info("수정한 게시글 : {}", utdBoard);
+	}
+
+}

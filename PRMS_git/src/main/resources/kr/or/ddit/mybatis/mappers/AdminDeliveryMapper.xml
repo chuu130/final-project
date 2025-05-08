@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.headquarter.common.mapper.AdminDeliveryMapper">
+	
+	<resultMap type="AdminDeliveryVO" id="adminDeliveryMap" autoMapping="true">
+		<id property="orderDtlsId" column="ORDER_DTLS_ID"/>
+		<association property="memorder" javaType="MemorderDefaultVO" autoMapping="true" />
+		<association property="orderdt" javaType="OrderdtDefaultVO" autoMapping="true" />
+		<association property="member" javaType="MemberDefaultVO" autoMapping="true" >
+			<id property="memNo" column="MEM_NO"/>
+		</association>
+	</resultMap>
+	
+	<select id="selectDeliveryList" resultMap="adminDeliveryMap">
+		SELECT A.ORDER_DTLS_ID
+        ,A.DLVY_BEGIN_DE
+        ,A.DLVY_PREARNGE_DE
+        ,A.DLVY_END_DE
+        ,A.DLVY_ADRES1
+        ,A.DLVY_STTUS
+        ,B.ORDER_DE
+        ,COUNT(D.PROD_ID) "cntProd"
+        ,D.ORDER_PROD_QY
+        ,D.ORDER_PROD_AMOUNT
+        ,C.MEM_NO
+        ,C.MEM_NM
+	FROM DELIVERY A INNER JOIN MEMORDER B ON (A.ORDER_DTLS_ID = B.ORDER_DTLS_ID)
+        INNER JOIN ORDERDT D ON (B.ORDER_DTLS_ID = D.ORDER_DTLS_ID)
+       INNER JOIN MEMBER C ON (B.MEM_NO = C.MEM_NO)
+       GROUP BY A.ORDER_DTLS_ID
+        ,A.DLVY_BEGIN_DE
+        ,A.DLVY_PREARNGE_DE
+        ,A.DLVY_END_DE
+        ,A.DLVY_ADRES1
+        ,A.DLVY_STTUS
+        ,B.ORDER_DE
+        ,D.ORDER_PROD_QY
+        ,D.ORDER_PROD_AMOUNT
+        ,C.MEM_NO
+        ,C.MEM_NM
+	</select>
+	
+	<select id="selectInDeliveryList" resultMap="adminDeliveryMap">
+		SELECT A.ORDER_DTLS_ID
+        ,A.DLVY_BEGIN_DE
+        ,A.DLVY_PREARNGE_DE
+        ,A.DLVY_END_DE
+        ,A.DLVY_ADRES1
+        ,A.DLVY_STTUS
+        ,B.ORDER_DE
+        ,COUNT(D.PROD_ID) "cntProd"
+        ,D.ORDER_PROD_QY
+        ,D.ORDER_PROD_AMOUNT
+        ,C.MEM_NO
+        ,C.MEM_NM
+	FROM DELIVERY A INNER JOIN MEMORDER B ON (A.ORDER_DTLS_ID = B.ORDER_DTLS_ID)
+        INNER JOIN ORDERDT D ON (B.ORDER_DTLS_ID = D.ORDER_DTLS_ID)
+       INNER JOIN MEMBER C ON (B.MEM_NO = C.MEM_NO)
+       WHERE A.DLVY_END_DE IS NULL
+       GROUP BY A.ORDER_DTLS_ID
+        ,A.DLVY_BEGIN_DE
+        ,A.DLVY_PREARNGE_DE
+        ,A.DLVY_END_DE
+        ,A.DLVY_ADRES1
+        ,A.DLVY_STTUS
+        ,B.ORDER_DE
+        ,D.ORDER_PROD_QY
+        ,D.ORDER_PROD_AMOUNT
+        ,C.MEM_NO
+        ,C.MEM_NM
+	</select>
+	
+	<select id="selectDeliveryCompleteList" resultMap="adminDeliveryMap">
+		SELECT A.ORDER_DTLS_ID
+        ,A.DLVY_BEGIN_DE
+        ,A.DLVY_PREARNGE_DE
+        ,A.DLVY_END_DE
+        ,A.DLVY_ADRES1
+        ,A.DLVY_STTUS
+        ,B.ORDER_DE
+        ,COUNT(D.PROD_ID) "cntProd"
+        ,D.ORDER_PROD_QY
+        ,D.ORDER_PROD_AMOUNT
+        ,C.MEM_NO
+        ,C.MEM_NM
+	FROM DELIVERY A INNER JOIN MEMORDER B ON (A.ORDER_DTLS_ID = B.ORDER_DTLS_ID)
+        INNER JOIN ORDERDT D ON (B.ORDER_DTLS_ID = D.ORDER_DTLS_ID)
+       INNER JOIN MEMBER C ON (B.MEM_NO = C.MEM_NO)
+        WHERE A.DLVY_END_DE IS NOT NULL
+       GROUP BY A.ORDER_DTLS_ID
+        ,A.DLVY_BEGIN_DE
+        ,A.DLVY_PREARNGE_DE
+        ,A.DLVY_END_DE
+        ,A.DLVY_ADRES1
+        ,A.DLVY_STTUS
+        ,B.ORDER_DE
+        ,D.ORDER_PROD_QY
+        ,D.ORDER_PROD_AMOUNT
+        ,C.MEM_NO
+        ,C.MEM_NM
+	</select>
+	
+	
+	
+</mapper>

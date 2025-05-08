@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.ReleaseDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.ReleaseDefaultVO">
+    <result column="ORDERDETAIL_NO" jdbcType="VARCHAR" property="orderdetailNo" />
+    <result column="RELEASE_QY" jdbcType="NUMERIC" property="releaseQy" />
+    <result column="RELEASE_DE" jdbcType="TIMESTAMP" property="releaseDe" />
+    <result column="RELEASE_PC" jdbcType="NUMERIC" property="releasePc" />
+    <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+    <result column="RELEASE_YN" jdbcType="VARCHAR" property="releaseYn" />
+    <association property="fiorder" javaType="FiorderDefaultVO" autoMapping="true" />
+    <association property="invreqeust" javaType="InvrequestDefaultVO" autoMapping="true" />
+    <association property="franchise" javaType="FranchiseDefaultVO" autoMapping="true" />
+    <association property="prod" javaType="PartprodDefaultVO" autoMapping="true" />
+  </resultMap>
+  <insert id="insertRelease" parameterType="kr.or.ddit.vo.def.ReleaseDefaultVO">
+    insert into RELEASE (ORDERDETAIL_NO, RELEASE_QY, RELEASE_DE,
+      RELEASE_PC, PROD_ID, RELEASE_YN)
+    values (#{orderdetailNo,jdbcType=VARCHAR}, #{releaseQy,jdbcType=NUMERIC}, #{releaseDe,jdbcType=TIMESTAMP},
+      #{releasePc,jdbcType=NUMERIC}, #{prodId,jdbcType=VARCHAR}, #{releaseYn,jdbcType=VARCHAR})
+  </insert>
+  <select id="selectReleaseList" resultMap="BaseResultMap">
+    SELECT * FROM (
+	    SELECT ROWNUM RNUM, a.*, b.partprod_image, b.partprod_nm
+        from RELEASE A INNER JOIN partprod B ON (a.prod_id = b.prod_id)
+	    ORDER BY RNUM DESC
+	)
+	WHERE RNUM >= #{firstRecord} AND RNUM <![CDATA[<=]]> #{lastRecord}
+  </select>
+
+  <select id="selectRelease" parameterType="string">
+	select *
+	from release
+	where ORDERDETAIL_NO = #{orderdetailNo}
+  </select>
+
+  <select id="countRelease">
+  	select count(ORDERDETAIL_NO)
+  	from release
+  </select>
+
+  <select id="selectReleaseDetail" parameterType="string" resultMap="BaseResultMap">
+	select a.*, b.*, c.*, d.*, f.*
+	from release a inner join fiorder b on (a.orderdetail_no = b.orderdetail_no)
+	    inner join invrequest c on (b.fireq_id = c.fireq_id)
+	    inner join franchise d on (c.franchise_id = d.franchise_id)
+	    inner join partprod f on (a.prod_id = f.prod_id)
+	where a.ORDERDETAIL_NO = #{orderdetailNo}
+  </select>
+
+  <update id="updaterelStatus" parameterType="string">
+  	update RELEASE
+  	set
+  		RELEASE_YN = 'Y'
+  	where ORDERDETAIL_NO = #{orderdetailNo}
+  </update>
+  <select id="checkYn" parameterType="string">
+  	select RELEASE_YN
+  	from release
+  	where ORDERDETAIL_NO = #{orderdetailNo}
+  </select>
+</mapper>

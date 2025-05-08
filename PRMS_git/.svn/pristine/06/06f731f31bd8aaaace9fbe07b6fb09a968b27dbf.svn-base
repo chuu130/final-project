@@ -1,0 +1,48 @@
+@charset "UTF-8";
+
+@font-face {
+	font-family: 'GmarketSansMedium';
+	src:
+		url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff')
+		format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+/* 기본 폰트로 GmarketSansMedium 적용 */
+body {
+	font-family: 'GmarketSansMedium', Arial, sans-serif;
+}
+
+/* 로그인창 박스배경 */
+.main-log {
+	background-color: white;
+	border-radius: 20px;
+	padding: 30px 30px;
+	position: relative;
+	width: 130%;
+	left: -90px;
+}
+
+/* 로그인 제목 패딩 */
+.text-center {
+	margin-top: 20px;
+	padding: 5px;
+}
+
+/* 로그인 버튼 둥글게 */
+#loginBtn {
+	border-radius: 20px;
+	font-size: 20px;
+	background-color: #1a74ff;
+	border: none;
+}
+
+/* 자동버튼 스타일 */
+#autoFranLoginBtn {
+	font-size: 16px;
+}
+
+#autoMasterLoginBtn {
+	font-size: 16px;
+}

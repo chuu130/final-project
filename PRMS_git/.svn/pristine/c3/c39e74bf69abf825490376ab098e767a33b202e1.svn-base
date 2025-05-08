@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.franchise.staff.mapper.StaffEmergencyMapper">
+
+	<insert id="insertStaffEmer" parameterType="EmergencyDefaultVO">
+		<selectKey order="BEFORE" resultType="String" keyProperty="emerNo">
+			SELECT EMERGNECY_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT ALL
+			INTO EMERGENCY
+			(
+				EMER_NO
+				, FRANCHISE_ID
+				, EMER_REQST
+			)
+			VALUES
+			(
+				'EMER'||#{emerNo, jdbcType=VARCHAR}
+				, #{franchiseId, jdbcType=VARCHAR}
+				, #{emerReqst, jdbcType=VARCHAR}
+			)
+		<if test="emerDtList neq null">
+			<foreach collection="emerDtList" item="emer" index="idx">
+				INTO EMERGENCYDT
+				(
+					EDETAIL_NO
+					, EDETAIL_QY
+					, EDETAIL_PC
+					, EMER_NO
+					, FIV_ID
+				)
+				VALUES
+				(
+					'EMERDT'||TO_CHAR(EMERGNECYDT_SEQ.NEXTVAL)||(#{idx}+1)
+					, #{emer.edetailQy, jdbcType=INTEGER}
+					, #{emer.edetailPc, jdbcType=INTEGER}
+					, 'EMER'||#{emerNo, jdbcType=VARCHAR}
+					, #{emer.fivId, jdbcType=VARCHAR}
+				)
+			</foreach>
+		</if>
+		SELECT * FROM DUAL
+	</insert>
+</mapper>

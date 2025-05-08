@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.QnaanswerDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.QnaanswerDefaultVO">
+    <id column="QNA_ANSWER_ID" jdbcType="VARCHAR" property="qnaAnswerId" />
+    <result column="CTR_BBS_NO" jdbcType="VARCHAR" property="ctrBbsNo" />
+    <result column="QNA_ANSWER_NM" jdbcType="VARCHAR" property="qnaAnswerNm" />
+    <result column="QNA_ANSWER_CN" jdbcType="VARCHAR" property="qnaAnswerCn" />
+    <result column="QNA_ANSWER_DE" jdbcType="TIMESTAMP" property="qnaAnswerDe" />
+    <result column="EMP_NO" jdbcType="VARCHAR" property="empNo" />
+  </resultMap>
+
+  <insert id="insertQnaBoard" parameterType="kr.or.ddit.vo.def.QnaanswerDefaultVO">
+    <selectKey order="BEFORE" resultType="string" keyProperty="qnaAnswerId">
+		SELECT QNAANSWER_SEQ.NEXTVAL FROM DUAL
+  	</selectKey>
+    insert into QNAANSWER 
+    (QNA_ANSWER_ID
+    , CTR_BBS_NO
+    , QNA_ANSWER_NM
+    , QNA_ANSWER_CN
+    , QNA_ANSWER_DE
+    , EMP_NO
+      )
+    values (#{qnaAnswerId,jdbcType=VARCHAR}
+    , #{ctrBbsNo,jdbcType=VARCHAR}
+    , #{qnaAnswerNm,jdbcType=VARCHAR}
+    , #{qnaAnswerCn,jdbcType=VARCHAR}
+    <if test="qnaAnswerDe != null">
+	   , #{qnaAnswerDe,jdbcType=TIMESTAMP}
+	 </if>
+	 <if test="qnaAnswerDe == null">
+	   ,SYSDATE
+	 </if>
+    , #{empNo,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <update id="updateQnaBoard" parameterType="kr.or.ddit.vo.def.QnaanswerDefaultVO">
+    update QNAANSWER
+    set CTR_BBS_NO = #{ctrBbsNo,jdbcType=VARCHAR},
+      QNA_ANSWER_NM = #{qnaAnswerNm,jdbcType=VARCHAR},
+      QNA_ANSWER_CN = #{qnaAnswerCn,jdbcType=VARCHAR},
+      QNA_ANSWER_DE = #{qnaAnswerDe,jdbcType=TIMESTAMP},
+      EMP_NO = #{empNo,jdbcType=VARCHAR}
+    where QNA_ANSWER_ID = #{qnaAnswerId,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectByQnaId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select QNA_ANSWER_ID, CTR_BBS_NO, QNA_ANSWER_NM, QNA_ANSWER_CN, QNA_ANSWER_DE, EMP_NO
+    from QNAANSWER
+    where QNA_ANSWER_ID = #{qnaAnswerId,jdbcType=VARCHAR}
+  </select>
+  
+    <select id="selectByctrBbsNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select QNA_ANSWER_ID, CTR_BBS_NO, QNA_ANSWER_NM, QNA_ANSWER_CN, QNA_ANSWER_DE, EMP_NO
+    from QNAANSWER
+    where CTR_BBS_NO = #{ctrBbsNo,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectAllQnaBoard" resultMap="BaseResultMap">
+    select QNA_ANSWER_ID, CTR_BBS_NO, QNA_ANSWER_NM, QNA_ANSWER_CN, QNA_ANSWER_DE, EMP_NO
+    from QNAANSWER
+  </select>
+  
+  <select id="selectQnaBoardList"  parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT QNA_ANSWER_ID, CTR_BBS_NO, QNA_ANSWER_NM, QNA_ANSWER_CN, QNA_ANSWER_DE, A.EMP_NO, B.EMP_ID
+	FROM QNAANSWER A 
+	LEFT OUTER JOIN EMPLOYEE B ON A.EMP_NO = B.EMP_NO
+	where CTR_BBS_NO = #{ctrBbsNo,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteQnaBoard" parameterType="java.lang.String">
+    delete from QNAANSWER
+    where QNA_ANSWER_ID = #{qnaAnswerId,jdbcType=VARCHAR}
+  </delete>
+  
+</mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.CounselDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.CounselDefaultVO">
+    <id column="COUNSEL_NO" jdbcType="VARCHAR" property="counselNo" />
+    <result column="FOUND_NO" jdbcType="VARCHAR" property="foundNo" />
+    <result column="COUNSEL_DE" jdbcType="TIMESTAMP" property="counselDe" />
+    <result column="COUNSEL_CN" jdbcType="VARCHAR" property="counselCn" />
+    <result column="COUNSEL_AT" jdbcType="VARCHAR" property="counselAt" />
+    <result column="EDU_NO" jdbcType="VARCHAR" property="eduNo" />
+    <collection property="foundList" ofType="FoundDefaultVO">
+    	<id column="FOUND_NO" jdbcType="VARCHAR" property="foundNo" />
+    	<result column="FOUND_NM" jdbcType="VARCHAR" property="foundNm" />
+		<result column="FOUND_TELNO" jdbcType="VARCHAR" property="foundTelno" />
+		<result column="FOUND_EMAIL" jdbcType="VARCHAR" property="foundEmail" />
+		<result column="FOUND_ADRES1" jdbcType="VARCHAR" property="foundAdres1" />
+		<result column="FOUND_ADRES2" jdbcType="VARCHAR" property="foundAdres2" />
+		<result column="FOUND_CN" jdbcType="VARCHAR" property="foundCn" />
+		<result column="FOUND_DE" jdbcType="TIMESTAMP" property="foundDe" />
+		<result column="FOUND_PLACE" jdbcType="VARCHAR" property="foundPlace" />
+		<result column="FOUND_ATCH" jdbcType="VARCHAR" property="foundAtch" />
+		<result column="FOUND_SIDE_SE" jdbcType="VARCHAR" property="foundSideSe" />
+		<result column="FOUND_LICENSE_AT" jdbcType="VARCHAR" property="foundLicenseAt" />
+		<result column="FOUND_CONFM_AT" jdbcType="VARCHAR" property="foundConfmAt" />
+		<result column="EMP_NO" jdbcType="VARCHAR" property="empNo" />
+		<association property="employee" javaType="EmployeeDefaultVO" autoMapping="true"/>
+    </collection>
+  </resultMap>
+  <delete id="deleteCounsel" parameterType="java.lang.String">
+    delete from COUNSEL
+    where COUNSEL_NO = #{counselNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertCounsel" parameterType="kr.or.ddit.vo.def.CounselDefaultVO">
+    insert into COUNSEL (COUNSEL_NO, FOUND_NO, COUNSEL_DE,
+      COUNSEL_CN, COUNSEL_AT, EDU_NO
+      )
+    values ('COU'||COUNSEL_SEQ.nextval, #{foundNo,jdbcType=VARCHAR}, sysdate,
+      #{counselCn,jdbcType=VARCHAR}, 'Y', #{eduNo,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateCounsel" parameterType="kr.or.ddit.vo.def.CounselDefaultVO">
+    update COUNSEL
+    set FOUND_NO = #{foundNo,jdbcType=VARCHAR},
+      COUNSEL_DE = #{counselDe,jdbcType=TIMESTAMP},
+      COUNSEL_CN = #{counselCn,jdbcType=VARCHAR},
+      COUNSEL_AT = #{counselAt,jdbcType=VARCHAR},
+      EDU_NO = #{eduNo,jdbcType=VARCHAR}
+    where COUNSEL_NO = #{counselNo,jdbcType=VARCHAR}
+  </update>
+  <select id="selectCounsel" parameterType="java.lang.String">
+    select COUNSEL_NO, FOUND_NO, COUNSEL_DE, COUNSEL_CN, COUNSEL_AT, EDU_NO
+    from COUNSEL
+    where COUNSEL_NO = #{counselNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectCounselList" resultMap="BaseResultMap">
+    select COUNSEL_NO, FOUND_NO, COUNSEL_DE, COUNSEL_CN, COUNSEL_AT, EDU_NO
+    from COUNSEL
+  </select>
+  <select id="CHeckCounsel" parameterType="java.lang.String">
+    select count(COUNSEL_NO)
+    from COUNSEL
+    where COUNSEL_NO = #{counselNo,jdbcType=VARCHAR}
+  </select>
+  <select id="counselAtList" resultMap="BaseResultMap">
+	  select a.*, b.*
+from counsel a inner join found b on (a.found_no = b.found_no)
+    inner join employee c on (b.emp_no = c.emp_no)
+  </select>
+  <update id="counselAtUpdate" parameterType="java.lang.String">
+  	update counsel
+  	set COUNSEL_AT = 'Y'
+  	where COUNSEL_NO = #{counselNo,jdbcType=VARCHAR}
+  </update>
+  <select id="selectCounselMax">
+	select 'COU'||max(TO_NUMBER(substr(counsel_no, 4)))
+	from counsel
+  </select>
+  <select id="selectCounselNo" parameterType="string">
+  	select *
+  	from counsel
+  	where COUNSEL_NO = #{counselNo,jdbcType=VARCHAR} AND COUNSEL_AT = 'Y'
+  </select>
+
+</mapper>

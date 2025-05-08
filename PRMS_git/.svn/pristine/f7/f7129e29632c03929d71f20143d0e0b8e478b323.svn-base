@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.MemorandumDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.MemorandumDefaultVO">
+    <id column="MEMORAN_NO" jdbcType="NUMERIC" property="memoranNo" />
+    <result column="MEMORAN_NM" jdbcType="VARCHAR" property="memoranNm" />
+    <result column="MEMORAN_DE" jdbcType="TIMESTAMP" property="memoranDe" />
+    <result column="FRANCHISE_ID" jdbcType="VARCHAR" property="franchiseId" />
+    <result column="MEMORAN_CN" jdbcType="CLOB" property="memoranCn" />
+    <collection property="franchiseList" ofType="FranchiseDefaultVO">
+    	<id column="FRANCHISE_ID" jdbcType="VARCHAR" property="franchiseId" />
+    	<result column="FRANCHISE_NM" jdbcType="VARCHAR" property="franchiseNm" />
+    </collection>
+  </resultMap>
+  <delete id="deleteMemorandum" parameterType="java.lang.Integer">
+    delete from MEMORANDUM
+    where MEMORAN_NO = #{memoranNo,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insertMemorandum" parameterType="kr.or.ddit.vo.def.MemorandumDefaultVO">
+    insert into MEMORANDUM (MEMORAN_NO, MEMORAN_NM, MEMORAN_DE,
+      FRANCHISE_ID, MEMORAN_CN)
+    values (SEQ_MEMORANDUM.nextval, #{memoranNm,jdbcType=VARCHAR}, #{memoranDe,jdbcType=TIMESTAMP},
+      #{franchiseId,jdbcType=VARCHAR}, #{memoranCn,jdbcType=CLOB})
+  </insert>
+  <update id="updateMemorandum" parameterType="kr.or.ddit.vo.def.MemorandumDefaultVO">
+    update MEMORANDUM
+    set MEMORAN_NM = #{memoranNm,jdbcType=VARCHAR},
+      MEMORAN_DE = #{memoranDe,jdbcType=TIMESTAMP},
+      FRANCHISE_ID = #{franchiseId,jdbcType=VARCHAR},
+      MEMORAN_CN = #{memoranCn,jdbcType=CLOB}
+    where MEMORAN_NO = #{memoranNo,jdbcType=NUMERIC}
+  </update>
+  <select id="selectMemorandum" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select MEMORAN_NO, MEMORAN_NM, MEMORAN_DE, FRANCHISE_ID, MEMORAN_CN
+    from MEMORANDUM
+    where MEMORAN_NO = #{memoranNo,jdbcType=NUMERIC}
+  </select>
+  <select id="selectMemoList" resultMap="BaseResultMap">
+    select a.*, b.*
+	from memorandum a inner join franchise b on (a.franchise_id = b.franchise_id)
+  </select>
+</mapper>

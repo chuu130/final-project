@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.franchise.franchisee.mapper.HotelTypeMapper">
+  <select id="selectHotel" resultType="CmmncodeDefaultVO">
+	SELECT CMMN_CODE_NM
+	FROM CMMNCODE
+	WHERE CMMNCL_CODE_ID='COMN14'
+  </select>
+
+  <select id="selectHotelInfo" parameterType="java.lang.String" resultType="CmmncodeDefaultVO">
+  	SELECT CMMN_CODE_NM, CMMN_REMARK2, CMMN_REMARK3
+	FROM CMMNCODE
+	WHERE CMMN_CODE_NM=#{cmmnCodeNm,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

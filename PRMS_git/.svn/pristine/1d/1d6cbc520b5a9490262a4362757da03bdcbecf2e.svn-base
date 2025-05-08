@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.market.common.mapper.ProdMapper">
+	<!--
+		prefixOverrides="AND"의 뜻은 and가 이상하게 쓰일경우 컷 해주는 것
+		조건이 다양하여 and가 붙을 수 도 안붙을 수도 있는 경우에 씀
+		알아서 and를 붙여주고 구문 오류일때 떼주는 고마운 녀석
+		저런식으로 바꾸면 카테고리 조건에 검색 조건을 같이 쓸 수있다.
+	-->
+	<resultMap type="AdmininvDefaultVO" id="adminInvMap" autoMapping="true">
+		<association property="prod" javaType="ProdDefaultVO" autoMapping="true" />
+	</resultMap>
+
+
+	<sql id="searchFrag">
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(detailCondition.partprodSe)">
+				AND INSTR(PARTPROD_SE, #{detailCondition.partprodSe}) > 0
+			</if>
+        	<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchType)
+        				and @org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+        		<choose>
+        			<when test="simpleCondition.searchType eq 'search'">
+        				AND INSTR(ADMININV_NM, #{simpleCondition.searchWord}) > 0
+        			</when>
+        		</choose>
+        	</if>
+        </trim>
+	</sql>
+
+	<select id="selectTotalRecord" resultType="int" >
+		SELECT COUNT(*)
+		FROM ADMININV A INNER JOIN PROD P ON (A.PROD_ID = P.PROD_ID)
+						INNER JOIN PARTPROD B ON (A.PROD_ID = B.PROD_ID)
+                        INNER JOIN CMMNCODE C ON (B.PARTPROD_SE = C.CMMN_CODE_ID)
+		<include refid="searchFrag" />
+	</select>
+
+	<select id="searchProdList" parameterType="kr.or.ddit.commons.paging.PaginationInfo" resultMap="adminInvMap">
+	WITH OTHERADIN AS (
+		SELECT
+        	A.PROD_ID,
+        	A.ADMININV_NM,
+        	A.ADMININV_DETAIL,
+        	A.ADMININV_QY,
+            B.PARTPROD_SE,
+            P.PROD_SLE_PC,
+            P.PROD_IMAGE,
+            P.PROD_SLE_NM,
+        	C.CMMN_CODE_NM
+		FROM ADMININV A INNER JOIN PROD P ON (A.PROD_ID = P.PROD_ID)
+						INNER JOIN PARTPROD B ON (A.PROD_ID = B.PROD_ID)
+                        INNER JOIN CMMNCODE C ON (B.PARTPROD_SE = C.CMMN_CODE_ID)
+    	<include refid="searchFrag" />
+    	ORDER BY A.ROWID DESC
+		)
+		SELECT A.*
+			FROM(
+    		SELECT OTHERADIN.*, ROWNUM RNUM
+    		FROM OTHERADIN
+			)A
+		WHERE RNUM BETWEEN #{firstRecord} AND #{lastRecord}
+	</select>
+
+</mapper>

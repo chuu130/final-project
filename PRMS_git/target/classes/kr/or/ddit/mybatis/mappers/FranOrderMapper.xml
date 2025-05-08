@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.headquarter.master.mapper.FranOrderMapper">
+
+	<!-- 가맹점 발주내역을 조회하기위한 resultMap -->
+	<resultMap type="InvrequestDefaultVO" id="franOrderMap" autoMapping="true">
+		<id property="fireqId" column="FIREQ_ID"/>
+		<association property="franchise" javaType="FranchiseDefaultVO" autoMapping="true"/>
+		<collection property="fiOrderList" ofType="FiorderDefaultVO" autoMapping="true">
+			<association property="prod" javaType="ProdDefaultVO" autoMapping="true">
+				<association property="admininv" javaType="AdmininvDefaultVO" autoMapping="true" />
+			</association>
+		</collection>
+	</resultMap>
+
+
+	<!-- 페이징을 위한 레코드수를 구하는 쿼리 -->
+	<select id="selectTotalRecord" parameterType="kr.or.ddit.commons.paging.PaginationInfoOrder">
+		SELECT
+		    COUNT(DISTINCT A.FIREQ_ID)
+		FROM
+		    INVREQUEST A INNER JOIN FRANCHISE B ON (A.FRANCHISE_ID = B.FRANCHISE_ID)
+		    LEFT OUTER JOIN FIORDER C ON (A.FIREQ_ID = C.FIREQ_ID)
+		    INNER JOIN PROD D ON (C.PROD_ID = D.PROD_ID)
+		    INNER JOIN ADMININV E ON (D.PROD_ID = E.PROD_ID)
+		<include refid="searchFlag"/>
+	</select>
+
+
+	<!-- 검색조건 동적쿼리 -->
+	<sql id="searchFlag">
+		<trim prefix=" WHERE ">
+			<if test="
+				@org.apache.commons.lang3.StringUtils@isNotBlank(searchData.searchData)
+				or
+				@org.apache.commons.lang3.StringUtils@isNotBlank(searchData.status)
+			">
+				<choose>
+					<!-- 발송상태만 검색조건에 포함되었을 때, 발송상태 비교-->
+					<when test="@org.apache.commons.lang3.StringUtils@isBlank(searchData.searchData)">
+						INSTR(FIREQ_STTUS, #{searchData.status}) > 0
+					</when>
+					<!-- 검색어만 검색조건에 포함되었을 때, 상품명과 가맹점명 비교-->
+					<when test="@org.apache.commons.lang3.StringUtils@isBlank(searchData.status)">
+						(INSTR(PROD_SLE_NM, #{searchData.searchData}) > 0 OR INSTR(FRANCHISE_NM, #{searchData.searchData}) > 0)
+					</when>
+					<!-- 둘다 포함되었을 때, 둘다 비교 -->
+					<otherwise>
+						INSTR(FIREQ_STTUS, #{searchData.status}) > 0
+						AND
+						(INSTR(PROD_SLE_NM, #{searchData.searchData}) > 0 OR INSTR(FRANCHISE_NM, #{searchData.searchData}) > 0)
+					</otherwise>
+				</choose>
+			</if>
+		</trim>
+	</sql>
+
+
+	<!-- 모든 가맹점 발주내역을 조회하는 쿼리 -->
+	<select id="selectInvRequestList" resultMap="franOrderMap">
+		WITH FRANORDERVIEW AS(
+			SELECT
+			    A.FIREQ_ID
+			    , FIREQ_DE
+			    , FIREQ_STTUS
+			    , FIREQ_AMOUNT
+			    , A.FRANCHISE_ID
+			    , FIREQ_REJ_CN
+			    , FRANCHISE_NM
+			    , FRANCHISE_TEL
+			    , FRANCHISE_ZIP
+			    , FRANCHISE_ADD1
+			    , FRANCHISE_ADD2
+			    , FRANCHISE_EMAIL
+			    , ORDERDETAIL_NO
+			    , ORDERDETAIL_QY
+			    , ORDERDETAIL_PC
+			    , C.PROD_ID
+			    , PROD_SLE_NM
+			    , PROD_SLE_PC
+			    , PROD_DC
+			    , PROD_IMAGE
+			    , ADMININV_NM
+			    , ADMININV_DETAIL
+			    , ADMININV_QY
+			FROM
+			    INVREQUEST A INNER JOIN FRANCHISE B ON (A.FRANCHISE_ID = B.FRANCHISE_ID)
+			    LEFT OUTER JOIN FIORDER C ON (A.FIREQ_ID = C.FIREQ_ID)
+			    INNER JOIN PROD D ON (C.PROD_ID = D.PROD_ID)
+			    INNER JOIN ADMININV E ON (D.PROD_ID = E.PROD_ID)
+			<include refid="searchFlag"/>
+		    )
+		    SELECT A.*
+			FROM (
+			        SELECT FRANORDERVIEW.*, DENSE_RANK() OVER(ORDER BY TO_NUMBER(SUBSTR(FRANORDERVIEW.FIREQ_ID,7)) DESC) RNUM
+			        FROM FRANORDERVIEW
+			       )  A
+		    WHERE RNUM BETWEEN #{firstRecord} AND #{lastRecord}
+	</select>
+
+
+	<!-- 발주번호를 이용해서 발주상세정보를 조회하는 쿼리 -->
+	<select id="selectInvRequest" parameterType="string" resultMap="franOrderMap">
+		SELECT
+			    A.FIREQ_ID
+			    , FIREQ_DE
+			    , FIREQ_STTUS
+			    , FIREQ_AMOUNT
+			    , EMP_ID
+			    , A.FRANCHISE_ID
+			    , FIREQ_REJ_CN
+			    , FRANCHISE_NM
+			    , FRANCHISE_TEL
+			    , FRANCHISE_ZIP
+			    , FRANCHISE_ADD1
+			    , FRANCHISE_ADD2
+			    , FRANCHISE_EMAIL
+			    , ORDERDETAIL_NO
+			    , ORDERDETAIL_QY
+			    , ORDERDETAIL_PC
+			    , C.PROD_ID
+			    , PROD_SLE_NM
+			    , PROD_SLE_PC
+			    , PROD_DC
+			    , PROD_IMAGE
+			    , ADMININV_NM
+			    , ADMININV_DETAIL
+			    , ADMININV_QY
+			FROM
+			    INVREQUEST A INNER JOIN FRANCHISE B ON (A.FRANCHISE_ID = B.FRANCHISE_ID)
+			    LEFT OUTER JOIN FIORDER C ON (A.FIREQ_ID = C.FIREQ_ID)
+			    INNER JOIN PROD D ON (C.PROD_ID = D.PROD_ID)
+			    INNER JOIN ADMININV E ON (D.PROD_ID = E.PROD_ID)
+			WHERE
+				A.FIREQ_ID = #{fireqId}
+			ORDER BY FIREQ_DE DESC
+	</select>
+
+
+	<!-- 가맹점 판매상품정보를 조회하는 쿼리 -->
+	<select id="selectFranProd" parameterType="InvrequestDefaultVO" resultType="FranprodDefaultVO">
+		SELECT
+		    FRANPROD_ID
+		FROM FRANPROD
+		WHERE FRANCHISE_ID = #{franchise.franchiseId}
+	</select>
+
+
+	<!-- 가맹점 재고를 업데이트하는 쿼리 -->
+	<update id="updateInvFran" parameterType="InventoryDefaultVO">
+		UPDATE INVENTORY
+		SET FIV_QY = FIV_QY + #{fivQy}
+		WHERE FRANCHISE_ID = #{franchiseId} AND FRANPROD_ID = #{franprodId}
+	</update>
+
+
+	<!-- 본사 재고를 업데이트하는 쿼리 -->
+	<update id="updateInvHead" parameterType="AdmininvDefaultVO">
+		UPDATE ADMININV
+		SET ADMININV_QY = ADMININV_QY + #{admininvQy}
+		WHERE PROD_ID = #{prodId}
+	</update>
+
+
+	<!-- 발주상태를 승인완료로 변경하는 쿼리 -->
+	<update id="updateFrieqSttusSuccess" parameterType="InventoryDefaultVO">
+		UPDATE INVREQUEST
+		SET FIREQ_STTUS = 'Y'
+		WHERE FIREQ_ID = #{fireqId}
+	</update>
+
+
+	<!-- 기존에 취급하지 않은 상품을 발주했을시, 가맹점 취급품목에 추가하는 쿼리 -->
+	<insert id="insertFranProd" parameterType="FranprodDefaultVO">
+		INSERT INTO FRANPROD
+		(
+		    FRANPROD_NM
+		    , FRANPROD_PC
+		    , FRANPROD_DE
+		    , FRANPROD_DC
+		    , FRANPROD_IMAGE
+		    , FRANCHISE_ID
+		    , FRANPROD_ID
+		    , PROD_ID
+		)
+		VALUES
+		(
+		    #{franprodNm}
+		    , #{franprodPc}
+		    , SYSDATE
+		    , #{franprodDc}
+		    , #{franprodImage}
+		    , #{franchiseId}
+		    , #{franprodId}
+		    , #{prodId}
+		)
+	</insert>
+
+
+	<!-- 기존에 취급하지 않은 상품을 발주했을시, 가맹점 재고품목에 추가하는 쿼리 -->
+	<insert id="insertInventory" parameterType="InventoryDefaultVO">
+		<selectKey order="BEFORE" resultType="string" keyProperty="fivId">
+			SELECT 'FIV' || TO_CHAR(INVENTORY_SEQ.NEXTVAL) FROM DUAL
+		</selectKey>
+
+		INSERT INTO INVENTORY
+		(
+		    FIV_ID
+		    , FIV_QY
+		    , FRANCHISE_ID
+		    , FRANPROD_ID
+		)
+		VALUES
+		(
+		    #{fivId}
+		    , #{fivQy}
+		    , #{franchiseId}
+		    , #{franprodId}
+		)
+	</insert>
+
+
+	<!-- 본사에서 반려했을시, 본사의 지출정보에 반영하는 메소드 -->
+	<insert id="insertRejectAdminexpMoney" parameterType="InventoryDefaultVO">
+		INSERT INTO ADMINEXP (
+		    ADMINEXP_NO
+		    , HQ_ID
+		    , COMN_CODE_ID
+		    , ADMINEXP_NM
+		    , ADMINEXP_CN
+		    , ADMINEXP_DE
+		    , ADMINEXP_AMOUNT
+		)
+		SELECT
+		    'AEXP' || ADMINEXP_SEQ.NEXTVAL
+		   	, 'HEAD1'
+		    , (SELECT CMMN_CODE_ID FROM CMMNCODE WHERE CMMN_CODE_NM = '재고신청 환불금액')
+		    , '재고신청 환불금액'
+		    , (SELECT LISTAGG(PROD_SLE_NM || '(' || ORDERDETAIL_QY || '개)', ', ') WITHIN GROUP (ORDER BY PROD_SLE_NM)
+		       FROM FIORDER A INNER JOIN PROD B ON (A.PROD_ID = B.PROD_ID)
+		       WHERE FIREQ_ID = #{fireqId})
+		    , SYSDATE
+		    , #{fireqAmount}
+		FROM INVREQUEST
+		WHERE FIREQ_ID = #{fireqId}
+	</insert>
+
+
+	<!-- 본사에서 반려했을시, 해당 가맹점의 매출정보에 반영하는 메소드 -->
+	<insert id="insertRejectFranMoney" parameterType="InventoryDefaultVO">
+		INSERT INTO FRANSELLING (
+		    FSEL_NO
+		    , FRANCHISEE_ID
+		    , FSEL_SE
+		    , FSEL_NM
+		    , FSEL_CN
+		    , FSEL_DE
+		    , FSEL_AMOUNT
+		)
+		SELECT
+		    'FSEL' || FRANSELLING_SEQ.NEXTVAL
+		    , #{franchiseId}
+		    , (SELECT CMMN_CODE_ID FROM CMMNCODE WHERE CMMN_CODE_NM = '발주 환불비용')
+		    , '발주 환불비용'
+		    ,  (SELECT LISTAGG(PROD_SLE_NM || '(' || ORDERDETAIL_QY || '개)', ', ') WITHIN GROUP (ORDER BY PROD_SLE_NM)
+		       FROM FIORDER A INNER JOIN PROD B ON (A.PROD_ID = B.PROD_ID)
+		       WHERE FIREQ_ID = #{fireqId})
+		    , SYSDATE
+		    , #{fireqAmount}
+		FROM
+		    INVREQUEST
+		WHERE FIREQ_ID = #{fireqId}
+	</insert>
+
+
+	<!-- 발주상태를 반려로 변경하고 반려사유를 입력하는 쿼리 -->
+	<update id="updateFrieqSttusReject" parameterType="InventoryDefaultVO">
+		UPDATE INVREQUEST
+		SET FIREQ_STTUS = 'N', FIREQ_REJ_CN = #{fireqRejCn}
+		WHERE FIREQ_ID = #{fireqId}
+	</update>
+
+
+	<!-- 발주처리날짜를 오늘로 지정하는 쿼리 -->
+	<update id="updateFrieqUpdateDe" parameterType="InvrequestDefaultVO">
+		UPDATE INVREQUEST
+		SET FIREQ_RESULT_DE = SYSDATE
+		WHERE FIREQ_ID = #{fireqId}
+	</update>
+
+</mapper>

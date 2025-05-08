@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.headquarter.common.mapper.HeadquarterProdMapper">
+	
+	<sql id="searchFrag">
+		<trim prefix="AND" >
+        	<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(paging.simpleCondition.searchWord)">
+        		<choose>
+        			<when test="paging.simpleCondition.searchType eq 'search'">
+						INSTR(PROD.PROD_SLE_NM, #{paging.simpleCondition.searchWord}) > 0
+        			</when>
+        		</choose>
+        	</if>
+        </trim>
+	</sql>
+	
+	<select id="selectTotalRecord" resultType="int">
+		SELECT COUNT(*)
+		FROM PROD
+	</select>
+	
+	<select id="selectDrowdownTotalRecord" resultType="int">
+		SELECT COUNT(*)
+    	FROM PROD, ADMININV, CMMNCODE , PARTPROD
+            		WHERE PROD.PROD_ID = ADMININV.PROD_ID AND ADMININV.PROD_ID = PARTPROD.PROD_ID
+            		AND PARTPROD_SE = CMMNCODE.CMMN_CODE_ID
+    	AND INSTR(CMMNCODE.CMMN_CODE_NM, #{name}) >0
+	</select>
+	
+	<select id="selectHeadquarterProdList" resultType="HeadquarterProdVO">
+		SELECT B.*
+   			FROM(SELECT ROWNUM RNUM, A.*
+        		FROM(
+            		SELECT PROD.PROD_ID
+                  		,PROD.PROD_SLE_NM
+                  		,PROD.PROD_SLE_PC
+                  		,PROD.PROD_IMAGE
+                  		,CMMNCODE.CMMN_CODE_NM "cmmncode.cmmnCodeNm"
+           			FROM PROD, ADMININV, CMMNCODE , PARTPROD
+            		WHERE PROD.PROD_ID = ADMININV.PROD_ID AND ADMININV.PROD_ID = PARTPROD.PROD_ID
+            		AND PARTPROD_SE = CMMNCODE.CMMN_CODE_ID
+            		<include refid="searchFrag"/>
+            		
+        	)A
+    	)B
+		<![CDATA[
+        WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+        ]]>
+
+	</select>
+	
+	<select id="selectProdDetail" resultType="HeadquarterProdVO">
+		SELECT A.PROD_ID   
+		    , A.PROD_SLE_NM
+		    , A.PROD_SLE_PC
+		    , A.PROD_REGIST_DE
+		    , A.PROD_IMAGE
+		    , B.ADMININV_QY "adminInv.admininvQy"
+		    , E.PARTNERS_CORNM "partners.partnersCornm"
+		    , D.CMMN_CODE_NM "cmmncode.cmmncodeNm"
+	    FROM PROD A, ADMININV B, PARTPROD C, CMMNCODE D , PARTNERS E
+	    WHERE A.PROD_ID = B.PROD_ID AND B.PROD_ID = C.PROD_ID AND C.PARTNERS_ID = E.PARTNERS_ID AND C.PARTPROD_SE = D.CMMN_CODE_ID
+	    AND A.PROD_ID = #{prodId}
+	</select>
+	
+	<select id="selectProdDropdownList" resultType="HeadquarterProdVO">
+		SELECT B.*
+   			FROM(SELECT ROWNUM RNUM, A.*
+        		FROM(
+            		SELECT PROD.PROD_ID
+                  		,PROD.PROD_SLE_NM
+                  		,PROD.PROD_SLE_PC
+                  		,PROD.PROD_IMAGE
+                  		,CMMNCODE.CMMN_CODE_NM "cmmncode.cmmnCodeNm"
+           			FROM PROD, ADMININV, CMMNCODE , PARTPROD
+            		WHERE PROD.PROD_ID = ADMININV.PROD_ID AND ADMININV.PROD_ID = PARTPROD.PROD_ID
+            		AND PARTPROD_SE = CMMNCODE.CMMN_CODE_ID
+            		AND INSTR(CMMNCODE.CMMN_CODE_NM, #{name}) >0
+            		<include refid="searchFrag"/>
+            		
+        	)A
+    	)B
+		<![CDATA[
+        WHERE RNUM >= #{firstRecord} AND RNUM <= #{lastRecord}
+        ]]>
+
+	</select>
+	
+	
+</mapper>

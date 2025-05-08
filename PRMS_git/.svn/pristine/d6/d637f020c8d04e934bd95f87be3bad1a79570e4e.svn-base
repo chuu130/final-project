@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.franchise.franchisee.mapper.FranEmerFranInvMapper">
+
+	<sql id="searchFrag">
+		<trim prefix="AND">
+        	<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(paging.simpleCondition.searchWord)">
+        		<choose>
+        			<when test="paging.simpleCondition.searchType eq 'search'">
+						INSTR(P.FRANPROD_NM, #{paging.simpleCondition.searchWord}) > 0
+        			</when>
+        		</choose>
+        	</if>
+        </trim>
+	</sql>
+
+	<select id="selectFranEmerFranInvList" resultType="InventoryDefaultVO">
+		WITH OTHERINVENTORY AS (
+	        SELECT
+	            I1.FIV_ID,
+	            I1.FIV_QY,
+	            I1.FRANCHISE_ID,
+	            I1.FRANPROD_ID,
+	            P.FRANPROD_NM,
+	            P.FRANPROD_PC,
+	            P.FRANPROD_IMAGE
+	        FROM
+	            INVENTORY I1
+	            INNER JOIN FRANPROD P ON (I1.FRANPROD_ID = P.FRANPROD_ID)
+	        WHERE
+	        	I1.FRANCHISE_ID = #{what}
+	        	AND I1.FIV_QY > 0
+	        	AND SUBSTR(I1.FRANPROD_ID, 5) IN (
+		            SELECT SUBSTR(I2.FRANPROD_ID, 5)
+		            FROM INVENTORY I2
+		            WHERE I2.FRANCHISE_ID = #{franchiseId} AND I2.FIV_QY > 0
+		        )
+	        	<include refid="searchFrag" />
+	        ORDER BY I1.ROWID DESC
+	        )
+	    SELECT A.*
+	        FROM(
+	        SELECT OTHERINVENTORY.*, ROWNUM RNUM
+	        FROM OTHERINVENTORY
+	        )A
+	    WHERE RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+	</select>
+
+	<select id="selectTotalRecord">
+		SELECT COUNT(*)
+		FROM
+			INVENTORY I1
+	        INNER JOIN FRANPROD P ON (I1.FRANPROD_ID = P.FRANPROD_ID)
+	        INNER JOIN INVENTORY I2 ON (I1.FRANPROD_ID = I2.FRANPROD_ID AND I2.FRANCHISE_ID = #{franchiseId})
+		WHERE
+			I1.FRANCHISE_ID = #{what}
+			AND I1.FIV_QY > 0
+		<include refid="searchFrag" />
+	</select>
+
+
+	<select id="selectFranFranchiseList" resultType="FranchiseDefaultVO">
+		SELECT
+		    FRANCHISE_ID,
+		    FRANCHISE_AREA,
+		    FRANCHISE_NM,
+		    FRANCHISE_TEL,
+		    FRANCHISE_ZIP,
+		    FRANCHISE_ADD1,
+		    FRANCHISE_ADD2,
+		    FRANCHISE_EMAIL,
+		    FRANCHISE_YN_AT,
+		    FRANCHISE_HOTEL_CO,
+		    EMP_NO,
+		    CMMN_CODE_NM
+		FROM
+		    FRANCHISE INNER JOIN CMMNCODE ON (FRANCHISE_AREA = CMMN_CODE_ID)
+		WHERE CMMN_CODE_NM IN (
+		    SELECT DISTINCT CMMN_CODE_NM
+		    FROM FRANCHISE INNER JOIN CMMNCODE ON (FRANCHISE_AREA = CMMN_CODE_ID)
+		    WHERE FRANCHISE_ID = #{franchiseId}
+		)
+		AND FRANCHISE_ID != #{franchiseId}
+		AND FRANCHISE_YN_AT = 'N'
+	</select>
+</mapper>

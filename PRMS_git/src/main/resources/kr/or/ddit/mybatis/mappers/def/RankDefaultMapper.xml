@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.RankDefaultMapper">
+	<resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.RankDefaultVO">
+		<id column="MEM_NO" jdbcType="VARCHAR" property="memNo" />
+		<result column="RANK_SE" jdbcType="VARCHAR" property="rankSe" />
+		<result column="RANK_DE" jdbcType="TIMESTAMP" property="rankDe" />
+	</resultMap>
+	<delete id="deleteRank" parameterType="java.lang.String">
+		delete from RANK
+		where MEM_NO = #{memNo,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insertRank"
+		parameterType="kr.or.ddit.vo.def.RankDefaultVO">
+		insert into RANK (MEM_NO, RANK_SE, RANK_DE
+		)
+		values (#{memNo,jdbcType=VARCHAR}, #{rankSe,jdbcType=VARCHAR},
+		#{rankDe,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<update id="updateRank"
+		parameterType="kr.or.ddit.vo.def.RankDefaultVO">
+		update RANK
+		set RANK_SE = #{rankSe,jdbcType=VARCHAR},
+		RANK_DE = #{rankDe,jdbcType=TIMESTAMP}
+		where MEM_NO = #{memNo,jdbcType=VARCHAR}
+	</update>
+	<select id="selectRank" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select MEM_NO, RANK_SE, RANK_DE
+		from RANK
+		where MEM_NO = #{memNo,jdbcType=VARCHAR}
+	</select>
+	<select id="selectRankList" resultMap="BaseResultMap">
+		select MEM_NO, RANK_SE, RANK_DE
+		from RANK
+	</select>
+	<select id="selectRankSE" parameterType="java.lang.String">
+		select RANK_SE
+		from rank
+		where mem_no = #{memId,jdbcType=VARCHAR}
+	</select>
+	<update id="updateRankgold" parameterType="String">
+		update RANK
+		set RANK_SE = '2'
+		where MEM_NO = #{memNo,jdbcType=VARCHAR}
+	</update>
+	<update id="updateRankplatinum" parameterType="String">
+		update RANK
+		set RANK_SE = '3'
+		where MEM_NO = #{memNo,jdbcType=VARCHAR}
+	</update>
+	<update id="updateRankdiamond" parameterType="String">
+		update RANK
+		set RANK_SE = '4'
+		where MEM_NO = #{memNo,jdbcType=VARCHAR}
+	</update>
+</mapper>

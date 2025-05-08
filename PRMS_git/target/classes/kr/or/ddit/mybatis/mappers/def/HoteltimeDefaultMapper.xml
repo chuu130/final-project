@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.HoteltimeDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.HoteltimeDefaultVO">
+    <id column="RES_HOTEL_DE" jdbcType="VARCHAR" property="resHotelDe" />
+    <id column="HOTEL_ID" jdbcType="VARCHAR" property="hotelId" />
+    <result column="RES_AM" jdbcType="VARCHAR" property="resAm" />
+    <result column="RES_PM" jdbcType="VARCHAR" property="resPm" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from HOTELTIME
+    where RES_HOTEL_DE = #{resHotelDe,jdbcType=VARCHAR}
+      and HOTEL_ID = #{hotelId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertHotelTime" parameterType="kr.or.ddit.vo.def.HoteltimeDefaultVO">
+    insert into HOTELTIME (RES_HOTEL_DE, HOTEL_ID)
+    values (#{resHotelDe,jdbcType=VARCHAR}, #{hotelId,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateHotelTime" parameterType="kr.or.ddit.vo.def.HoteltimeDefaultVO">
+    update HOTELTIME
+    set RES_AM = #{resAm,jdbcType=VARCHAR},
+      RES_PM = #{resPm,jdbcType=VARCHAR}
+    where RES_HOTEL_DE = #{resHotelDe,jdbcType=VARCHAR}
+      and HOTEL_ID = #{hotelId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select RES_HOTEL_DE, HOTEL_ID, RES_AM, RES_PM
+    from HOTELTIME
+    where RES_HOTEL_DE = #{resHotelDe,jdbcType=VARCHAR}
+      and HOTEL_ID = #{hotelId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select RES_HOTEL_DE, HOTEL_ID, RES_AM, RES_PM
+    from HOTELTIME
+  </select>
+  <select id="selectHotelTime" parameterType="HashMap" resultMap="BaseResultMap">
+	SELECT RES_HOTEL_DE, RES_AM, RES_PM, HOTEL_ID
+	FROM HOTELTIME
+	WHERE HOTEL_ID = #{hotelId,jdbcType=VARCHAR} AND RES_HOTEL_DE = #{resHotelDe,jdbcType=VARCHAR}
+  </select>
+</mapper>

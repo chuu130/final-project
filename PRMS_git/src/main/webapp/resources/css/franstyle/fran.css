@@ -1,0 +1,71 @@
+@charset "UTF-8";
+
+body {
+	background-color: #ffffff;
+}
+
+#content {
+	margin-left: 17rem;
+}
+
+/* Sidebar 변경 */
+#sidebar {
+	height: -webkit-fill-available;
+	width: 300px;
+	box-shadow: 0 0.5rem 0.5rem rgba(34, 34, 34, 0.15) !important;
+}
+
+#menu-header-font {
+	font-size: 16px;
+}
+
+/* 주문 관련 테이블 선 스타일 */
+/*위와 오른쪽선 */
+.order-border {
+	border-right-width: thin;
+	border-top-width: thin;
+}
+
+/*위와 왼쪽선 */
+.order-border-le {
+	border-left-width: thin;
+	border-top-width: thin;
+}
+
+/*위쪽 선 */
+.order-border-top {
+	border-top-width: thin;
+}
+
+/*오른쪽 선만 */
+.order-border-right {
+	border-right-width: thin;
+}
+
+/*왼쪽 선만 */
+.order-border-left {
+	border-left-width: thin;
+}
+
+/*왼쪽오른쪽 선만 */
+.order-border-side {
+	border-left-width: thin;
+	border-right-width: thin;
+}
+
+/*글씨체 정렬*/
+.txtlign {
+	text-align: center;
+}
+
+/* 테이블 헤드 색상 */
+.boardlist-head {
+	background-color: #0066ff17;
+}
+
+/*메뉴 타이틇 소제목 스타일*/
+/* .sub-me-title { */
+/* 	font-weight: 600; */
+/* 	font-size: 20px; */
+/* 	padding: 0; */
+/* } */

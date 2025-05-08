@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.AdminexpDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.AdminexpDefaultVO">
+    <id column="ADMINEXP_NO" jdbcType="VARCHAR" property="adminexpNo" />
+    <id column="HQ_ID" jdbcType="VARCHAR" property="hqId" />
+    <result column="COMN_CODE_ID" jdbcType="VARCHAR" property="comnCodeId" />
+    <result column="ADMINEXP_NM" jdbcType="VARCHAR" property="adminexpNm" />
+    <result column="ADMINEXP_CN" jdbcType="VARCHAR" property="adminexpCn" />
+    <result column="ADMINEXP_DE" jdbcType="TIMESTAMP" property="adminexpDe" />
+    <result column="ADMINEXP_AMOUNT" jdbcType="NUMERIC" property="adminexpAmount" />
+  </resultMap>
+  <delete id="deleteAdminexp" parameterType="map">
+    delete from ADMINEXP
+    where ADMINEXP_NO = #{adminexpNo,jdbcType=VARCHAR}
+      and HQ_ID = #{hqId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertAdminexp" parameterType="kr.or.ddit.vo.def.AdminexpDefaultVO">
+    insert into ADMINEXP (ADMINEXP_NO, HQ_ID, COMN_CODE_ID,
+      ADMINEXP_NM, ADMINEXP_CN, ADMINEXP_DE, ADMINEXP_AMOUNT)
+    values ('AEXP'||ADMINEXP_SEQ.nextval, #{hqId,jdbcType=VARCHAR}, #{comnCodeId,jdbcType=VARCHAR},
+      #{adminexpNm,jdbcType=VARCHAR}, #{adminexpCn,jdbcType=VARCHAR}, sysdate, #{adminexpAmount,jdbcType=NUMERIC})
+  </insert>
+  <update id="updateAdminexp" parameterType="kr.or.ddit.vo.def.AdminexpDefaultVO">
+    update ADMINEXP
+    set COMN_CODE_ID = #{comnCodeId,jdbcType=VARCHAR},
+      ADMINEXP_NM = #{adminexpNm,jdbcType=VARCHAR},
+      ADMINEXP_CN = #{adminexpCn,jdbcType=VARCHAR},
+      ADMINEXP_DE = #{adminexpDe,jdbcType=TIMESTAMP},
+      ADMINEXP_AMOUNT = #{adminexpAmount,jdbcType=NUMERIC}
+    where ADMINEXP_NO = #{adminexpNo,jdbcType=VARCHAR}
+      and HQ_ID = #{hqId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectAdminexp" parameterType="map" resultMap="BaseResultMap">
+    select ADMINEXP_NO, HQ_ID, COMN_CODE_ID, ADMINEXP_NM, ADMINEXP_CN, ADMINEXP_DE,
+    ADMINEXP_AMOUNT
+    from ADMINEXP
+    where ADMINEXP_NO = #{adminexpNo,jdbcType=VARCHAR}
+      and HQ_ID = #{hqId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAdminexpList" resultMap="BaseResultMap">
+    select ADMINEXP_NO, HQ_ID, COMN_CODE_ID, ADMINEXP_NM, ADMINEXP_CN, ADMINEXP_DE,
+    ADMINEXP_AMOUNT
+    from ADMINEXP
+  </select>
+</mapper>

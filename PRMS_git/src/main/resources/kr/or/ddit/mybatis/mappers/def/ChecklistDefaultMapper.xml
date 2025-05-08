@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.ChecklistDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.ChecklistDefaultVO">
+    <id column="CHECK_NO" jdbcType="VARCHAR" property="checkNo" />
+    <result column="CHECK_CLEAN" jdbcType="NUMERIC" property="checkClean" />
+    <result column="CHECK_REVIEW" jdbcType="NUMERIC" property="checkReview" />
+    <result column="CHECK_STOCK" jdbcType="NUMERIC" property="checkStock" />
+    <result column="CHECK_KIND" jdbcType="NUMERIC" property="checkKind" />
+    <result column="CHECK_JOB" jdbcType="NUMERIC" property="checkJob" />
+    <result column="CHECK_SAFETY" jdbcType="NUMERIC" property="checkSafety" />
+    <result column="CHECK_STORE" jdbcType="NUMERIC" property="checkStore" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from CHECKLIST
+    where CHECK_NO = #{checkNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.ChecklistDefaultVO">
+    insert into CHECKLIST (CHECK_NO, CHECK_CLEAN, CHECK_REVIEW, 
+      CHECK_STOCK, CHECK_KIND, CHECK_JOB, 
+      CHECK_SAFETY, CHECK_STORE)
+    values (#{checkNo,jdbcType=VARCHAR}, #{checkClean,jdbcType=NUMERIC}, #{checkReview,jdbcType=NUMERIC}, 
+      #{checkStock,jdbcType=NUMERIC}, #{checkKind,jdbcType=NUMERIC}, #{checkJob,jdbcType=NUMERIC}, 
+      #{checkSafety,jdbcType=NUMERIC}, #{checkStore,jdbcType=NUMERIC})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.ChecklistDefaultVO">
+    update CHECKLIST
+    set CHECK_CLEAN = #{checkClean,jdbcType=NUMERIC},
+      CHECK_REVIEW = #{checkReview,jdbcType=NUMERIC},
+      CHECK_STOCK = #{checkStock,jdbcType=NUMERIC},
+      CHECK_KIND = #{checkKind,jdbcType=NUMERIC},
+      CHECK_JOB = #{checkJob,jdbcType=NUMERIC},
+      CHECK_SAFETY = #{checkSafety,jdbcType=NUMERIC},
+      CHECK_STORE = #{checkStore,jdbcType=NUMERIC}
+    where CHECK_NO = #{checkNo,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select CHECK_NO, CHECK_CLEAN, CHECK_REVIEW, CHECK_STOCK, CHECK_KIND, CHECK_JOB, CHECK_SAFETY, 
+    CHECK_STORE
+    from CHECKLIST
+    where CHECK_NO = #{checkNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select CHECK_NO, CHECK_CLEAN, CHECK_REVIEW, CHECK_STOCK, CHECK_KIND, CHECK_JOB, CHECK_SAFETY, 
+    CHECK_STORE
+    from CHECKLIST
+  </select>
+</mapper>

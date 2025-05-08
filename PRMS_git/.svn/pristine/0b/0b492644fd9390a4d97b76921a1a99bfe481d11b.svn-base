@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.commons.def.mapper.MemberDefaultMapper">
+	<resultMap id="BaseResultMap"
+		type="kr.or.ddit.vo.def.MemberDefaultVO">
+		<id column="MEM_NO" jdbcType="VARCHAR" property="memNo" />
+		<result column="MEM_ID" jdbcType="VARCHAR" property="memId" />
+		<result column="MEM_PASSWORD" jdbcType="VARCHAR"
+			property="memPassword" />
+		<result column="MEM_NM" jdbcType="VARCHAR" property="memNm" />
+		<result column="MEM_IMAGE" jdbcType="VARCHAR"
+			property="memImage" />
+		<result column="MEM_TELNO" jdbcType="VARCHAR"
+			property="memTelno" />
+		<result column="MEM_BIRTHDY" jdbcType="TIMESTAMP"
+			property="memBirthdy" />
+		<result column="MEM_EMAIL" jdbcType="VARCHAR"
+			property="memEmail" />
+		<result column="MEM_YN_AT" jdbcType="VARCHAR"
+			property="memYnAt" />
+		<result column="MEM_ML" jdbcType="NUMERIC" property="memMl" />
+		<association property="orderdt"
+			javaType="OrderdtDefaultVO" autoMapping="true" />
+		<collection property="ranklist" ofType="RankDefaultVO" >
+		<id column="MEM_NO" jdbcType="VARCHAR"
+				property="memNo" />
+		<result column="RANK_SE" jdbcType="VARCHAR" property="rankSe" />
+			</collection>
+		<collection property="memorderlist"
+			ofType="MemorderDefaultVO">
+			<id column="ORDER_DTLS_ID" jdbcType="VARCHAR"
+				property="orderDtlsId" />
+			<collection property="paylist" ofType="PaymentDefaultVO">
+				<id column="PAY_ID" jdbcType="VARCHAR" property="payId" />
+				<result column="PAY_AMOUNT" jdbcType="NUMERIC"
+					property="payAmount" />
+			</collection>
+		</collection>
+	</resultMap>
+
+
+	<update id="deleteMember" parameterType="java.lang.String">
+		update MEMBER
+		set MEM_YN_AT = 'Y'
+		where MEM_NO = #{memNo,jdbcType=VARCHAR}
+	</update>
+
+
+	<insert id="insertMember"
+		parameterType="kr.or.ddit.vo.def.MemberDefaultVO">
+		insert into MEMBER (MEM_NO, MEM_ID, MEM_PASSWORD,
+		MEM_NM, MEM_IMAGE, MEM_TELNO,
+		MEM_BIRTHDY, MEM_EMAIL, MEM_YN_AT,
+		MEM_ML, MEM_ZIP, MEM_ADD1, MEM_ADD2)
+		values (#{memNo,jdbcType=VARCHAR},
+		#{memId,jdbcType=VARCHAR},
+		#{memPassword,jdbcType=VARCHAR},
+		#{memNm,jdbcType=VARCHAR}, #{memImage,jdbcType=VARCHAR},
+		#{memTelno,jdbcType=VARCHAR},
+		#{memBirthdy,jdbcType=TIMESTAMP},
+		#{memEmail,jdbcType=VARCHAR},
+		#{memYnAt,jdbcType=VARCHAR},
+		#{memMl,jdbcType=NUMERIC})
+	</insert>
+
+	<update id="updateMember"
+		parameterType="kr.or.ddit.vo.def.MemberDefaultVO">
+		update MEMBER
+		set MEM_ID = #{memId,jdbcType=VARCHAR},
+		MEM_PASSWORD = #{memPassword,jdbcType=VARCHAR},
+		MEM_NM =
+		#{memNm,jdbcType=VARCHAR},
+		MEM_IMAGE = #{memImage,jdbcType=VARCHAR},
+		MEM_TELNO = #{memTelno,jdbcType=VARCHAR},
+		MEM_BIRTHDY =
+		#{memBirthdy,jdbcType=TIMESTAMP},
+		MEM_EMAIL =
+		#{memEmail,jdbcType=VARCHAR},
+		MEM_YN_AT = #{memYnAt,jdbcType=VARCHAR},
+		MEM_ML = #{memMl,jdbcType=NUMERIC}
+		where MEM_NO =
+		#{memNo,jdbcType=VARCHAR}
+	</update>
+	<select id="selectMember" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select MEM_NO, MEM_ID, MEM_PASSWORD, MEM_NM, MEM_IMAGE,
+		MEM_TELNO,
+		MEM_BIRTHDY, MEM_EMAIL,
+		MEM_YN_AT, MEM_ML
+		from MEMBER
+		where
+		MEM_NO = #{memNo,jdbcType=VARCHAR}
+	</select>
+	<select id="selectMemberListPaging" resultType="MemberDefaultVO">
+		SELECT * FROM (
+		    SELECT ROWNUM RNUM, a.*
+		    FROM member a
+		    ORDER BY RNUM DESC
+		)
+		WHERE RNUM >= #{firstRecord} AND RNUM <![CDATA[<]]> #{lastRecord}
+	</select>
+	<select id="selectMemberList" resultMap="BaseResultMap">
+		select *
+		from member
+	</select>
+
+	<select id="selectMemberId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select MEM_NO, MEM_ID, MEM_PASSWORD, MEM_NM, MEM_IMAGE,
+		MEM_TELNO,
+		MEM_BIRTHDY, MEM_EMAIL,
+		MEM_YN_AT, MEM_ML
+		from MEMBER
+		where
+		MEM_ID = #{memId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectMemOrder" resultMap="BaseResultMap">
+		select A.*, b.*, c.*
+		from
+		member a LEFT OUTER JOIN MEMORDER b ON (a.mem_NO = b.mem_no)
+		LEFT OUTER
+		JOIN ORDERDT c on (b.order_dtls_id = c.order_dtls_id)
+		where a.mem_no =
+		#{memNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="memBirthdy" resultType="String">
+		select
+		SUBSTR(TO_DATE(mem_birthdy, 'YY-MM-DD'),4,5)
+		from member
+	</select>
+	<select id="payment" parameterType="String" resultMap="BaseResultMap">
+		select a.*,b.*,c.*
+		from member a
+		left outer join memorder b on (a.mem_no = b.mem_no)
+		left outer join
+		payment c on (b.order_dtls_id = c.order_dtls_id)
+		where a.mem_no =
+		#{memNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectMemberranklist" parameterType="String">
+		select a.*,b.*
+		from member a left outer join rank b on (a.mem_no = b.mem_no)
+		where
+		a.mem_no = #{memNo,jdbcType=VARCHAR}
+	</select>
+	<select id="countMember">
+		select count(mem_no)
+		from member
+	</select>
+
+	<select id="checkMempass" parameterType="string">
+		select MEM_PASSWORD
+		from member
+		where mem_no = #{memNo,jdbcType=VARCHAR}
+	</select>
+
+
+	<!-- 최근 등록일 기준으로 판매상품을 조회하는 메소드 -->
+	<select id="selectLatestProdList" resultType="ProdDefaultVO">
+		SELECT
+		    PROD_ID
+		    , PROD_SLE_NM
+		    , PROD_SLE_PC
+		    , PROD_REGIST_DE
+		    , PROD_DC
+		    , PROD_IMAGE
+		    , EMP_NO
+		    , CMMN_CODE_ID
+		FROM PROD
+		WHERE ROWNUM BETWEEN 1 AND 10
+		ORDER BY PROD_REGIST_DE DESC
+	</select>
+
+
+	<!-- 배송상태에 해당하는 주문정보를 조회하기위한 resultMap -->
+	<resultMap type="MemorderDefaultVO" id="memOrderMap" autoMapping="true">
+		<id property="orderDtlsId" column="ORDER_DTLS_ID"/>
+		<association property="payment" javaType="PaymentDefaultVO" autoMapping="true" />
+		<association property="delivery" javaType="DeliveryDefaultVO" autoMapping="true" />
+		<collection property="orderDtList" ofType="OrderdtDefaultVO" autoMapping="true">
+			<association property="prod" javaType="ProdDefaultVO" autoMapping="true" />
+		</collection>
+	</resultMap>
+
+	<!-- 배송상태에 해당하는 주문정보를 조회하는 쿼리 -->
+	<select id="selectDlvySttusMemOrderList" parameterType="MemorderDefaultVO" resultMap="memOrderMap">
+		SELECT
+		    A.ORDER_DTLS_ID
+		    , MEM_NO
+		    , ORDER_DE
+		    , PAY_ID
+		    , PAY_MILEAGE_DISCOUNT
+		    , PAY_COUPON_DISCOUNT
+		    , PAY_TOTAL_DISCOUNT
+		    , PAY_METHOD
+		    , PAY_AMOUNT
+		    , PAY_PREMILEAGE_DISCOUNT
+		    , PAY_MILEAGE_TOTAL_DISCOUNT
+		    , PAY_PG
+		    , PAY_COMPANY
+		    , ORDER_PROD_DETAIL
+		    , C.PROD_ID
+		    , ORDER_PROD_QY
+		    , ORDER_PROD_AMOUNT
+		    , PROD_SLE_NM
+		    , PROD_SLE_PC
+		    , PROD_DC
+		    , PROD_IMAGE
+		    , DLVY_ZIP
+		    , DLVY_ADRES1
+		    , DLVY_ADRES2
+		    , DLVY_STTUS
+		FROM
+		    MEMORDER A INNER JOIN PAYMENT B ON (A.ORDER_DTLS_ID = B.ORDER_DTLS_ID)
+		    LEFT OUTER JOIN ORDERDT C ON (A.ORDER_DTLS_ID = C.ORDER_DTLS_ID)
+		    INNER JOIN PROD D ON (C.PROD_ID = D.PROD_ID)
+		    INNER JOIN DELIVERY F ON (A.ORDER_DTLS_ID = F.ORDER_DTLS_ID)
+		WHERE MEM_NO = #{member.memNo} AND DLVY_STTUS = #{delivery.dlvySttus}
+		ORDER BY A.ORDER_DTLS_ID DESC
+	</select>
+
+</mapper>
