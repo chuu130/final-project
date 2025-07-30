@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.franchise.franchisee.mapper.FranIndexMapper">
+
+	<!-- 해당 가맹점의 총매출을 조회하는 쿼리(수정해야함!!!) -->
+	<select id="selectTotalRevenue" parameterType="EmployeeDefaultVO" resultType="int">
+		SELECT  NVL((SELECT SUM(FSEL_AMOUNT)
+            		 FROM FRANSELLING
+            		 WHERE
+                		FRANCHISEE_ID = #{franchiseId}
+                		AND SUBSTR(TO_CHAR(FSEL_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)),0)
+              - NVL((SELECT SUM(FEXPS_AMOUNT)
+                   	 FROM EXPENSE
+                   	 WHERE
+                    	FRANCHISEE_ID = #{franchiseId}
+                     	AND INSTR(FEXPS_NM,'환불') > 0 OR INSTR(FEXPS_NM,'반품') > 0
+                     	AND SUBSTR(TO_CHAR(FEXPS_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)),0) TOTAL_REVENUE
+        FROM DUAL
+	</select>
+
+	<select id="selectProductRevenue" parameterType="EmployeeDefaultVO" resultType="int">
+		SELECT  NVL((SELECT SUM(FSEL_AMOUNT)
+            		 FROM FRANSELLING
+            		 WHERE
+                		FRANCHISEE_ID = #{franchiseId}
+                        AND FSEL_NM NOT LIKE('%미용%') AND FSEL_NM NOT LIKE('%호텔%')
+                		AND SUBSTR(TO_CHAR(FSEL_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)),0)
+              - NVL((SELECT SUM(FEXPS_AMOUNT)
+                   	 FROM EXPENSE
+                   	 WHERE
+                    	FRANCHISEE_ID = #{franchiseId}
+                     	AND INSTR(FEXPS_NM,'환불') > 0 OR INSTR(FEXPS_NM,'반품') > 0
+                     	AND SUBSTR(TO_CHAR(FEXPS_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)),0) TOTAL_REVENUE
+        FROM DUAL
+	</select>
+
+	<select id="selectBeautyRevenue" parameterType="EmployeeDefaultVO" resultType="int">
+		SELECT  NVL((SELECT SUM(FSEL_AMOUNT)
+            		 FROM FRANSELLING
+            		 WHERE
+                		FRANCHISEE_ID = #{franchiseId}
+                        AND FSEL_NM LIKE('%미용%')),0)- NVL((SELECT SUM(FEXPS_AMOUNT)
+                   	 FROM EXPENSE
+                   	 WHERE
+                    	FRANCHISEE_ID = #{franchiseId}
+                     	AND INSTR(FEXPS_NM,'미용예약 환불') > 0
+                     	AND SUBSTR(TO_CHAR(FEXPS_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)),0) TOTAL_REVENUE
+        FROM DUAL
+	</select>
+
+	<select id="selectHotelRevenue" parameterType="EmployeeDefaultVO" resultType="int">
+		SELECT  NVL((SELECT SUM(FSEL_AMOUNT)
+            		 FROM FRANSELLING
+            		 WHERE
+                		FRANCHISEE_ID = #{franchiseId}
+                        AND FSEL_NM LIKE('%호텔%')),0)
+            - NVL((SELECT SUM(FEXPS_AMOUNT)
+                   	 FROM EXPENSE
+                   	 WHERE
+                    	FRANCHISEE_ID = #{franchiseId}
+                     	AND INSTR(FEXPS_NM,'호텔예약 환불') > 0
+                     	AND SUBSTR(TO_CHAR(FEXPS_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)),0) TOTAL_REVENUE
+        FROM DUAL
+	</select>
+
+</mapper>

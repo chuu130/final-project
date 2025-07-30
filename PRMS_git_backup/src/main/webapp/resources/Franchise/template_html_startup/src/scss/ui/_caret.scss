@@ -1,0 +1,16 @@
+.caret {
+	&:before {
+		content: "\f107";
+		
+		@include fontawesome();
+	}
+}
+.dropup {
+	&.caret,
+	& .caret {
+		content: '';
+		border-top: 0;
+		border-bottom: 4px dashed;
+		border-bottom: 4px solid\9;
+  }
+}

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.headquarter.master.mapper.SalesMapper">
+	<select id="selectMonthSelling" resultType="AdminSalesVO">
+		WITH FRANREVENUEMONTHVIEW AS(
+		    SELECT
+		        TO_CHAR(SELNG_DE, 'YYYY-MM') SELNG_DT
+		        , SELNG_AMOUNT
+		    FROM SELLING
+		        WHERE SUBSTR(TO_CHAR(SELNG_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+		) SELECT SELNG_DT, SUM(SELNG_AMOUNT) SELNG_AMOUNT
+		FROM FRANREVENUEMONTHVIEW
+		GROUP BY SELNG_DT
+		ORDER BY SELNG_DT
+	</select>
+	<select id="selectMonthExpense" resultType="AdminSalesVO">
+		WITH FRANREVENUEMONTHVIEW AS(
+		    SELECT
+		        TO_CHAR(ADMINEXP_DE, 'YYYY-MM') EXP_DT
+		        , ADMINEXP_AMOUNT
+		    FROM ADMINEXP
+		        WHERE SUBSTR(TO_CHAR(ADMINEXP_DE),1,4) = SUBSTR(TO_CHAR(SYSDATE),1,4)
+		) SELECT EXP_DT, SUM(ADMINEXP_AMOUNT) EXP_AMOUNT
+		FROM FRANREVENUEMONTHVIEW
+		GROUP BY EXP_DT
+		ORDER BY EXP_DT
+	</select>
+
+	<select id="selectByTop5ProdList" resultType="AdminSalesVO">
+	SELECT B.*
+		FROM(
+		    SELECT ROWNUM RNUM, A.*
+		    FROM(
+		        SELECT C.PROD_SLE_NM PROD_NM, SUM(ORDER_PROD_AMOUNT) PROD_TOTAL, F.CMMN_CODE_NM, E.PARTPROD_PC STORE_PC, SUM(E.PARTPROD_PC) STORE_TOTAL_PC, COUNT(*) PRODCNT
+		        FROM MEMORDER A INNER JOIN ORDERDT B ON (A.ORDER_DTLS_ID = B.ORDER_DTLS_ID)
+		            INNER JOIN PROD C ON (B.PROD_ID = C.PROD_ID)
+		            INNER JOIN ADMININV D ON (D.PROD_ID = C.PROD_ID)
+                    INNER JOIN PARTPROD E ON (D.PROD_ID = E.PROD_ID)
+                    INNER JOIN CMMNCODE F ON (E.PARTPROD_SE = F.CMMN_CODE_ID)
+		        GROUP BY C.PROD_SLE_NM,F.CMMN_CODE_NM, E.PARTPROD_PC
+		        ORDER BY PROD_TOTAL DESC) A
+		        
+		    ) B
+		WHERE RNUM BETWEEN 1 AND 5
+	
+	</select>
+	
+	<select id="selectByProdSalesList" resultType="AdminSalesVO">
+		SELECT C.PROD_SLE_NM PROD_NM, SUM(ORDER_PROD_AMOUNT) PROD_TOTAL, F.CMMN_CODE_NM, E.PARTPROD_PC STORE_PC, SUM(E.PARTPROD_PC) STORE_TOTAL_PC, COUNT(*) PRODCNT
+		        FROM MEMORDER A INNER JOIN ORDERDT B ON (A.ORDER_DTLS_ID = B.ORDER_DTLS_ID)
+		            INNER JOIN PROD C ON (B.PROD_ID = C.PROD_ID)
+		            INNER JOIN ADMININV D ON (D.PROD_ID = C.PROD_ID)
+                    INNER JOIN PARTPROD E ON (D.PROD_ID = E.PROD_ID)
+                    INNER JOIN CMMNCODE F ON (E.PARTPROD_SE = F.CMMN_CODE_ID)
+		        GROUP BY C.PROD_SLE_NM,F.CMMN_CODE_NM, E.PARTPROD_PC
+		        ORDER BY PROD_TOTAL DESC
+	</select>
+
+
+
+
+</mapper>

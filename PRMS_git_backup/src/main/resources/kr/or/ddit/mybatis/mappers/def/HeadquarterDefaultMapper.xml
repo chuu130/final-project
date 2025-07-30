@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.HeadquarterDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.HeadquarterDefaultVO">
+    <id column="HQ_ID" jdbcType="VARCHAR" property="hqId" />
+    <result column="HQ_MTLTY" jdbcType="VARCHAR" property="hqMtlty" />
+    <result column="HQ_ADRES1" jdbcType="VARCHAR" property="hqAdres1" />
+    <result column="HQ_ADRES2" jdbcType="VARCHAR" property="hqAdres2" />
+    <result column="HQ_ZIP" jdbcType="VARCHAR" property="hqZip" />
+    <result column="HQ_EMAIL" jdbcType="VARCHAR" property="hqEmail" />
+    <result column="HQ_TELNO" jdbcType="VARCHAR" property="hqTelno" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from HEADQUARTER
+    where HQ_ID = #{hqId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.HeadquarterDefaultVO">
+    insert into HEADQUARTER (HQ_ID, HQ_MTLTY, HQ_ADRES1, 
+      HQ_ADRES2, HQ_ZIP, HQ_EMAIL, 
+      HQ_TELNO)
+    values (#{hqId,jdbcType=VARCHAR}, #{hqMtlty,jdbcType=VARCHAR}, #{hqAdres1,jdbcType=VARCHAR}, 
+      #{hqAdres2,jdbcType=VARCHAR}, #{hqZip,jdbcType=VARCHAR}, #{hqEmail,jdbcType=VARCHAR}, 
+      #{hqTelno,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.HeadquarterDefaultVO">
+    update HEADQUARTER
+    set HQ_MTLTY = #{hqMtlty,jdbcType=VARCHAR},
+      HQ_ADRES1 = #{hqAdres1,jdbcType=VARCHAR},
+      HQ_ADRES2 = #{hqAdres2,jdbcType=VARCHAR},
+      HQ_ZIP = #{hqZip,jdbcType=VARCHAR},
+      HQ_EMAIL = #{hqEmail,jdbcType=VARCHAR},
+      HQ_TELNO = #{hqTelno,jdbcType=VARCHAR}
+    where HQ_ID = #{hqId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select HQ_ID, HQ_MTLTY, HQ_ADRES1, HQ_ADRES2, HQ_ZIP, HQ_EMAIL, HQ_TELNO
+    from HEADQUARTER
+    where HQ_ID = #{hqId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select HQ_ID, HQ_MTLTY, HQ_ADRES1, HQ_ADRES2, HQ_ZIP, HQ_EMAIL, HQ_TELNO
+    from HEADQUARTER
+  </select>
+</mapper>

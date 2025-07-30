@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.OrderdtDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.OrderdtDefaultVO">
+    <id column="ORDER_PROD_DETAIL" jdbcType="VARCHAR" property="orderProdDetail" />
+    <result column="ORDER_DTLS_ID" jdbcType="VARCHAR" property="orderDtlsId" />
+    <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+    <result column="ORDER_PROD_DETAIL_NM" jdbcType="VARCHAR" property="orderProdDetailNm" />
+    <result column="ORDER_PROD_QY" jdbcType="NUMERIC" property="orderProdQy" />
+    <result column="ORDER_PROD_AMOUNT" jdbcType="NUMERIC" property="orderProdAmount" />
+    <result column="CMMNCL_CODE_ID" jdbcType="VARCHAR" property="cmmnclCodeId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ORDERDT
+    where ORDER_PROD_DETAIL = #{orderProdDetail,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.OrderdtDefaultVO">
+    insert into ORDERDT (ORDER_PROD_DETAIL, ORDER_DTLS_ID, PROD_ID, 
+      ORDER_PROD_DETAIL_NM, ORDER_PROD_QY, ORDER_PROD_AMOUNT, 
+      CMMNCL_CODE_ID)
+    values (#{orderProdDetail,jdbcType=VARCHAR}, #{orderDtlsId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, 
+      #{orderProdDetailNm,jdbcType=VARCHAR}, #{orderProdQy,jdbcType=NUMERIC}, #{orderProdAmount,jdbcType=NUMERIC}, 
+      #{cmmnclCodeId,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.OrderdtDefaultVO">
+    update ORDERDT
+    set ORDER_DTLS_ID = #{orderDtlsId,jdbcType=VARCHAR},
+      PROD_ID = #{prodId,jdbcType=VARCHAR},
+      ORDER_PROD_DETAIL_NM = #{orderProdDetailNm,jdbcType=VARCHAR},
+      ORDER_PROD_QY = #{orderProdQy,jdbcType=NUMERIC},
+      ORDER_PROD_AMOUNT = #{orderProdAmount,jdbcType=NUMERIC},
+      CMMNCL_CODE_ID = #{cmmnclCodeId,jdbcType=VARCHAR}
+    where ORDER_PROD_DETAIL = #{orderProdDetail,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select ORDER_PROD_DETAIL, ORDER_DTLS_ID, PROD_ID, ORDER_PROD_DETAIL_NM, ORDER_PROD_QY, 
+    ORDER_PROD_AMOUNT, CMMNCL_CODE_ID
+    from ORDERDT
+    where ORDER_PROD_DETAIL = #{orderProdDetail,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ORDER_PROD_DETAIL, ORDER_DTLS_ID, PROD_ID, ORDER_PROD_DETAIL_NM, ORDER_PROD_QY, 
+    ORDER_PROD_AMOUNT, CMMNCL_CODE_ID
+    from ORDERDT
+  </select>
+  
+    <select id="selectByreviewid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT MEM_NO, REVIEW_IMAGE ,ORDER_PROD_DETAIL
+	FROM ORDERDT A 
+	LEFT OUTER JOIN REVIEW B ON A.PROD_ID = B.PROD_ID	
+  </select>
+  
+</mapper>

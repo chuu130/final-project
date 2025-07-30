@@ -1,0 +1,55 @@
+<!-- BEGIN #sidebar -->
+		<div id="sidebar" class="app-sidebar">
+			<!-- BEGIN scrollbar -->
+			<div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
+				<!-- BEGIN menu -->
+				<div class="menu">
+					<div class="menu-profile">
+						<a href="javascript:;" class="menu-profile-link" data-bs-toggle="dropdown">
+							<div class="menu-profile-cover with-shadow"></div>
+							<div class="menu-profile-image">
+								<div class="menu-profile-img d-flex align-items-center justify-content-center bg-secondary-subtle text-secondary rounded-circle overflow-hidden">
+									<i class="bi bi-person-fill fs-60px mb-n4"></i>
+								</div>
+							</div>
+							<div class="menu-profile-info">
+								<div class="d-flex align-items-center">
+									<div class="flex-grow-1 fw-bold">
+										Administrator
+									</div>
+									<div class="ms-auto"><i class="fa fa-chevron-down"></i></div>
+								</div>
+								<small>username@account.com</small>
+							</div>
+						</a>
+						<div class="dropdown-menu dropdown-menu-end me-lg-3 mt-1 w-200px">
+							<a class="dropdown-item d-flex align-items-center" href="profile.html"><i class="far fa-user fa-fw fa-lg me-3"></i> Profile</a>
+							<a class="dropdown-item d-flex align-items-center" href="email_inbox.html"><i class="far fa-envelope fa-fw fa-lg me-3"></i> Inbox</a>
+							<a class="dropdown-item d-flex align-items-center" href="calendar.html"><i class="far fa-calendar fa-fw fa-lg me-3"></i> Calendar</a>
+							<a class="dropdown-item d-flex align-items-center" href="settings.html"><i class="fa fa-sliders fa-fw fa-lg me-3"></i> Settings</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item d-flex align-items-center" href="page_login.html"><i class="fa fa-arrow-right-from-bracket fa-fw fa-lg me-3"></i> Logout</a>
+						</div>
+					</div>
+					<div class="menu-header">Navigation</div>
+					<div class="menu-item@@if (context.homeClass) { @@homeClass}">
+						<a href="index.html" class="menu-link">
+							<span class="menu-icon"><i class="fa fa-home"></i></span>
+							<span class="menu-text">Home</span>
+						</a>
+					</div>
+				</div>
+				<!-- END menu -->
+				<div class="p-3 mt-auto">
+					<a href="https://seantheme.com/droplet/documentation/index.html" class="btn d-block btn-theme fs-13px fw-semibold rounded-pill">
+						<i class="fa fa-code-branch me-2 ms-n2 opacity-5"></i> Documentation
+					</a>
+				</div>
+			</div>
+			<!-- END scrollbar -->
+		</div>
+		<!-- END #sidebar -->
+			
+		<!-- BEGIN mobile-sidebar-backdrop -->
+		<button class="app-sidebar-mobile-backdrop" data-toggle-target=".app" data-toggle-class="app-sidebar-mobile-toggled"></button>
+		<!-- END mobile-sidebar-backdrop -->

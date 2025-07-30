@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.headquarter.master.mapper.OnlineOrderMapper">
+
+	<!-- 마켓회원의 주문내역을 조회하기위한 resultMap -->
+	<resultMap type="MemorderDefaultVO" id="memOrderMap" autoMapping="true">
+		<id property="orderDtlsId" column="ORDER_DTLS_ID"/>
+		<association property="member" javaType="MemberDefaultVO" autoMapping="true"/>
+		<association property="payment" javaType="PaymentDefaultVO" autoMapping="true"/>
+		<association property="delivery" javaType="DeliveryDefaultVO" autoMapping="true"/>
+		<collection property="orderDtList" ofType="OrderdtDefaultVO" autoMapping="true" >
+			<association property="prod" javaType="ProdDefaultVO" autoMapping="true"/>
+		</collection>
+	</resultMap>
+
+
+
+	<!-- 페이징을 위한 레코드수를 구하는 쿼리 -->
+	<select id="selectTotalRecord" parameterType="kr.or.ddit.commons.paging.PaginationInfoOrder">
+		SELECT COUNT(DISTINCT A.ORDER_DTLS_ID)
+		FROM
+		    MEMORDER A INNER JOIN MEMBER B ON (A.MEM_NO = B.MEM_NO)
+		    INNER JOIN DELIVERY C ON (A.ORDER_DTLS_ID = C.ORDER_DTLS_ID)
+		    LEFT OUTER JOIN ORDERDT D ON (A.ORDER_DTLS_ID = D.ORDER_DTLS_ID)
+		    INNER JOIN PROD E ON (D.PROD_ID = E.PROD_ID)
+		    INNER JOIN PAYMENT F ON (A.ORDER_DTLS_ID = F.ORDER_DTLS_ID)
+		WHERE
+			A.FRANCHISEE_ID IS NULL
+			<if test="searchData.searchData != null and searchData.searchData != ''">
+				AND (INSTR(MEM_ID,#{searchData.searchData}) > 0 OR INSTR(PROD_SLE_NM,#{searchData.searchData}) > 0)
+			</if>
+			<if test="searchData.dlvySttus != null and searchData.dlvySttus != ''">
+				AND  DLVY_STTUS = #{searchData.dlvySttus}
+			</if>
+	</select>
+
+
+	<!-- 마켓 주문내역을 조회하는 쿼리 -->
+	<select id="selectMemOrderList" resultMap="memOrderMap">
+		WITH OTHERMEMORDERVIEW AS (
+			SELECT
+			    A.ORDER_DTLS_ID
+			    , ORDER_DE
+			    , A.MEM_NO
+			    , MEM_ID
+			    , MEM_TELNO
+			    , DLVY_STTUS
+			    , ORDER_PROD_DETAIL
+			    , D.PROD_ID
+			    , ORDER_PROD_QY
+			    , ORDER_PROD_AMOUNT
+			    , PROD_SLE_NM
+			    , PROD_SLE_PC
+			    , PROD_IMAGE
+			    , PAY_ID
+			    , PAY_MILEAGE_DISCOUNT
+			    , PAY_COUPON_DISCOUNT
+			    , PAY_TOTAL_DISCOUNT
+			    , PAY_METHOD
+			    , PAY_AMOUNT
+			    , PAY_PREMILEAGE_DISCOUNT
+			    , PAY_MLSAVINGS
+			    , PAY_MILEAGE_TOTAL_DISCOUNT
+			FROM
+			    MEMORDER A INNER JOIN MEMBER B ON (A.MEM_NO = B.MEM_NO)
+			    INNER JOIN DELIVERY C ON (A.ORDER_DTLS_ID = C.ORDER_DTLS_ID)
+			    LEFT OUTER JOIN ORDERDT D ON (A.ORDER_DTLS_ID = D.ORDER_DTLS_ID)
+			    INNER JOIN PROD E ON (D.PROD_ID = E.PROD_ID)
+			    INNER JOIN PAYMENT F ON (A.ORDER_DTLS_ID = F.ORDER_DTLS_ID)
+			WHERE
+				A.FRANCHISEE_ID IS NULL
+				<if test="searchData.searchData != null and searchData.searchData != ''">
+					AND (INSTR(MEM_ID,#{searchData.searchData}) > 0 OR INSTR(PROD_SLE_NM,#{searchData.searchData}) > 0)
+				</if>
+				<if test="searchData.dlvySttus != null and searchData.dlvySttus != ''">
+					AND  DLVY_STTUS = #{searchData.dlvySttus}
+				</if>
+			)
+		    SELECT A.*
+		        FROM(
+			        SELECT OTHERMEMORDERVIEW.*, DENSE_RANK() OVER(ORDER BY TO_NUMBER(SUBSTR(OTHERMEMORDERVIEW.ORDER_DTLS_ID,3)) DESC) RNUM
+			        FROM OTHERMEMORDERVIEW
+		        )A
+		    WHERE RNUM BETWEEN #{firstRecord} AND #{lastRecord}
+	</select>
+
+	<!-- 주문번호를 이용해서 주문상세정보를 조회하는 쿼리 -->
+	<select id="selectMemOrderDt" parameterType="string" resultMap="memOrderMap">
+		SELECT
+		    A.ORDER_DTLS_ID
+		    , A.MEM_NO
+		    , ORDER_DE
+		    , MEM_ID
+		    , MEM_TELNO
+		    , MEM_NM
+		    , PAY_ID
+		    , PAY_MILEAGE_DISCOUNT
+		    , PAY_COUPON_DISCOUNT
+		    , PAY_TOTAL_DISCOUNT
+		    , PAY_METHOD
+		    , PAY_AMOUNT
+		    , PAY_PREMILEAGE_DISCOUNT
+		    , MYCOUPON_NO
+		    , PAY_MILEAGE_TOTAL_DISCOUNT
+		    , PAY_PG
+		    , PAY_COMPANY
+		    , PAY_MLSAVINGS
+		    , ORDER_PROD_DETAIL
+		    , D.PROD_ID
+		    , ORDER_PROD_QY
+		    , ORDER_PROD_AMOUNT
+		    , PROD_SLE_NM
+		    , PROD_SLE_PC
+		    , PROD_DC
+		    , PROD_IMAGE
+		    , DLVY_ZIP
+		    , DLVY_ADRES1
+		    , DLVY_ADRES2
+		    , DLVY_STTUS
+		FROM
+		    MEMORDER A INNER JOIN MEMBER B ON (A.MEM_NO = B.MEM_NO)
+		    INNER JOIN PAYMENT C ON (A.ORDER_DTLS_ID = C.ORDER_DTLS_ID)
+		    LEFT OUTER JOIN ORDERDT D ON (A.ORDER_DTLS_ID = D.ORDER_DTLS_ID)
+		    INNER JOIN PROD E ON (D.PROD_ID = E.PROD_ID)
+		    INNER JOIN DELIVERY F ON (A.ORDER_DTLS_ID = F.ORDER_DTLS_ID)
+		WHERE A.ORDER_DTLS_ID = #{orderDtlsId}
+	</select>
+
+
+	<!-- 주문번호를 이용해서 발송처리를하는 쿼리 -->
+	<update id="updateDlvySttus" parameterType="string">
+		UPDATE DELIVERY
+        SET
+            DLVY_BEGIN_DE = SYSDATE
+            , DLVY_PREARNGE_DE = SYSDATE + 2
+            , DLVY_STTUS = '배송중'
+        WHERE ORDER_DTLS_ID = #{orderDtlsId}
+	</update>
+
+
+	<!-- 배송중인 주문정보를 조회한다. -->
+	<select id="selectDlveringMemOrder">
+		SELECT
+		    A.ORDER_DTLS_ID
+		    , ORDER_DE
+		    , A.MEM_NO
+		    , MEM_ID
+		    , MEM_TELNO
+		    , DLVY_STTUS
+		    , ORDER_PROD_DETAIL
+		    , D.PROD_ID
+		    , ORDER_PROD_QY
+		    , ORDER_PROD_AMOUNT
+		    , PROD_SLE_NM
+		    , PROD_SLE_PC
+		    , PROD_IMAGE
+		FROM
+		    MEMORDER A INNER JOIN MEMBER B ON (A.MEM_NO = B.MEM_NO)
+		    INNER JOIN DELIVERY C ON (A.ORDER_DTLS_ID = C.ORDER_DTLS_ID)
+		    LEFT OUTER JOIN ORDERDT D ON (A.ORDER_DTLS_ID = D.ORDER_DTLS_ID)
+		    INNER JOIN PROD E ON (D.PROD_ID = E.PROD_ID)
+		WHERE DLVY_STTUS = '배송중'
+	</select>
+
+
+	<!-- 배송완료처리하는 쿼리 -->
+	<update id="updateDlvySttusSuccess">
+	<![CDATA[
+		UPDATE DELIVERY
+        SET DLVY_END_DE = SYSDATE, DLVY_STTUS = '배송완료'
+        WHERE ORDER_DTLS_ID = #{orderDtlsId} AND SYSDATE >= DLVY_PREARNGE_DE
+    ]]>
+	</update>
+
+</mapper>

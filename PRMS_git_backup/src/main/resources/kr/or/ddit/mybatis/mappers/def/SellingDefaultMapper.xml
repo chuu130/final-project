@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.SellingDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.SellingDefaultVO">
+    <id column="SELNG_NO" jdbcType="VARCHAR" property="selngNo" />
+    <id column="HQ_ID" jdbcType="VARCHAR" property="hqId" />
+    <result column="SELNG_SE" jdbcType="VARCHAR" property="selngSe" />
+    <result column="SELNG_NM" jdbcType="VARCHAR" property="selngNm" />
+    <result column="SELNG_CN" jdbcType="VARCHAR" property="selngCn" />
+    <result column="SELNG_DE" jdbcType="TIMESTAMP" property="selngDe" />
+    <result column="SELNG_AMOUNT" jdbcType="VARCHAR" property="selngAmount" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from SELLING
+    where SELNG_NO = #{selngNo,jdbcType=VARCHAR}
+      and HQ_ID = #{hqId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.SellingDefaultVO">
+    insert into SELLING (SELNG_NO, HQ_ID, SELNG_PROD_SE,
+      SELNG_PROD_NM, SELNG_PROD_CN, SELNG_PROD_DE,
+      SELING_PROD_ATCH, SELING_AMOUNT)
+    values (#{selngNo,jdbcType=VARCHAR}, #{hqId,jdbcType=VARCHAR}, #{selngProdSe,jdbcType=VARCHAR},
+      #{selngProdNm,jdbcType=VARCHAR}, #{selngProdCn,jdbcType=VARCHAR}, #{selngProdDe,jdbcType=TIMESTAMP},
+      #{selingProdAtch,jdbcType=VARCHAR}, #{selingAmount,jdbcType=NUMERIC})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.SellingDefaultVO">
+    update SELLING
+    set SELNG_PROD_SE = #{selngProdSe,jdbcType=VARCHAR},
+      SELNG_PROD_NM = #{selngProdNm,jdbcType=VARCHAR},
+      SELNG_PROD_CN = #{selngProdCn,jdbcType=VARCHAR},
+      SELNG_PROD_DE = #{selngProdDe,jdbcType=TIMESTAMP},
+      SELING_PROD_ATCH = #{selingProdAtch,jdbcType=VARCHAR},
+      SELING_AMOUNT = #{selingAmount,jdbcType=NUMERIC}
+    where SELNG_NO = #{selngNo,jdbcType=VARCHAR}
+      and HQ_ID = #{hqId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select SELNG_NO, HQ_ID, SELNG_PROD_SE, SELNG_PROD_NM, SELNG_PROD_CN, SELNG_PROD_DE,
+    SELING_PROD_ATCH, SELING_AMOUNT
+    from SELLING
+    where SELNG_NO = #{selngNo,jdbcType=VARCHAR}
+      and HQ_ID = #{hqId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select SELNG_NO, HQ_ID, SELNG_PROD_SE, SELNG_PROD_NM, SELNG_PROD_CN, SELNG_PROD_DE,
+    SELING_PROD_ATCH, SELING_AMOUNT
+    from SELLING
+  </select>
+  <insert id="insertSelling" parameterType="SellingDefaultVO">
+  	insert into SELLING (SELNG_NO
+						, HQ_ID
+						, SELNG_SE
+						, SELNG_NM
+						, SELNG_CN
+						, SELNG_DE
+						, SELNG_AMOUNT)
+    values ('SEL'||SELLING_SEQ.nextval, #{hqId,jdbcType=VARCHAR}, #{selngSe,jdbcType=VARCHAR},
+      #{selngNm,jdbcType=VARCHAR}, #{selngCn,jdbcType=VARCHAR}, sysdate,
+      #{selngAmount,jdbcType=VARCHAR})
+  </insert>
+</mapper>

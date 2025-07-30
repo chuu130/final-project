@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.market.member.mapper.MemberWishListMapper">
+	
+	<resultMap type="MemberWishListVO" id="memberWishListMap" autoMapping="true">
+		<id property="prodId" column="PROD_ID"/>
+		<association property="prod" javaType="ProdDefaultVO" autoMapping="true"/>
+		<association property="admininv" javaType="AdminInvVO" autoMapping="true" />
+		<association property="cmmncode" javaType="CmmncodeDefaultVO" autoMapping="true">
+			<id property="cmmnCodeId" column="CMMN_CODE_ID"/>
+		</association>
+	</resultMap>
+	
+	<select id="selectMemberWishList" resultMap="memberWishListMap">
+		select A.MEM_NO
+		    , A.PROD_ID
+		    , A.LIKE_DE
+		    , B.prod_sle_nm 
+		    , B.prod_sle_pc 
+		    , B.prod_image 
+		    , C.CMMN_CODE_NM
+		    , D.admininv_qy 
+		from FAVORITES A INNER JOIN PROD B ON (A.PROD_ID = B.PROD_ID)
+            INNER JOIN CMMNCODE C ON (B.CMMN_CODE_ID = C.CMMN_CODE_ID)
+            INNER JOIN ADMININV D ON (B.PROD_ID = D.PROD_ID)
+        WHERE MEM_NO = #{memNo}
+	</select>
+	
+	<select id="selectWishListCount" resultType="int">
+		SELECT COUNT(*)
+	    FROM FAVORITES
+	    WHERE MEM_NO = #{memNo}
+	</select>
+	
+	<delete id="deleteMemberWishListProd">
+		DELETE FROM FAVORITES WHERE MEM_NO = #{memNo} AND PROD_ID = #{prodId}
+	</delete>
+	
+	<insert id="insertWishList">
+		INSERT INTO FAVORITES(PROD_ID, MEM_NO, LIKE_DE)
+		VALUES(#{prodId}, #{memNo}, SYSDATE)
+	</insert>
+	
+	<select id="checkProdWishList" resultMap="memberWishListMap" >
+		select A.MEM_NO
+		    , A.PROD_ID
+		    , A.LIKE_DE
+		    , B.prod_sle_nm 
+		    , B.prod_sle_pc 
+		    , B.prod_image 
+		    , C.CMMN_CODE_NM
+		    , D.admininv_qy 
+		from FAVORITES A INNER JOIN PROD B ON (A.PROD_ID = B.PROD_ID)
+            INNER JOIN CMMNCODE C ON (B.CMMN_CODE_ID = C.CMMN_CODE_ID)
+            INNER JOIN ADMININV D ON (B.PROD_ID = D.PROD_ID)
+        WHERE MEM_NO = #{memNo}
+        AND PROD_ID = #{prodId}
+	</select>
+</mapper>

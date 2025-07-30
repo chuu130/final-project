@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.EventDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.EventDefaultVO">
+    <id column="EVENT_ID" jdbcType="VARCHAR" property="eventId" />
+    <result column="EVENT_NM" jdbcType="VARCHAR" property="eventNm" />
+    <result column="EVENT_CN" jdbcType="VARCHAR" property="eventCn" />
+    <result column="EVENT_BEGIN_DE" jdbcType="TIMESTAMP" property="eventBeginDe" />
+    <result column="EVENT_END_DE" jdbcType="TIMESTAMP" property="eventEndDe" />
+    <result column="EVENT_IMAGE" jdbcType="VARCHAR" property="eventImage" />
+    <result column="EMP_NO" jdbcType="VARCHAR" property="empNo" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from EVENT
+    where EVENT_ID = #{eventId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.EventDefaultVO">
+    insert into EVENT (EVENT_ID, EVENT_NM, EVENT_CN, 
+      EVENT_BEGIN_DE, EVENT_END_DE, EVENT_IMAGE, 
+      EMP_NO)
+    values (#{eventId,jdbcType=VARCHAR}, #{eventNm,jdbcType=VARCHAR}, #{eventCn,jdbcType=VARCHAR}, 
+      #{eventBeginDe,jdbcType=TIMESTAMP}, #{eventEndDe,jdbcType=TIMESTAMP}, #{eventImage,jdbcType=VARCHAR}, 
+      #{empNo,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.EventDefaultVO">
+    update EVENT
+    set EVENT_NM = #{eventNm,jdbcType=VARCHAR},
+      EVENT_CN = #{eventCn,jdbcType=VARCHAR},
+      EVENT_BEGIN_DE = #{eventBeginDe,jdbcType=TIMESTAMP},
+      EVENT_END_DE = #{eventEndDe,jdbcType=TIMESTAMP},
+      EVENT_IMAGE = #{eventImage,jdbcType=VARCHAR},
+      EMP_NO = #{empNo,jdbcType=VARCHAR}
+    where EVENT_ID = #{eventId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select EVENT_ID, EVENT_NM, EVENT_CN, EVENT_BEGIN_DE, EVENT_END_DE, EVENT_IMAGE, EMP_NO
+    from EVENT
+    where EVENT_ID = #{eventId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select EVENT_ID, EVENT_NM, EVENT_CN, EVENT_BEGIN_DE, EVENT_END_DE, EVENT_IMAGE, EMP_NO
+    from EVENT
+  </select>
+</mapper>

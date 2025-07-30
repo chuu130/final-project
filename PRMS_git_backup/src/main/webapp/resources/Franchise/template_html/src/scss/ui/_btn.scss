@@ -1,0 +1,15 @@
+.btn-default,
+.btn-outline-default {
+  --#{$prefix}btn-font-weight: $btn-font-weight;
+  --#{$prefix}btn-color: var(--#{$prefix}component-color);
+  --#{$prefix}btn-bg: var(--#{$prefix}component-bg);
+  --#{$prefix}btn-border-color: var(--#{$prefix}border-color);
+  --#{$prefix}btn-hover-color: var(--#{$prefix}component-color);
+  --#{$prefix}btn-hover-bg: var(--#{$prefix}border-color);
+  --#{$prefix}btn-hover-border-color: var(--#{$prefix}border-color);
+  --#{$prefix}btn-focus-shadow-rgb: var(--#{$prefix}violet-rgb);
+  --#{$prefix}btn-active-color: var(--#{$prefix}component-color);
+  --#{$prefix}btn-active-bg: var(--#{$prefix}border-color);
+  --#{$prefix}btn-active-border-color: var(--#{$prefix}border-color);
+  --#{$prefix}btn-disabled-border-color: var(--#{$prefix}border-color);
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.market.common.mapper.CommonHeaderMenuMapper">
+	<select id="selectCommnMenuList" resultType="hashMap">
+		SELECT to_char(LEVEL) LVL, CMMN_CODE_ID, CMMN_PRNT_CODE, CMMN_CODE_NM
+		FROM CMMNCODE
+		WHERE CMMNCL_CODE_ID = 'COMN05'
+		START WITH CMMN_PRNT_CODE IS NULL
+		CONNECT BY PRIOR CMMN_CODE_ID = CMMN_PRNT_CODE
+	</select>
+</mapper>

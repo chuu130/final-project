@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.commons.def.mapper.FoundDefaultMapper">
+	<resultMap id="BaseResultMap"
+		type="kr.or.ddit.vo.def.FoundDefaultVO">
+		<id column="FOUND_NO" jdbcType="VARCHAR" property="foundNo" />
+		<result column="FOUND_NM" jdbcType="VARCHAR" property="foundNm" />
+		<result column="FOUND_TELNO" jdbcType="VARCHAR"
+			property="foundTelno" />
+		<result column="FOUND_EMAIL" jdbcType="VARCHAR"
+			property="foundEmail" />
+		<result column="FOUND_ADRES1" jdbcType="VARCHAR"
+			property="foundAdres1" />
+		<result column="FOUND_ADRES2" jdbcType="VARCHAR"
+			property="foundAdres2" />
+		<result column="FOUND_CN" jdbcType="VARCHAR" property="foundCn" />
+		<result column="FOUND_DE" jdbcType="TIMESTAMP"
+			property="foundDe" />
+		<result column="FOUND_PLACE" jdbcType="VARCHAR"
+			property="foundPlace" />
+		<result column="FOUND_ATCH" jdbcType="VARCHAR"
+			property="foundAtch" />
+		<result column="FOUND_SIDE_SE" jdbcType="VARCHAR"
+			property="foundSideSe" />
+		<result column="FOUND_LICENSE_AT" jdbcType="VARCHAR"
+			property="foundLicenseAt" />
+		<result column="FOUND_CONFM_AT" jdbcType="VARCHAR"
+			property="foundConfmAt" />
+		<result column="EMP_NO" jdbcType="VARCHAR" property="empNo" />
+		<!-- <collection property="counselList" -->
+		<!-- ofType="CounselDefaultVO"> -->
+		<!-- <id column="COUNSEL_NO" jdbcType="VARCHAR" -->
+		<!-- property="counselNo" /> -->
+		<!-- <collection property="" ofType="PaymentDefaultVO"> -->
+		<!-- <id column="PAY_ID" jdbcType="VARCHAR" property="payId" /> -->
+		<!-- <result column="FOUND_NO" jdbcType="VARCHAR" -->
+		<!-- property="payAmount" /> -->
+		<!-- </collection> -->
+		<!-- </collection> -->
+	</resultMap>
+	<delete id="deleteFound" parameterType="java.lang.String">
+		delete from FOUND
+		where FOUND_NO = #{foundNo,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insertFound"
+		parameterType="kr.or.ddit.vo.def.FoundDefaultVO">
+		insert into FOUND (
+		FOUND_NO
+		, FOUND_NM
+		, FOUND_TELNO
+		, FOUND_EMAIL
+		, FOUND_ZIP
+		, FOUND_ADRES1
+		, FOUND_ADRES2
+		, FOUND_CN
+		, FOUND_PLACE
+		, FOUND_ATCH
+		, FOUND_LICENSE_AT
+		) values (
+		#{foundNo,jdbcType=VARCHAR}
+		, #{foundNm,jdbcType=VARCHAR}
+		, #{foundTelno,jdbcType=VARCHAR}
+		, #{foundEmail,jdbcType=VARCHAR}
+		, #{foundZip,jdbcType=VARCHAR}
+		, #{foundAdres1,jdbcType=VARCHAR}
+		, #{foundAdres2,jdbcType=VARCHAR}
+		, #{foundCn,jdbcType=VARCHAR}
+		, #{foundPlace,jdbcType=VARCHAR}
+		, #{foundAtch,jdbcType=VARCHAR}
+		, #{foundLicenseAt,jdbcType=VARCHAR}
+	</insert>
+	<update id="updateFound"
+		parameterType="kr.or.ddit.vo.def.FoundDefaultVO">
+		update FOUND
+		set FOUND_NM = #{foundNm,jdbcType=VARCHAR},
+		FOUND_TELNO = #{foundTelno,jdbcType=VARCHAR},
+		FOUND_EMAIL = #{foundEmail,jdbcType=VARCHAR},
+		FOUND_ADRES1 = #{foundAdres1,jdbcType=VARCHAR},
+		FOUND_ADRES2 = #{foundAdres2,jdbcType=VARCHAR},
+		FOUND_CN = #{foundCn,jdbcType=VARCHAR},
+		FOUND_DE = #{foundDe,jdbcType=TIMESTAMP},
+		FOUND_PLACE = #{foundPlace,jdbcType=VARCHAR},
+		FOUND_ATCH = #{foundAtch,jdbcType=VARCHAR},
+		FOUND_SIDE_SE = #{foundSideSe,jdbcType=VARCHAR},
+		FOUND_LICENSE_AT = #{foundLicenseAt,jdbcType=VARCHAR},
+		FOUND_CONFM_AT = #{foundConfmAt,jdbcType=VARCHAR},
+		EMP_NO = #{empNo,jdbcType=VARCHAR}
+		where FOUND_NO = #{foundNo,jdbcType=VARCHAR}
+	</update>
+	<select id="selectFound" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select FOUND_NO, FOUND_NM, FOUND_TELNO, FOUND_EMAIL, FOUND_ADRES1,
+		FOUND_ADRES2,
+		FOUND_CN, FOUND_DE, FOUND_PLACE, FOUND_ATCH, FOUND_SIDE_SE, FOUND_LICENSE_AT,
+		FOUND_CONFM_AT,
+		EMP_NO
+		from FOUND
+		where FOUND_NO = #{foundNo,jdbcType=VARCHAR}
+	</select>
+	<select id="selectFoundList" resultMap="BaseResultMap">
+		SELECT A.FOUND_NO, A.FOUND_NM, A.FOUND_TELNO, A.FOUND_EMAIL, A.FOUND_ADRES1,
+		A.FOUND_ADRES2, A.FOUND_CN, A.FOUND_DE, A.FOUND_PLACE, A.FOUND_ATCH,
+		A.FOUND_SIDE_SE, A.FOUND_LICENSE_AT, A.EMP_NO
+		FROM FOUND A LEFT OUTER JOIN COUNSEL B ON (A.FOUND_NO = B.FOUND_NO)
+		LEFT OUTER JOIN CONTRACT C ON (B.COUNSEL_NO = C.COUNSEL_NO)
+
+		WHERE B.COUNSEL_AT='Y' AND C.CONTRACT_PC_AT = 'Y'
+		GROUP BY A.FOUND_NO, A.FOUND_NM, A.FOUND_TELNO, A.FOUND_EMAIL,
+		A.FOUND_ADRES1, A.FOUND_ADRES2, A.FOUND_CN, A.FOUND_DE, A.FOUND_PLACE,
+		A.FOUND_ATCH, A.FOUND_SIDE_SE, A.FOUND_LICENSE_AT, A.EMP_NO
+
+	</select>
+
+</mapper>

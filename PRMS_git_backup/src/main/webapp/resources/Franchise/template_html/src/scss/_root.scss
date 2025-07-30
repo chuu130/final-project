@@ -1,0 +1,41 @@
+:root,
+[data-bs-theme="light"] {
+  --#{$prefix}component-bg: #{$component-bg};
+  --#{$prefix}component-bg-rgb: #{to-rgb($component-bg)};
+  --#{$prefix}component-color: #{$component-color};
+  --#{$prefix}component-color-rgb: #{to-rgb($component-color)};
+  --#{$prefix}app-header-bg: #{$app-header-bg};
+  --#{$prefix}app-header-color: #{$app-header-color};
+  --#{$prefix}app-header-color-rgb: #{to-rgb($app-header-color)};
+  --#{$prefix}app-header-border-color: #{$app-header-border-color};
+  --#{$prefix}app-header-scroll-box-shadow: #{$app-header-scroll-box-shadow};
+  --#{$prefix}app-sidebar-link-color: #{$app-sidebar-link-color};
+  --#{$prefix}app-sidebar-link-hover-color: #{$app-sidebar-link-hover-color};
+  --#{$prefix}app-sidebar-link-hover-bg: #{$app-sidebar-link-hover-bg};
+  --#{$prefix}app-sidebar-link-active-color: #{$app-sidebar-link-active-color};
+  --#{$prefix}app-sidebar-link-active-bg: #{$app-sidebar-link-active-bg};
+  --#{$prefix}app-sidebar-mobile-bg: #{$app-sidebar-mobile-bg};
+  --#{$prefix}theme-bg-subtle: #{tint-color($theme, 80%)};
+}
+
+@if $enable-dark-mode {
+  @include color-mode(dark, true) {
+    // scss-docs-start root-dark-mode-vars
+		--#{$prefix}component-bg: #{$component-bg-dark};
+		--#{$prefix}component-bg-rgb: #{to-rgb($component-bg-dark)};
+		--#{$prefix}component-color: #{$component-color-dark};
+		--#{$prefix}component-color-rgb: #{to-rgb($component-color-dark)};
+		--#{$prefix}app-header-bg: #{$app-header-bg-dark};
+		--#{$prefix}app-header-color: #{$app-header-color-dark};
+		--#{$prefix}app-header-color-rgb: #{to-rgb($app-header-color-dark)};
+  	--#{$prefix}app-header-border-color: #{$app-header-border-color-dark};
+		--#{$prefix}app-sidebar-link-color: #{$app-sidebar-link-color-dark};
+		--#{$prefix}app-sidebar-link-hover-color: #{$app-sidebar-link-hover-color-dark};
+		--#{$prefix}app-sidebar-link-hover-bg: #{$app-sidebar-link-hover-bg-dark};
+		--#{$prefix}app-sidebar-link-active-color: #{$app-sidebar-link-active-color-dark};
+		--#{$prefix}app-sidebar-link-active-bg: #{$app-sidebar-link-active-bg-dark};
+  	--#{$prefix}app-sidebar-mobile-bg: #{$app-sidebar-mobile-bg-dark};
+  	--#{$prefix}theme-bg-subtle: #{shade-color($theme, 80%)};
+    // scss-docs-end root-dark-mode-vars
+  }
+}

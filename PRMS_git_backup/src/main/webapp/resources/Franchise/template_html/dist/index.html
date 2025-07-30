@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>droplet | Dashboard</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	
+	<!-- ================== BEGIN core-css ================== -->
+	<link href="assets/css/vendor.min.css" rel="stylesheet">
+	<link href="assets/css/app.min.css" rel="stylesheet">
+	<!-- ================== END core-css ================== -->
+	
+	<!-- ================== BEGIN page-css ================== -->
+	<link href="assets/plugins/jvectormap-next/jquery-jvectormap.css" rel="stylesheet">
+	<link href="assets/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+	<!-- ================== END page-css ================== -->
+
+</head>
+<body>
+	<!-- BEGIN #app -->
+	<div id="app" class="app">
+		<!-- BEGIN #header -->
+		<div id="header" class="app-header" >
+			<!-- BEGIN desktop-toggler -->
+			<div class="desktop-toggler">
+				<button type="button" class="menu-toggler" data-toggle-class="app-sidebar-collapsed" data-toggle-target=".app">
+					<span class="bar"></span>
+					<span class="bar"></span>
+				</button>
+			</div>
+			<!-- END desktop-toggler -->
+			
+			<!-- BEGIN mobile-toggler -->
+			<div class="mobile-toggler">
+				<button type="button" class="menu-toggler" data-toggle-class="app-sidebar-mobile-toggled" data-toggle-target=".app">
+					<span class="bar"></span>
+					<span class="bar"></span>
+				</button>
+			</div>
+			<!-- END mobile-toggler -->
+				
+			<!-- BEGIN brand -->
+			<div class="brand">
+				<a href="index.html" class="brand-logo">
+					droplet
+				</a>
+			</div>
+			<!-- END brand -->
+			
+			<!-- BEGIN menu -->
+			<div class="menu">
+				<div class="menu-item dropdown">
+					<a href="index.html" data-toggle-class="app-header-menu-search-toggled" data-toggle-target=".app" class="menu-link">
+						<div class="menu-icon"><i class="bi bi-search nav-icon"></i></div>
+					</a>
+				</div>
+				<div class="menu-item dropdown dropdown-mobile-full">
+					<a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
+						<div class="menu-icon"><i class="bi bi-grid-3x3-gap nav-icon"></i></div>
+					</a>
+					<div class="dropdown-menu fade dropdown-menu-end w-300px text-center p-0 mt-1 overflow-hidden">
+						<div class="row gx-0 p-1 pb-0">
+							<div class="col-4">
+								<div class="h-100 p-1">
+									<a href="email_inbox.html" class="dropdown-item p-2 rounded-2">
+										<div class="position-relative pt-1">
+											<i class="bi bi-circle-fill position-absolute text-primary end-0 me-2 fs-6px d-block"></i>
+											<i class="bi bi-envelope fs-2 d-block text-body text-opacity-50"></i>
+										</div>
+										<div class="small">Inbox</div>
+									</a>
+								</div>
+							</div>
+							<div class="col-4">
+								<div class="h-100 p-1">
+									<a href="pos_customer_order.html" target="_blank" class="dropdown-item p-2 rounded-2">
+										<div class="position-relative pt-1">
+											<i class="bi bi-hdd-network fs-2 d-block text-body text-opacity-50"></i>
+										</div>
+										<div class="small">Pos System</div>
+									</a>
+								</div>
+							</div>
+							<div class="col-4">
+								<div class="h-100 p-1">
+									<a href="calendar.html" class="dropdown-item p-2 rounded-2">
+										<div class="position-relative pt-1">
+											<i class="bi bi-calendar4 fs-2 d-block text-body text-opacity-50"></i>
+										</div>
+										<div class="small">Calendar</div>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="row gx-0 p-1 pt-0">
+							<div class="col-4">
+								<div class="h-100 p-1">
+									<a href="helper.html" class="dropdown-item p-2 rounded-2">
+										<div class="position-relative pt-1">
+											<i class="bi bi-terminal fs-2 d-block text-body text-opacity-50"></i>
+										</div>
+										<div class="small">Helper</div>
+									</a>
+								</div>
+							</div>
+							<div class="col-4">
+								<div class="h-100 p-1">
+									<a href="settings.html" class="dropdown-item p-2 rounded-2">
+										<div class="position-relative pt-1">
+											<i class="bi bi-circle-fill position-absolute text-primary end-0 me-2 fs-6px d-block"></i>
+											<i class="bi bi-sliders fs-2 d-block text-body text-opacity-50"></i>
+										</div>
+										<div class="small">Settings</div>
+									</a>
+								</div>
+							</div>
+							<div class="col-4">
+								<div class="h-100 p-1">
+									<a href="widgets.html" class="dropdown-item p-2 rounded-2">
+										<div class="position-relative pt-1">
+											<i class="bi bi-collection-play fs-2 d-block text-body text-opacity-50"></i>
+										</div>
+										<div class="small">Widgets</div>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="menu-item dropdown dropdown-mobile-full">
+					<a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
+						<div class="menu-icon"><i class="bi bi-bell nav-icon"></i></div>
+						<div class="menu-badge bg-theme"></div>
+					</a>
+					<div class="dropdown-menu dropdown-menu-end mt-1 w-350px pt-1">
+						<h6 class="dropdown-header mb-1">Notifications (5)</h6>
+						<div class="dropdown-divider mt-1"></div>
+						<a href="#" class="d-flex align-items-center dropdown-item text-wrap">
+							<div class="fs-20px bg-primary bg-opacity-15 w-40px h-40px rounded-pill d-flex align-items-center justify-content-center">
+								<i class="fa fa-box fa-lg text-primary"></i>
+							</div>
+							<div class="flex-1 flex-wrap ps-3">
+								<div>New order received ($1,299)</div>
+								<div class="small text-body text-opacity-50">just now</div>
+							</div>
+							<div class="ps-2 text-body text-opacity-25">
+								<i class="fa fa-chevron-right"></i>
+							</div>
+						</a>
+						<a href="#" class="d-flex align-items-center dropdown-item text-wrap">
+							<div class="fs-20px bg-body w-40px h-40px rounded-pill d-flex align-items-center justify-content-center">
+								<i class="fa fa-user text-body text-opacity-50"></i>
+							</div>
+							<div class="flex-1 flex-wrap ps-3">
+								<div>3 new account created</div>
+								<div class="small text-body text-opacity-50">2 minutes ago</div>
+							</div>
+							<div class="ps-2 text-body text-opacity-25">
+								<i class="fa fa-chevron-right"></i>
+							</div>
+						</a>
+						<a href="#" class="d-flex align-items-center dropdown-item text-wrap">
+							<div class="fs-20px bg-primary bg-opacity-15 w-40px h-40px rounded-pill d-flex align-items-center justify-content-center">
+								<i class="fa fa-server text-primary"></i>
+							</div>
+							<div class="flex-1 flex-wrap ps-3">
+								<div>Setup completed</div>
+								<div class="small text-body text-opacity-50">3 minutes ago</div>
+							</div>
+							<div class="ps-2 text-body text-opacity-25">
+								<i class="fa fa-chevron-right"></i>
+							</div>
+						</a>
+						<a href="#" class="d-flex align-items-center dropdown-item text-wrap">
+							<div class="fs-20px bg-primary bg-opacity-15 w-40px h-40px rounded-pill d-flex align-items-center justify-content-center">
+								<i class="fa fa-screwdriver-wrench text-primary"></i>
+							</div>
+							<div class="flex-1 flex-wrap ps-3">
+								<div>Widget installation done</div>
+								<div class="small text-body text-opacity-50">5 minutes ago</div>
+							</div>
+							<div class="ps-2 text-body text-opacity-25">
+								<i class="fa fa-chevron-right"></i>
+							</div>
+						</a>
+						<a href="#" class="d-flex align-items-center dropdown-item text-wrap">
+							<div class="fs-20px bg-primary bg-opacity-15 w-40px h-40px rounded-pill d-flex align-items-center justify-content-center">
+								<i class="fa fa-file-invoice text-primary"></i>
+							</div>
+							<div class="flex-1 flex-wrap ps-3">
+								<div>Payment method enabled</div>
+								<div class="small text-body text-opacity-50">10 minutes ago</div>
+							</div>
+							<div class="ps-2 text-body text-opacity-25">
+								<i class="fa fa-chevron-right"></i>
+							</div>
+						</a>
+						<div class="dropdown-divider"></div>
+						<div class="text-center">
+							<a href="#" class="text-decoration-none fw-bold">see all</a>
+						</div>
+					</div>
+				</div>
+				<div class="menu-item dropdown dropdown-mobile-full">
+					<a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
+						<div class="menu-img online">
+							<span class="menu-img-bg" style="background-image: url(assets/img/user/user.jpg)"></span>
+						</div>
+						<div class="menu-text d d-none">username@account.com</div>
+					</a>
+					<div class="dropdown-menu dropdown-menu-end me-lg-3 mt-1 w-200px">
+						<a class="dropdown-item d-flex align-items-center" href="profile.html"><i class="far fa-user fa-fw fa-lg me-3"></i> Profile</a>
+						<a class="dropdown-item d-flex align-items-center" href="email_inbox.html"><i class="far fa-envelope fa-fw fa-lg me-3"></i> Inbox</a>
+						<a class="dropdown-item d-flex align-items-center" href="calendar.html"><i class="far fa-calendar fa-fw fa-lg me-3"></i> Calendar</a>
+						<a class="dropdown-item d-flex align-items-center" href="settings.html"><i class="fa fa-sliders fa-fw fa-lg me-3"></i> Settings</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item d-flex align-items-center" href="page_login.html"><i class="fa fa-arrow-right-from-bracket fa-fw fa-lg me-3"></i> Logout</a>
+					</div>
+				</div>
+			</div>
+			<!-- END menu -->
+			
+			<!-- BEGIN menu-search -->
+			<form class="menu-search" method="POST" name="header_search_form">
+				<div class="menu-search-container">
+					<div class="menu-search-icon"><i class="bi bi-search"></i></div>
+					<div class="menu-search-input">
+						<input type="text" class="form-control form-control-lg" placeholder="Search menu...">
+					</div>
+					<div class="menu-search-icon">
+						<a href="#" data-toggle-class="app-header-menu-search-toggled" data-toggle-target=".app"><i class="bi bi-x-lg"></i></a>
+					</div>
+				</div>
+			</form>
+			<!-- END menu-search -->
+		</div>
+		<!-- END #header -->
+		
+		<!-- BEGIN #sidebar -->
+		<div id="sidebar" class="app-sidebar">
+			<!-- BEGIN scrollbar -->
+			<div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
+				<!-- BEGIN menu -->
+				<div class="menu">
+					<div class="menu-profile">
+						<a href="javascript:;" class="menu-profile-link" data-bs-toggle="dropdown">
+							<div class="menu-profile-cover with-shadow"></div>
+							<div class="menu-profile-image">
+								<div class="menu-profile-img" style="background-image: url(assets/img/user/user.jpg)"></div>
+							</div>
+							<div class="menu-profile-info">
+								<div class="d-flex align-items-center">
+									<div class="flex-grow-1 fw-bold">
+										Administrator
+									</div>
+									<div class="ms-auto"><i class="fa fa-chevron-down"></i></div>
+								</div>
+								<small>username@account.com</small>
+							</div>
+						</a>
+						<div class="dropdown-menu dropdown-menu-end me-lg-3 mt-1 w-200px">
+							<a class="dropdown-item d-flex align-items-center" href="profile.html"><i class="far fa-user fa-fw fa-lg me-3"></i> Profile</a>
+							<a class="dropdown-item d-flex align-items-center" href="email_inbox.html"><i class="far fa-envelope fa-fw fa-lg me-3"></i> Inbox</a>
+							<a class="dropdown-item d-flex align-items-center" href="calendar.html"><i class="far fa-calendar fa-fw fa-lg me-3"></i> Calendar</a>
+							<a class="dropdown-item d-flex align-items-center" href="settings.html"><i class="fa fa-sliders fa-fw fa-lg me-3"></i> Settings</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item d-flex align-items-center" href="page_login.html"><i class="fa fa-arrow-right-from-bracket fa-fw fa-lg me-3"></i> Logout</a>
+						</div>
+					</div>
+					<div class="menu-header">Navigation</div>
+					<div class="menu-item active">
+						<a href="index.html" class="menu-link">
+							<span class="menu-icon"><i class="fa fa-qrcode"></i></span>
+							<span class="menu-text">Dashboard</span>
+						</a>
+					</div>
+					<div class="menu-item">
+						<a href="analytics.html" class="menu-link">
+							<span class="menu-icon"><i class="fa fa-chart-bar"></i></span>
+							<span class="menu-text">Analytics</span>
+						</a>
+					</div>
+					<div class="menu-item has-sub">
+						<a href="#" class="menu-link">
+							<span class="menu-icon">
+								<i class="fa fa-envelope-open-text"></i>
+							</span>
+							<span class="menu-text">Email</span>
+							<span class="menu-caret"><b class="caret"></b></span>
+						</a>
+						<div class="menu-submenu">
+							<div class="menu-item">
+								<a href="email_inbox.html" class="menu-link">
+									<span class="menu-text">Inbox</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="email_compose.html" class="menu-link">
+									<span class="menu-text">Compose</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="email_detail.html" class="menu-link">
+									<span class="menu-text">Detail</span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="menu-header">Components</div>
+					<div class="menu-item">
+						<a href="widgets.html" class="menu-link">
+							<span class="menu-icon"><i class="fa fa-gem"></i></span>
+							<span class="menu-text">Widgets</span>
+						</a>
+					</div>
+					<div class="menu-item has-sub">
+						<a href="javascript:;" class="menu-link">
+							<div class="menu-icon">
+								<i class="fa fa-wallet"></i>
+								<!--<span class="w-5px h-5px rounded-3 bg-theme position-absolute top-0 end-0 mt-3px me-3px"></span>-->
+							</div>
+							<div class="menu-text d-flex align-items-center">POS System</div> 
+							<span class="menu-caret"><b class="caret"></b></span>
+						</a>
+						<div class="menu-submenu">
+							<div class="menu-item">
+								<a href="pos_customer_order.html" target="_blank" class="menu-link">
+									<div class="menu-text">Customer Order</div>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="pos_kitchen_order.html" target="_blank" class="menu-link">
+									<div class="menu-text">Kitchen Order</div>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="pos_counter_checkout.html" target="_blank" class="menu-link">
+									<div class="menu-text">Counter Checkout</div>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="pos_table_booking.html" target="_blank" class="menu-link">
+									<div class="menu-text">Table Booking</div>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="pos_menu_stock.html" target="_blank" class="menu-link">
+									<div class="menu-text">Menu Stock</div>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="menu-item has-sub">
+						<a href="#" class="menu-link">
+							<span class="menu-icon"><i class="fa fa-palette"></i></span>
+							<span class="menu-text">UI Kits</span> 
+							<span class="menu-caret"><b class="caret"></b></span>
+						</a>
+						<div class="menu-submenu">
+							<div class="menu-item">
+								<a href="ui_bootstrap.html" class="menu-link">
+									<span class="menu-text">Bootstrap</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="ui_buttons.html" class="menu-link">
+									<span class="menu-text">Buttons</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="ui_card.html" class="menu-link">
+									<span class="menu-text">Card</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="ui_icons.html" class="menu-link">
+									<span class="menu-text">Icons</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="ui_modal_notification.html" class="menu-link">
+									<span class="menu-text">Modal & Notification</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="ui_typography.html" class="menu-link">
+									<span class="menu-text">Typography</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="ui_tabs_accordions.html" class="menu-link">
+									<span class="menu-text">Tabs & Accordions</span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="menu-item has-sub">
+						<a href="#" class="menu-link">
+							<span class="menu-icon"><i class="fa fa-font"></i></span>
+							<span class="menu-text">Forms</span> 
+							<span class="menu-caret"><b class="caret"></b></span>
+						</a>
+						<div class="menu-submenu">
+							<div class="menu-item">
+								<a href="form_elements.html" class="menu-link">
+									<span class="menu-text">Form Elements</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="form_plugins.html" class="menu-link">
+									<span class="menu-text">Form Plugins</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="form_wizards.html" class="menu-link">
+									<span class="menu-text">Wizards</span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="menu-item has-sub">
+						<a href="#" class="menu-link">
+							<span class="menu-icon"><i class="fa fa-border-all"></i></span>
+							<span class="menu-text">Tables</span>
+							<span class="menu-caret"><b class="caret"></b></span>
+						</a>
+						<div class="menu-submenu">
+							<div class="menu-item">
+								<a href="table_elements.html" class="menu-link">
+									<span class="menu-text">Table Elements</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="table_plugins.html" class="menu-link">
+									<span class="menu-text">Table Plugins</span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="menu-item has-sub">
+						<a href="#" class="menu-link">
+							<span class="menu-icon"><i class="fa fa-chart-pie"></i></span>
+							<span class="menu-text">Charts</span>
+							<span class="menu-caret"><b class="caret"></b></span>
+						</a>
+						<div class="menu-submenu">
+							<div class="menu-item">
+								<a href="chart_js.html" class="menu-link">
+									<span class="menu-text">Chart.js</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="chart_apex.html" class="menu-link">
+									<span class="menu-text">Apexcharts.js</span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="menu-item">
+						<a href="map.html" class="menu-link">
+							<span class="menu-icon"><i class="fa fa-earth-asia"></i></span>
+							<span class="menu-text">Map</span>
+						</a>
+					</div>
+					<div class="menu-item has-sub">
+						<a href="#" class="menu-link">
+							<span class="menu-icon"><i class="fa fa-clone"></i></span>
+							<span class="menu-text">Layout</span>
+							<span class="menu-caret"><b class="caret"></b></span>
+						</a>
+						<div class="menu-submenu">
+							<div class="menu-item">
+								<a href="layout_starter.html" class="menu-link">
+									<span class="menu-text">Starter Page</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="layout_fixed_footer.html" class="menu-link">
+									<span class="menu-text">Fixed Footer</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="layout_full_height.html" class="menu-link">
+									<span class="menu-text">Full Height</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="layout_full_width.html" class="menu-link">
+									<span class="menu-text">Full Width</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="layout_boxed_layout.html" class="menu-link">
+									<span class="menu-text">Boxed Layout</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="layout_collapsed_sidebar.html" class="menu-link">
+									<span class="menu-text">Collapsed Sidebar</span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="menu-item has-sub">
+						<a href="#" class="menu-link">
+							<span class="menu-icon"><i class="fa fa-file-code"></i></span>
+							<span class="menu-text">Pages</span>
+							<span class="menu-caret"><b class="caret"></b></span>
+						</a>
+						<div class="menu-submenu">
+							<div class="menu-item">
+								<a href="page_scrum_board.html" class="menu-link">
+									<span class="menu-text">Scrum Board</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="page_products.html" class="menu-link">
+									<span class="menu-text">Products</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="page_product_details.html" class="menu-link">
+									<span class="menu-text">Product Details</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="page_orders.html" class="menu-link">
+									<span class="menu-text">Orders</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="page_order_details.html" class="menu-link">
+									<span class="menu-text">Order Details</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="page_gallery.html" class="menu-link">
+									<span class="menu-text">Gallery</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="page_search_results.html" class="menu-link">
+									<span class="menu-text">Search Results</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="page_coming_soon.html" class="menu-link">
+									<span class="menu-text">Coming Soon Page</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="page_404_error.html" class="menu-link">
+									<span class="menu-text">404 Error Page</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="page_login.html" class="menu-link">
+									<span class="menu-text">Login</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="page_register.html" class="menu-link">
+									<span class="menu-text">Register</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="page_messenger.html" class="menu-link">
+									<span class="menu-text">Messenger</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="page_data_management.html" class="menu-link">
+									<span class="menu-text">Data Management</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="page_file_manager.html" class="menu-link">
+									<span class="menu-text">File Manager</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a href="page_pricing.html" class="menu-link">
+									<span class="menu-text">Pricing Page</span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="menu-item">
+						<a href="landing.html" class="menu-link">
+							<span class="menu-icon"><i class="fab fa-slack"></i></span>
+							<span class="menu-text">Landing Page</span>
+						</a>
+					</div>
+					<div class="menu-header">Users</div>
+					<div class="menu-item">
+						<a href="profile.html" class="menu-link">
+							<span class="menu-icon"><i class="fa fa-user"></i></span>
+							<span class="menu-text">Profile</span>
+						</a>
+					</div>
+					<div class="menu-item">
+						<a href="calendar.html" class="menu-link">
+							<span class="menu-icon"><i class="fa fa-calendar-day"></i></span>
+							<span class="menu-text">Calendar</span>
+						</a>
+					</div>
+					<div class="menu-item">
+						<a href="settings.html" class="menu-link">
+							<span class="menu-icon"><i class="fa fa-sliders"></i></span>
+							<span class="menu-text">Settings</span>
+						</a>
+					</div>
+					<div class="menu-item">
+						<a href="helper.html" class="menu-link">
+							<span class="menu-icon"><i class="fa fa-info-circle"></i></span>
+							<span class="menu-text">Helper</span>
+						</a>
+					</div>
+				</div>
+				<!-- END menu -->
+				<div class="p-3 mt-auto">
+					<a href="https://seantheme.com/droplet/documentation/index.html" target="_blank" class="btn d-block btn-theme fs-13px fw-semibold rounded-pill">
+						<i class="fa fa-code-branch me-2 ms-n2 opacity-5"></i> Documentation
+					</a>
+				</div>
+			</div>
+			<!-- END scrollbar -->
+		</div>
+		<!-- END #sidebar -->
+			
+		<!-- BEGIN mobile-sidebar-backdrop -->
+		<button class="app-sidebar-mobile-backdrop" data-toggle-target=".app" data-toggle-class="app-sidebar-mobile-toggled"></button>
+		<!-- END mobile-sidebar-backdrop -->
+		
+		<!-- BEGIN #content -->
+		<div id="content" class="app-content">
+			<div class="d-lg-flex align-items-end mb-4">
+				<h3 class="page-header mb-lg-0">
+					Dashboard
+					<small class="d-block fs-12px mt-1">Monitor key performance metrics for online store</small>
+				</h3>
+				<div class="ms-auto">
+					<a href="#" class="btn fw-semibold fs-13px btn-secondary me-2" id="daterange-filter"><i class="fa fa-calendar fa-fw me-md-1 opacity-5"></i> <span>27 Jan 2024 - 02 Feb 2024</span> <b class="caret ms-3"></b></a>
+					<a href="#" class="btn fw-semibold fs-13px btn-theme"><i class="fa fa-upload fa-fw me-md-1 opacity-5"></i> <span class="d-none d-sm-inline">Export report</span></a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xl-3 col-lg-6">
+					<!-- BEGIN card -->
+					<div class="card bg-size-cover mb-3 border-dark" data-bs-theme="dark" style="background-image: url(assets/img/bg/pattern.jpg);">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<div class="mb-3 fw-semibold d-flex align-items-center">
+								<div class="flex-fill">Account Balance</div>
+								<div>
+									<a href="#" data-bs-toggle="dropdown" class="text-body"><i class="bi bi-three-dots-vertical"></i></a>
+									<div class="dropdown-menu dropdown-menu-end" data-bs-theme="light">
+										<a href="#" class="dropdown-item">View full report</a>
+										<a href="#" class="dropdown-item">Reload</a>
+										<a href="#" class="dropdown-item">Export Data</a>
+									</div>
+								</div>
+							</div>
+							<div class="row mb-1">
+								<div class="col-lg-12 position-relative">
+									<h3 class="mb-0">$52,382</h3>
+									<div class="fs-13px mt-2"><span class="badge text-bg-theme py-5px me-1">+30%</span> compare to last week</div>
+									<i class="fab fa-cc-visa display-6 lh-1 mt-n2 me-3 position-absolute end-0 top-0"></i>
+								</div>
+							</div>
+							<div class="mt-3 fs-11px">
+								<div>last updated on</div>
+								<div class="fw-600">Feb 3, 4:09:57 AM UTC</div>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<div class="col-xl-3 col-lg-6">
+					<!-- BEGIN card -->
+					<div class="card mb-3">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<div class="mb-3 fw-semibold d-flex align-items-center">
+								<div class="flex-fill">Total Orders</div>
+								<div>
+									<a href="#" data-bs-toggle="dropdown" class="text-body"><i class="bi bi-three-dots-vertical"></i></a>
+									<div class="dropdown-menu dropdown-menu-end" data-bs-theme="light">
+										<a href="#" class="dropdown-item">View full report</a>
+										<a href="#" class="dropdown-item">Reload</a>
+										<a href="#" class="dropdown-item">Export Data</a>
+									</div>
+								</div>
+							</div>
+							<div class="row mb-1">
+								<div class="col-lg-12 position-relative">
+									<h3 class="mb-0 d-flex">
+										302
+										<span class="text-body fs-10px badge bg-body my-5px d-flex align-items-center ms-2">
+											<i class="fa fa-exclamation-circle fa-fw fa-lg me-1 text-warning"></i> 
+											3 pending orders
+										</span>
+									</h3>
+									<div class="fs-13px mt-2"><span class="badge bg-theme-subtle text-theme py-5px me-1">+12%</span> compare to last week</div>
+									<i class="bi bi-box-seam display-6 lh-1 mt-n2 text-body text-opacity-20 me-3 position-absolute end-0 top-0"></i>
+								</div>
+							</div>
+							<div class="mt-3 fs-11px">
+								<div class="text-body text-opacity-50">last updated on</div>
+								<div class="fw-600 text-body text-opacity-75">Feb 3, 4:09:57 AM UTC</div>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<div class="col-xl-3 col-lg-6">
+					<!-- BEGIN card -->
+					<div class="card mb-3">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<div class="mb-3 fw-semibold d-flex align-items-center">
+								<div class="flex-fill">New User</div>
+								<div>
+									<a href="#" data-bs-toggle="dropdown" class="text-body"><i class="bi bi-three-dots-vertical"></i></a>
+									<div class="dropdown-menu dropdown-menu-end" data-bs-theme="light">
+										<a href="#" class="dropdown-item">View full report</a>
+										<a href="#" class="dropdown-item">Reload</a>
+										<a href="#" class="dropdown-item">Export Data</a>
+									</div>
+								</div>
+							</div>
+							<div class="row mb-1">
+								<div class="col-lg-12 position-relative">
+									<h3>1,958</h3>
+									<div class="fs-13px"><span class="badge bg-danger-subtle text-danger py-5px me-1">-5.6%</span> compare to last week</div>
+									<i class="bi bi-person-add display-6 lh-1 mt-n2 text-body text-opacity-20 me-3 position-absolute end-0 top-0"></i>
+								</div>
+							</div>
+							<div class="mt-3 fs-11px">
+								<div class="text-body text-opacity-50">last updated on</div>
+								<div class="fw-600 text-body text-opacity-75">Feb 3, 4:09:57 AM UTC</div>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<div class="col-xl-3 col-lg-6">
+					<!-- BEGIN card -->
+					<div class="card mb-3">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<div class="mb-3 fw-semibold d-flex align-items-center">
+								<div class="flex-fill">Product on Sale</div>
+								<div>
+									<a href="#" data-bs-toggle="dropdown" class="text-body"><i class="bi bi-three-dots-vertical"></i></a>
+									<div class="dropdown-menu dropdown-menu-end" data-bs-theme="light">
+										<a href="#" class="dropdown-item">View full report</a>
+										<a href="#" class="dropdown-item">Reload</a>
+										<a href="#" class="dropdown-item">Export Data</a>
+									</div>
+								</div>
+							</div>
+							<div class="row mb-1">
+								<div class="col-lg-12 position-relative">
+									<h3>91</h3>
+									<div class="fs-13px mt-2"><span class="badge bg-muted bg-opacity-10 py-5px text-gray-300 me-1">+0%</span> compare to last week</div>
+									<i class="bi bi-shop display-6 lh-1 mt-n2 text-body text-opacity-20 me-3 position-absolute end-0 top-0"></i>
+								</div>
+							</div>
+							<div class="mt-3 fs-11px">
+								<div class="text-body text-opacity-50">last updated on</div>
+								<div class="fw-600 text-body text-opacity-75">Feb 3, 4:09:57 AM UTC</div>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<div class="col-xl-6">
+					<!-- BEGIN card -->
+					<div class="card mb-3">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<div class="mb-3 fw-semibold d-flex align-items-center">
+								<div class="flex-fill">Total Visitors</div>
+								<div>
+									<a href="#" data-bs-toggle="dropdown" class="text-body"><i class="bi bi-three-dots-vertical"></i></a>
+									<div class="dropdown-menu dropdown-menu-end" data-bs-theme="light">
+										<a href="#" class="dropdown-item">View full report</a>
+										<a href="#" class="dropdown-item">Reload</a>
+										<a href="#" class="dropdown-item">Export Data</a>
+									</div>
+								</div>
+							</div>
+							<div class="mb-3 position-relative">
+								<div class="h3 d-flex">
+									<div>183,210</div>
+									<span class="badge bg-theme-subtle text-theme fs-14px d-flex align-items-center ms-3 fw-semibold my-2px">
+										<i class="fa fa-arrow-up me-1"></i> 10.49k
+									</span>
+								</div>
+								<div class="fs-13px mt-2"><span class="badge bg-theme-subtle text-theme py-5px me-1">-12.23%</span> compare to last week</div>
+							</div>
+							<hr class="opacity-1">
+							<div class="d-flex flex-wrap mb-2">
+								<a href="#" class="btn btn-outline-secondary me-2 btn-sm active">1D</a>
+								<a href="#" class="btn btn-outline-secondary me-2 btn-sm">5D</a>
+								<a href="#" class="btn btn-outline-secondary me-2 btn-sm">1M</a>
+								<a href="#" class="btn btn-outline-secondary me-2 btn-sm">6M</a>
+								<a href="#" class="btn btn-outline-secondary me-2 btn-sm">6M</a>
+								<a href="#" class="btn btn-outline-secondary me-2 btn-sm">YTD</a>
+								<a href="#" class="btn btn-outline-secondary me-2 btn-sm">1Y</a>
+								<a href="#" class="btn btn-outline-secondary me-2 btn-sm">5Y</a>
+								<a href="#" class="btn btn-outline-secondary me-2 btn-sm">MAX</a>
+							</div>
+							<div class="mx-n3 h-300px mb-3">
+								<div id="chart" class="w-100"></div>
+							</div>
+							<div class="table-responsive">
+								<table class="w-100 small mb-0 text-truncate text-body text-opacity-75">
+									<thead>
+										<tr>
+											<th class="w-50 pe-2">Browser</th>
+											<th class="w-25 pe-2">Users</th>
+											<th class="w-25 pe-2">% Users</th>
+											<th class="w-25 pe-2">Bounce Rate</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr class="text-body fw-semibold">
+											<td class="pe-2">
+												<div class="d-flex">
+													<span class="w-20px">1.</span> Chrome
+												</div>
+											</td>
+											<td class="pe-2">1,392</td>
+											<td class="pe-2">71.31%</td>
+											<td class="pe-2">36.99%</td>
+										</tr>
+										<tr class="text-body text-opacity-75 fw-semibold">
+											<td class="pe-2">
+												<div class="d-flex">
+													<span class="w-20px">2.</span> Firefox
+												</div>
+											</td>
+											<td class="pe-2">220</td>
+											<td class="pe-2">11.27%</td>
+											<td class="pe-2">42.11%</td>
+										</tr>
+										<tr>
+											<td class="pe-2">
+												<div class="d-flex">
+													<span class="w-20px">3.</span> Edge
+												</div>
+											</td>
+											<td class="pe-2">147</td>
+											<td class="pe-2">7.53%</td>
+											<td class="pe-2">43.79%</td>
+										</tr>
+										<tr>
+											<td class="pe-2">
+												<div class="d-flex">
+													<span class="w-20px">4.</span> Safari
+												</div>
+											</td>
+											<td class="pe-2">98</td>
+											<td class="pe-2">5.02%</td>
+											<td class="pe-2">32.98%</td>
+										</tr>
+										<tr>
+											<td class="pe-2">
+												<div class="d-flex">
+													<span class="w-20px">5.</span> Opera
+												</div>
+											</td>
+											<td class="pe-2">39</td>
+											<td class="pe-2">2.00%</td>
+											<td class="pe-2">36.10%</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<div class="col-xl-6">
+					<!-- BEGIN card -->
+					<div class="card mb-3">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<div class="mb-3 fw-semibold d-flex align-items-center">
+								<div class="flex-fill">Visitors by Region</div>
+								<div>
+									<a href="#" data-bs-toggle="dropdown" class="text-body"><i class="bi bi-three-dots-vertical"></i></a>
+									<div class="dropdown-menu dropdown-menu-end" data-bs-theme="light">
+										<a href="#" class="dropdown-item">View full report</a>
+										<a href="#" class="dropdown-item">Reload</a>
+										<a href="#" class="dropdown-item">Export Data</a>
+									</div>
+								</div>
+							</div>
+							<div class="mb-3 position-relative">
+								<div class="h3 d-flex">
+									<div>1.38m</div>
+									<span class="badge text-danger bg-danger-subtle fs-14px d-flex align-items-center ms-3 fw-semibold my-2px">
+										<i class="fa fa-arrow-down me-1"></i> 102k
+									</span>
+								</div>
+								<div class="fs-13px mt-2"><span class="badge text-danger bg-danger-subtle py-5px me-1">+4.51%</span> compare to last week</div>
+							</div>
+							<hr class="opacity-1">
+							<div class="d-flex flex-wrap mb-2">
+								<a href="#" class="btn btn-outline-secondary me-2 btn-pill btn-sm active">Country</a>
+								<a href="#" class="btn btn-outline-secondary me-2 btn-sm">City</a>
+								<a href="#" class="btn btn-outline-secondary me-2 btn-sm">Continent</a>
+								<a href="#" class="btn btn-outline-secondary me-2 btn-sm">Sub Continent</a>
+							</div>
+							<div id="map" class="h-300px mb-3"></div>
+							<div class="table-responsive">
+								<table class="w-100 small mb-0 text-truncate text-body text-opacity-50">
+									<thead>
+										<tr class="text-body text-opacity-75">
+											<th class="w-50 pe-2">Country</th>
+											<th class="w-25 pe-2">Users</th>
+											<th class="w-25 pe-2">Sessions</th>
+											<th class="w-25 pe-2">Bounce Rate</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr class="text-body fw-semibold">
+											<td class="pe-2">
+												<div class="d-flex">
+													<span class="w-20px">1.</span> United Kingdom
+												</div>
+											</td>
+											<td class="pe-2">228(11.62%)</td>
+											<td class="pe-2">460(13.57%)</td>
+											<td class="pe-2">36.09%</td>
+										</tr>
+										<tr class="text-body text-opacity-75 fw-semibold">
+											<td class="pe-2">
+												<div class="d-flex">
+													<span class="w-20px">2.</span> United States
+												</div>
+											</td>
+											<td class="pe-2">178(9.07%)</td>
+											<td class="pe-2">256(7.55%)</td>
+											<td class="pe-2">42.97%</td>
+										</tr>
+										<tr>
+											<td class="pe-2">
+												<div class="d-flex">
+													<span class="w-20px">3.</span> China
+												</div>
+											</td>
+											<td class="pe-2">162(8.26%)</td>
+											<td class="pe-2">293(8.64%)</td>
+											<td class="pe-2">37.20%</td>
+										</tr>
+										<tr>
+											<td class="pe-2">
+												<div class="d-flex">
+													<span class="w-20px">4.</span> Indonesia
+												</div>
+											</td>
+											<td class="pe-2">102(5.20%)</td>
+											<td class="pe-2">199(5.87%)</td>
+											<td class="pe-2">37.19%</td>
+										</tr>
+										<tr>
+											<td class="pe-2">
+												<div class="d-flex">
+													<span class="w-20px">5.</span> Brazil
+												</div>
+											</td>
+											<td class="pe-2">97(4.94%)</td>
+											<td class="pe-2">213(6.28%)</td>
+											<td class="pe-2">36.15%</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<div class="col-xl-6 pb-3">
+					<!-- BEGIN card -->
+					<div class="card mb-3">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<div class="mb-3 fw-semibold d-flex align-items-center">
+								<div class="flex-fill">Product Ranking</div>
+								<div>
+									<a href="#" data-bs-toggle="dropdown" class="text-body"><i class="bi bi-three-dots-vertical"></i></a>
+									<div class="dropdown-menu dropdown-menu-end" data-bs-theme="light">
+										<a href="#" class="dropdown-item">View full report</a>
+										<a href="#" class="dropdown-item">Reload</a>
+										<a href="#" class="dropdown-item">Export Data</a>
+									</div>
+								</div>
+							</div>
+							<div class="d-flex">
+								<div class="w-80px p-2 rounded bg-body">
+									<div class="ratio ratio-4x3">
+										<div class="d-flex align-items-center justify-content-center">
+											<img alt="" class="mw-100 mh-100" src="assets/img/product/product-1-thumb.png">
+										</div>
+									</div>
+								</div>
+								<div class="flex-fill ps-3">
+									<div class="h6 lh-base mb-0">iPhone 14 Pro Max</div>
+									<div class="text-muted small mb-2">Apple</div>
+									<div class="d-flex align-items-center small">
+										<span>$1,399</span>
+										<span class="fs-11px text-body text-opacity-20 mx-2">|</span>
+										<span class="text-body text-opacity-50 me-1 fs-12px">stock: </span>
+										<span>382</span>
+									</div>
+								</div>
+								<div class="text-body fw-bold text-end fs-5">
+									1,083
+									<div class="fs-13px text-body text-opacity-50 fw-semibold lh-1">sold</div>
+								</div>
+							</div>
+							<hr class="opacity-1">
+							<div class="d-flex">
+								<div class="w-80px p-2 rounded bg-body">
+									<div class="ratio ratio-4x3">
+										<div class="d-flex align-items-center justify-content-center">
+											<img alt="" class="mw-100 mh-100" src="assets/img/product/product-2-thumb.png">
+										</div>
+									</div>
+								</div>
+								<div class="flex-fill ps-3">
+									<div class="h6 lh-base mb-0">OnePlus 10 Pro</div>
+									<div class="text-muted small mb-2">OnePlus</div>
+									<div class="d-flex align-items-center small">
+										<span>$589</span>
+										<span class="fs-11px text-body text-opacity-20 mx-2">|</span>
+										<span class="text-body text-opacity-50 me-1 fs-12px">stock: </span>
+										<span>87</span>
+									</div>
+								</div>
+								<div class="text-body fw-bold text-end fs-5">
+									738
+									<div class="fs-13px text-body text-opacity-50 fw-semibold lh-1">sold</div>
+								</div>
+							</div>
+							<hr class="opacity-1">
+							<div class="d-flex">
+								<div class="w-80px p-2 rounded bg-body">
+									<div class="ratio ratio-4x3">
+										<div class="d-flex align-items-center justify-content-center">
+											<img alt="" class="mw-100 mh-100" src="assets/img/product/product-3-thumb.png">
+										</div>
+									</div>
+								</div>
+								<div class="flex-fill ps-3">
+									<div class="h6 lh-base mb-0">Galaxy s23 Ultra</div>
+									<div class="text-muted small mb-2">Samsung</div>
+									<div class="d-flex align-items-center small">
+										<span>$1,199</span>
+										<span class="fs-11px text-body text-opacity-20 mx-2">|</span>
+										<span class="text-body text-opacity-50 me-1 fs-12px">stock: </span>
+										<span>80</span>
+									</div>
+								</div>
+								<div class="text-body fw-bold text-end fs-5">
+									738
+									<div class="fs-13px text-body text-opacity-50 fw-semibold lh-1">sold</div>
+								</div>
+							</div>
+							<hr class="opacity-1">
+							<div class="d-flex">
+								<div class="w-80px p-2 rounded bg-body">
+									<div class="ratio ratio-4x3">
+										<div class="d-flex align-items-center justify-content-center">
+											<img alt="" class="mw-100 mh-100" src="assets/img/product/product-4-thumb.png">
+										</div>
+									</div>
+								</div>
+								<div class="flex-fill ps-3">
+									<div class="h6 lh-base mb-0">Pixel 7 Pro</div>
+									<div class="text-muted small mb-2">Google</div>
+									<div class="d-flex align-items-center small">
+										<span>$749</span>
+										<span class="fs-11px text-body text-opacity-20 mx-2">|</span>
+										<span class="text-body text-opacity-50 me-1 fs-12px">stock: </span>
+										<span>65</span>
+									</div>
+								</div>
+								<div class="text-body fw-bold text-end fs-5">
+									642
+									<div class="fs-13px text-body text-opacity-50 fw-semibold lh-1">sold</div>
+								</div>
+							</div>
+							<hr class="opacity-1">
+							<div class="d-flex">
+								<div class="w-80px p-2 rounded bg-body">
+									<div class="ratio ratio-4x3">
+										<div class="d-flex align-items-center justify-content-center">
+											<img alt="" class="mw-100 mh-100" src="assets/img/product/product-5-thumb.png">
+										</div>
+									</div>
+								</div>
+								<div class="flex-fill ps-3">
+									<div class="h6 lh-base mb-0">Mate 50 Pro</div>
+									<div class="text-muted small mb-2">Huawei</div>
+									<div class="d-flex align-items-center small">
+										<span>$1,650</span>
+										<span class="fs-11px text-body text-opacity-20 mx-2">|</span>
+										<span class="text-body text-opacity-50 me-1 fs-12px">stock: </span>
+										<span>128</span>
+									</div>
+								</div>
+								<div class="text-body text-end fw-bold fs-5">
+									567
+									<div class="fs-13px text-body text-opacity-50 fw-semibold lh-1">sold</div>
+								</div>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<div class="col-xl-6 pb-3">
+					<!-- BEGIN card -->
+					<div class="card mb-3">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<div class="mb-3 fw-semibold d-flex align-items-center">
+								<div class="flex-fill">Activity Log</div>
+								<div>
+									<a href="#" data-bs-toggle="dropdown" class="text-body"><i class="bi bi-three-dots-vertical"></i></a>
+									<div class="dropdown-menu dropdown-menu-end" data-bs-theme="light">
+										<a href="#" class="dropdown-item">View full report</a>
+										<a href="#" class="dropdown-item">Reload</a>
+										<a href="#" class="dropdown-item">Export Data</a>
+									</div>
+								</div>
+							</div>
+							<div class="d-flex align-items-center">
+								<div>
+									<div class="w-40px h-40px fs-20px my-n1 rounded-pill d-flex align-items-center justify-content-center bg-theme-subtle text-theme">
+										<i class="bi bi-key-fill"></i>
+									</div>
+								</div>
+								<div class="flex-1 px-3">
+									<h6 class="mb-0 fw-semibold">admin logged in.</h6>
+									<div class="text-muted small">just now</div>
+								</div>
+								<div class="fs-20px">
+									<a href="#" class="text-body text-opacity-30"><i class="bi bi-search"></i></a>
+								</div>
+							</div>
+							<hr class="opacity-1">
+							<div class="d-flex align-items-center">
+								<div>
+									<div class="w-40px h-40px fs-20px rounded-pill d-flex align-items-center justify-content-center bg-body text-body">
+										<i class="bi bi-clock-history"></i>
+									</div>
+								</div>
+								<div class="flex-1 px-3">
+									<h6 class="mb-0 fw-semibold">admin initiated a backup of the system.</h6>
+									<div class="text-muted small">5 minutes ago	</div>
+								</div>
+								<div class="fs-20px">
+									<a href="#" class="text-body text-opacity-30"><i class="bi bi-search"></i></a>
+								</div>
+							</div>
+							<hr class="opacity-1">
+							<div class="d-flex align-items-center">
+								<div>
+									<div class="w-40px h-40px fs-20px rounded-pill d-flex align-items-center justify-content-center bg-body text-body">
+										<i class="bi bi-person"></i>
+									</div>
+								</div>
+								<div class="flex-1 px-3">
+									<h6 class="mb-0 fw-semibold">admin created a new user account for john_doe.</h6>
+									<div class="text-muted small">10 minutes ago	</div>
+								</div>
+								<div class="fs-20px">
+									<a href="#" class="text-body text-opacity-30"><i class="bi bi-search"></i></a>
+								</div>
+							</div>
+							<hr class="opacity-1">
+							<div class="d-flex align-items-center">
+								<div>
+									<div class="w-40px h-40px fs-20px rounded-pill d-flex align-items-center justify-content-center bg-body text-body">
+										<i class="bi bi-receipt"></i>
+									</div>
+								</div>
+								<div class="flex-1 px-3">
+									<h6 class="mb-0 fw-semibold">admin updated Jane Doe's billing module access.</h6>
+									<div class="text-muted small">15 minutes ago	</div>
+								</div>
+								<div class="fs-20px">
+									<a href="#" class="text-body text-opacity-30"><i class="bi bi-search"></i></a>
+								</div>
+							</div>
+							<hr class="opacity-1">
+							<div class="d-flex align-items-center">
+								<div>
+									<div class="w-40px h-40px fs-20px rounded-pill d-flex align-items-center justify-content-center bg-body text-body">
+										<i class="bi bi-arrow-clockwise"></i>
+									</div>
+								</div>
+								<div class="flex-1 px-3">
+									<h6 class="mb-0 fw-semibold">admin reset password for jim_smith.</h6>
+									<div class="text-muted small">20 minutes ago	</div>
+								</div>
+								<div class="fs-20px">
+									<a href="#" class="text-body text-opacity-30"><i class="bi bi-search"></i></a>
+								</div>
+							</div>
+							<hr class="opacity-1">
+							<div class="d-flex align-items-center">
+								<div>
+									<div class="w-40px h-40px fs-20px rounded-pill d-flex align-items-center justify-content-center bg-theme-subtle text-theme">
+										<i class="bi bi-database-fill"></i>
+									</div>
+								</div>
+								<div class="flex-1 px-3">
+									<h6 class="mb-0 fw-semibold">admin performed maintenance on the database server.</h6>
+									<div class="text-muted small">25 minutes ago	</div>
+								</div>
+								<div class="fs-20px">
+									<a href="#" class="text-body text-opacity-30"><i class="bi bi-search"></i></a>
+								</div>
+							</div>
+							<hr class="opacity-1">
+							<div class="d-flex align-items-center">
+								<div>
+									<div class="w-40px h-40px fs-20px rounded-pill d-flex align-items-center justify-content-center bg-body text-body">
+										<i class="bi bi-list-ol"></i>
+									</div>
+								</div>
+								<div class="flex-1 px-3">
+									<h6 class="mb-0 fw-semibold">admin reviewed the audit log for any unusual activity.</h6>
+									<div class="text-muted small">30 minutes ago	</div>
+								</div>
+								<div class="fs-20px">
+									<a href="#" class="text-body text-opacity-30"><i class="bi bi-search"></i></a>
+								</div>
+							</div>
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+			</div>
+		</div>
+		<!-- END #content -->
+		
+		<!-- BEGIN theme-panel -->
+		<div class="app-theme-panel">
+			<div class="app-theme-panel-container">
+				<a href="javascript:;" data-toggle="theme-panel-expand" class="app-theme-toggle-btn"><i class="bi bi-sliders"></i></a>
+				<div class="app-theme-panel-content">
+					<div class="fw-bold text-body mb-2">
+						Theme Color
+					</div>
+					<div class="app-theme-list">
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-pink" data-theme-class="theme-pink" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Pink"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-red" data-theme-class="theme-red" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Red"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-warning" data-theme-class="theme-warning" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Orange"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-yellow" data-theme-class="theme-yellow" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Yellow"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-lime" data-theme-class="theme-lime" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Lime"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-green" data-theme-class="theme-green" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Green"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-teal" data-theme-class="theme-teal" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Teal"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-info" data-theme-class="theme-info"  data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Cyan"></a></div>
+						<div class="app-theme-list-item active"><a href="javascript:;" class="app-theme-list-link bg-primary" data-theme-class=""  data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Default"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-purple" data-theme-class="theme-purple" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Purple"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-indigo" data-theme-class="theme-indigo" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Indigo"></a></div>
+						<div class="app-theme-list-item"><a href="javascript:;" class="app-theme-list-link bg-gray-200" data-theme-class="theme-gray-500" data-toggle="theme-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Gray"></a></div>
+					</div>
+					<hr class="opacity-1">
+					<div class="row mt-10px">
+						<div class="col-8">
+							<div class="fw-bold text-body d-flex mb-1 align-items-center">
+								Dark Mode 
+								<i class="bi bi-moon-fill ms-2 my-n1 fs-5 text-body text-opacity-25"></i>
+							</div>
+							<div class="lh-sm">
+								<small class="text-body opacity-50">Adjust the appearance to reduce glare and give your eyes a break.</small>
+							</div>
+						</div>
+						<div class="col-4 d-flex">
+							<div class="form-check form-switch ms-auto mb-0">
+								<input type="checkbox" class="form-check-input" name="app-theme-dark-mode" data-toggle="theme-dark-mode" id="appThemeDarkMode" value="1">
+								<label class="form-check-label" for="appThemeDarkMode"></label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- END theme-panel -->
+		<!-- BEGIN btn-scroll-top -->
+		<a href="#" data-toggle="scroll-to-top" class="btn-scroll-top fade"><i class="fa fa-arrow-up"></i></a>
+		<!-- END btn-scroll-top -->
+	</div>
+	<!-- END #app -->
+	
+	<!-- ================== BEGIN core-js ================== -->
+	<script src="assets/js/vendor.min.js"></script>
+	<script src="assets/js/app.min.js"></script>
+	<!-- ================== END core-js ================== -->
+	
+	<!-- ================== BEGIN page-js ================== -->
+	<script src="assets/plugins/jvectormap-next/jquery-jvectormap.min.js"></script>
+	<script src="assets/plugins/jvectormap-content/world-mill.js"></script>
+	<script src="assets/plugins/apexcharts/dist/apexcharts.min.js"></script>
+	<script src="assets/plugins/moment/min/moment.min.js"></script>
+	<script src="assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+	<script src="assets/js/demo/dashboard.demo.js"></script>
+	<!-- ================== END page-js ================== -->
+	
+</body>
+</html>

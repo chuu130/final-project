@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.headquarter.master.mapper.CalendarMapper">
+	<resultMap id="BaseResultMap" type="CalendarVO">
+		<id column="CAL_NO" jdbcType="NUMERIC" property="calNo" />
+		<result column="TITLE" jdbcType="VARCHAR" property="title" />
+		<result column="START" jdbcType="DATE" property="start" />
+		<result column="END" jdbcType="DATE" property="end" />
+		<result column="COLOR" jdbcType="VARCHAR" property="color" />
+		<result column="TEXTCOLOR" jdbcType="VARCHAR" property="textColor" />
+		<association property="franchise" javaType="FranchiseDefaultVO" autoMapping="true" />
+	</resultMap>
+
+	<insert id="insertCalendar" parameterType="CalendarVO">
+		INSERT INTO CALENDAR (
+			TITLE,
+			"START",
+			"END",
+			COLOR,
+			TEXTCOLOR,
+			CAL_NO)
+		VALUES (
+			#{title, jdbcType=VARCHAR},
+			#{start, jdbcType=TIMESTAMP},
+			#{end, jdbcType=TIMESTAMP},
+			#{color, jdbcType=VARCHAR},
+			#{textColor, jdbcType=VARCHAR},
+			CALENDAR_SEQ.nextval
+		)
+	</insert>
+	<update id="updateCalendar" parameterType="CalendarVO">
+		update calendar
+		set
+			TITLE = #{title, jdbcType=VARCHAR},
+			"START" = #{start, jdbcType=TIMESTAMP},
+			"END" = #{end, jdbcType=TIMESTAMP}
+		WHERE CAL_NO = #{calNo, jdbcType=VARCHAR}
+	</update>
+	<delete id="deleteCalendar" parameterType="int">
+		DELETE FROM CALENDAR
+		WHERE CAL_NO = #{calNo, jdbcType=VARCHAR}
+	</delete>
+
+	<select id="calendarList">
+		select TITLE, "START", "END", COLOR, TEXTCOLOR, CAL_NO
+		from calendar
+	</select>
+
+	<select id="CheckCalendar" parameterType="int">
+		select count(cal_no)
+		from calendar
+		where cal_no = #{calNo, jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectcalendar" parameterType="int">
+		select *
+		from calendar
+		where cal_no = #{calNo, jdbcType=VARCHAR}
+	</select>
+</mapper>

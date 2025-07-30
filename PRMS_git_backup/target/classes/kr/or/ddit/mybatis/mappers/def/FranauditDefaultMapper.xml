@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.FranauditDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.FranauditDefaultVO">
+    <id column="AUDIT_NO" jdbcType="VARCHAR" property="auditNo" />
+    <result column="AUDIT_STTUS" jdbcType="VARCHAR" property="auditSttus" />
+    <result column="AUDIT_RESULT" jdbcType="VARCHAR" property="auditResult" />
+    <result column="AUDIT_DE" jdbcType="TIMESTAMP" property="auditDe" />
+    <result column="AUDIT_CONFM_AT" jdbcType="VARCHAR" property="auditConfmAt" />
+    <result column="FRANCHISE_ID" jdbcType="VARCHAR" property="franchiseId" />
+    <result column="CHECK_NO" jdbcType="VARCHAR" property="checkNo" />
+  </resultMap>
+  <delete id="deleteFranAudit" parameterType="java.lang.String">
+    delete from FRANAUDIT
+    where AUDIT_NO = #{auditNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertFranAudit" parameterType="kr.or.ddit.vo.def.FranauditDefaultVO">
+    insert into FRANAUDIT (AUDIT_NO, AUDIT_STTUS, AUDIT_RESULT,
+      AUDIT_DE, AUDIT_CONFM_AT, FRANCHISE_ID,
+      CHECK_NO)
+    values (FRANAUDIT_SEQ.nextval, #{auditSttus,jdbcType=VARCHAR}, #{auditResult,jdbcType=VARCHAR},
+      #{auditDe,jdbcType=TIMESTAMP}, #{auditConfmAt,jdbcType=VARCHAR}, #{franchiseId,jdbcType=VARCHAR},
+      #{checkNo,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateFranAudit" parameterType="kr.or.ddit.vo.def.FranauditDefaultVO">
+    update FRANAUDIT
+    set AUDIT_STTUS = #{auditSttus,jdbcType=VARCHAR},
+      AUDIT_RESULT = #{auditResult,jdbcType=VARCHAR},
+      AUDIT_DE = #{auditDe,jdbcType=TIMESTAMP},
+      AUDIT_CONFM_AT = #{auditConfmAt,jdbcType=VARCHAR},
+      FRANCHISE_ID = #{franchiseId,jdbcType=VARCHAR},
+      CHECK_NO = #{checkNo,jdbcType=VARCHAR}
+    where AUDIT_NO = #{auditNo,jdbcType=VARCHAR}
+  </update>
+  <select id="selectFranAudit" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select AUDIT_NO, AUDIT_STTUS, AUDIT_RESULT, AUDIT_DE, AUDIT_CONFM_AT, FRANCHISE_ID,
+    CHECK_NO
+    from FRANAUDIT
+    where AUDIT_NO = #{auditNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectFranAuditList" resultMap="BaseResultMap">
+    select AUDIT_NO, AUDIT_STTUS, AUDIT_RESULT, AUDIT_DE, AUDIT_CONFM_AT, FRANCHISE_ID,
+    CHECK_NO
+    from FRANAUDIT
+  </select>
+</mapper>

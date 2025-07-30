@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.commons.def.mapper.MaintainDefaultMapper">
+	<resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.MaintainDefaultVO">
+		<id column="MAINT_NO" jdbcType="VARCHAR" property="maintNo" />
+		<result column="MAINT_AT" jdbcType="VARCHAR" property="maintAt" />
+		<result column="MAINT_PC" jdbcType="NUMERIC" property="maintPc" />
+		<result column="MAINT_DE" jdbcType="TIMESTAMP"
+			property="maintDe" />
+		<result column="FRANCHISE_ID" jdbcType="VARCHAR"
+			property="franchiseId" />
+			<collection property="franchiselist" ofType="FranchiseDefaultVO">
+				<id column="FRANCHISE_ID" jdbcType="VARCHAR" property="franchiseId" />
+		<result column="FRANCHISE_NM" jdbcType="VARCHAR" property="franchiseNm" />
+			</collection>
+
+	</resultMap>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from MAINTAIN
+		where MAINT_NO = #{maintNo,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="kr.or.ddit.vo.def.MaintainDefaultVO">
+		insert into MAINTAIN (MAINT_NO, MAINT_AT, MAINT_PC,
+		MAINT_DE, FRANCHISE_ID)
+		values (#{maintNo,jdbcType=VARCHAR}, #{maintAt,jdbcType=VARCHAR},
+		#{maintPc,jdbcType=NUMERIC},
+		#{maintDe,jdbcType=TIMESTAMP}, #{franchiseId,jdbcType=VARCHAR})
+	</insert>
+	<update id="updateByPrimaryKey"
+		parameterType="kr.or.ddit.vo.def.MaintainDefaultVO">
+		update MAINTAIN
+		set MAINT_AT = #{maintAt,jdbcType=VARCHAR},
+		MAINT_PC = #{maintPc,jdbcType=NUMERIC},
+		MAINT_DE = #{maintDe,jdbcType=TIMESTAMP},
+		FRANCHISE_ID = #{franchiseId,jdbcType=VARCHAR}
+		where MAINT_NO = #{maintNo,jdbcType=VARCHAR}
+	</update>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select MAINT_NO, MAINT_AT, MAINT_PC, MAINT_DE, FRANCHISE_ID
+		from MAINTAIN
+		where MAINT_NO = #{maintNo,jdbcType=VARCHAR}
+	</select>
+	<select id="selectAll" resultMap="BaseResultMap">
+		select a.*, b.*
+		from maintain a inner join franchise b on (a.franchise_id =
+		b.franchise_id)
+	</select>
+
+</mapper>

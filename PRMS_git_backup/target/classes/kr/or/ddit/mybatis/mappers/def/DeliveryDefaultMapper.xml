@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.DeliveryDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.DeliveryDefaultVO">
+    <id column="ORDER_DTLS_ID" jdbcType="VARCHAR" property="orderDtlsId" />
+    <result column="DLVY_BEGIN_DE" jdbcType="TIMESTAMP" property="dlvyBeginDe" />
+    <result column="DLVY_PREARNGE_DE" jdbcType="TIMESTAMP" property="dlvyPrearngeDe" />
+    <result column="DLVY_END_DE" jdbcType="TIMESTAMP" property="dlvyEndDe" />
+    <result column="DLVY_ADRES1" jdbcType="VARCHAR" property="dlvyAdres1" />
+    <result column="DLVY_ADRES2" jdbcType="VARCHAR" property="dlvyAdres2" />
+    <result column="DLVY_ZIP" jdbcType="VARCHAR" property="dlvyZip" />
+    <result column="DLVY_ID" jdbcType="VARCHAR" property="dlvyId" />
+    <result column="DLVY_STTUS" jdbcType="VARCHAR" property="dlvySttus" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from DELIVERY
+    where ORDER_PROD_DETAIL = #{orderProdDetail,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.DeliveryDefaultVO">
+    insert into DELIVERY (ORDER_PROD_DETAIL, DLVY_BEGIN_DE, DLVY_PREARNGE_DE,
+      DLVY_END_DE, DLVY_ADRES1, DLVY_ADRES2,
+      DLVY_ZIP, DLVY_ID, DLVY_STTUS
+      )
+    values (#{orderProdDetail,jdbcType=VARCHAR}, #{dlvyBeginDe,jdbcType=TIMESTAMP}, #{dlvyPrearngeDe,jdbcType=TIMESTAMP},
+      #{dlvyEndDe,jdbcType=TIMESTAMP}, #{dlvyAdres1,jdbcType=VARCHAR}, #{dlvyAdres2,jdbcType=VARCHAR},
+      #{dlvyZip,jdbcType=VARCHAR}, #{dlvyId,jdbcType=VARCHAR}, #{dlvySttus,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.DeliveryDefaultVO">
+    update DELIVERY
+    set DLVY_BEGIN_DE = #{dlvyBeginDe,jdbcType=TIMESTAMP},
+      DLVY_PREARNGE_DE = #{dlvyPrearngeDe,jdbcType=TIMESTAMP},
+      DLVY_END_DE = #{dlvyEndDe,jdbcType=TIMESTAMP},
+      DLVY_ADRES1 = #{dlvyAdres1,jdbcType=VARCHAR},
+      DLVY_ADRES2 = #{dlvyAdres2,jdbcType=VARCHAR},
+      DLVY_ZIP = #{dlvyZip,jdbcType=VARCHAR},
+      DLVY_ID = #{dlvyId,jdbcType=VARCHAR},
+      DLVY_STTUS = #{dlvySttus,jdbcType=VARCHAR}
+    where ORDER_PROD_DETAIL = #{orderProdDetail,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select ORDER_PROD_DETAIL, DLVY_BEGIN_DE, DLVY_PREARNGE_DE, DLVY_END_DE, DLVY_ADRES1,
+    DLVY_ADRES2, DLVY_ZIP, DLVY_ID, DLVY_STTUS
+    from DELIVERY
+    where ORDER_PROD_DETAIL = #{orderProdDetail,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ORDER_PROD_DETAIL, DLVY_BEGIN_DE, DLVY_PREARNGE_DE, DLVY_END_DE, DLVY_ADRES1,
+    DLVY_ADRES2, DLVY_ZIP, DLVY_ID, DLVY_STTUS
+    from DELIVERY
+  </select>
+</mapper>

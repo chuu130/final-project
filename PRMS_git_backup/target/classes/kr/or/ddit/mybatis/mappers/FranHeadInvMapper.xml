@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.franchise.franchisee.mapper.FranHeadInvMapper">
+
+	<sql id="searchFrag">
+		<trim prefix="WHERE">
+        	<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+        		<choose>
+        			<when test="simpleCondition.searchType eq 'search'">
+        				INSTR(PROD_SLE_NM, #{simpleCondition.searchWord}) > 0
+        			</when>
+        		</choose>
+        	</if>
+        </trim>
+	</sql>
+
+	<select id="selectFranHeadInvList">
+	WITH OTHERFRANHEADINV AS (
+	        SELECT
+	            PROD_ID,
+	            PROD_IMAGE,
+	            PROD_DC,
+	            PROD_SLE_NM,
+	            PROD_SLE_PC
+	        FROM
+	            PROD
+	        <include refid="searchFrag" />
+	        ORDER BY PROD.ROWID ASC
+	        )
+	    SELECT A.*
+	        FROM(
+	        SELECT OTHERFRANHEADINV.*, ROWNUM RNUM
+	        FROM OTHERFRANHEADINV
+	        )A
+	    WHERE RNUM BETWEEN #{firstRecord} AND #{lastRecord}
+	</select>
+
+	<select id="selectTotalRecord">
+		SELECT COUNT(*)
+		FROM PROD
+		<include refid="searchFrag" />
+	</select>
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.headquarter.common.mapper.UnderPerformingFranchiseMapper">
+	
+	<resultMap type="FranchiseVO" id="franchiseMap" autoMapping="true">
+		<id property="franchiseId" column="FRANCHISE_ID"/>
+		<association property="franselling" javaType="FranSellingDefaultVO" autoMapping="true" />
+		<association property="expense" javaType="ExpenseDefaultVO" autoMapping="true" />
+	</resultMap>
+	
+	<select id="selectThisYearFranchiseSelling" resultMap="franchiseMap">
+		SELECT  C.*
+            FROM(
+         SELECT A.FRANCHISE_ID
+			, A.FRANCHISE_NM
+			, SUM(B.FSEL_AMOUNT) "totalThisyearSelling"
+		FROM FRANCHISE A INNER JOIN FRANSELLING B ON (A.FRANCHISE_ID = B.FRANCHISEE_ID)
+		WHERE SUBSTR(TO_CHAR(B.FSEL_DE,'YYYY-MM-DD'),3,2) = TO_CHAR(SYSDATE, 'YY')
+		GROUP BY A.FRANCHISE_ID, A.FRANCHISE_NM
+        ORDER BY SUM(B.FSEL_AMOUNT))C
+        WHERE ROWNUM BETWEEN 1 AND 5
+	</select>
+	
+	<select id="selectLastYearFranchiseSelling" resultMap="franchiseMap">
+		SELECT C.*
+		FROM(
+		SELECT A.FRANCHISE_ID
+			, A.FRANCHISE_NM
+			, SUM(B.FSEL_AMOUNT) "totalLastyearSelling"
+		FROM FRANCHISE A INNER JOIN FRANSELLING B ON (A.FRANCHISE_ID = B.FRANCHISEE_ID)
+		WHERE SUBSTR(TO_CHAR(B.FSEL_DE,'YYYY-MM-DD'),3,2) = TO_CHAR(SYSDATE, 'YY') -1
+		GROUP BY A.FRANCHISE_ID, A.FRANCHISE_NM
+		ORDER BY SUM(B.FSEL_AMOUNT) ) C
+		WHERE ROWNUM BETWEEN 1 AND 5
+	</select>
+	
+	<select id="selectThisYearFranchiseExpense" resultMap="franchiseMap">
+		SELECT C.*
+		FROM(
+		SELECT A.FRANCHISE_ID
+		    , A.FRANCHISE_NM
+		    , SUM(B.FEXPS_AMOUNT) "totalThisyearExpense"
+		FROM FRANCHISE A INNER JOIN EXPENSE B ON (A.FRANCHISE_ID = B.FRANCHISEE_ID)
+		WHERE TO_CHAR(B.FEXPS_DE, 'YY') = TO_CHAR(SYSDATE, 'YY')
+		GROUP BY A.FRANCHISE_ID ,A.FRANCHISE_NM
+		ORDER BY SUM(B.FEXPS_AMOUNT) ) C
+		WHERE ROWNUM BETWEEN 1 AND 5
+	</select>
+	
+	<select id="selectLastYearFranchiseExpense" resultMap="franchiseMap">
+	SELECT C.*
+		FROM(
+		SELECT A.FRANCHISE_ID
+		    , A.FRANCHISE_NM
+		    , SUM(B.FEXPS_AMOUNT) "totalLastyearExpense"
+		FROM FRANCHISE A INNER JOIN EXPENSE B ON (A.FRANCHISE_ID = B.FRANCHISEE_ID)
+		WHERE TO_CHAR(B.FEXPS_DE, 'YY') = TO_CHAR(SYSDATE, 'YY')-1
+		GROUP BY A.FRANCHISE_ID ,A.FRANCHISE_NM
+		ORDER BY SUM(B.FEXPS_AMOUNT) ) C
+		WHERE ROWNUM BETWEEN 1 AND 5
+	</select>
+	
+	
+</mapper>

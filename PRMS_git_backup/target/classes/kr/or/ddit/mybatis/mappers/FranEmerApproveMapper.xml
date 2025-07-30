@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.franchise.franchisee.mapper.FranEmerApproveMapper">
+
+	<sql id="searchFrag">
+		<trim prefix="AND" >
+        	<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(paging.simpleCondition.searchType)
+        				and @org.apache.commons.lang3.StringUtils@isNotBlank(paging.simpleCondition.searchWord)">
+        		<choose>
+        			<when test="paging.simpleCondition.searchType eq 'search'">
+						INSTR(EMER_PARTN, #{paging.simpleCondition.searchWord}) > 0
+        			</when>
+        		</choose>
+        	</if>
+        </trim>
+	</sql>
+
+	<select id="selectFranEmerFranInvApproveList">
+		WITH OTHEREMERGENCY AS (
+		    SELECT
+		        E.EMER_NO,
+		        E.EMER_DE,
+		        E.EMER_PARTN,
+		        (SELECT F.FRANCHISE_NM
+			    FROM FRANCHISE F INNER JOIN EMERGENCY E2 ON (F.FRANCHISE_ID = E2.FRANCHISE_ID)
+			    WHERE EMER_NO = E.EMER_NO) FRANCHISE_NM,
+		        E.EMER_REJ_CN,
+		        E.EMER_AMOUNT
+		    FROM
+		        EMERGENCY E
+		    WHERE E.EMER_REQST = #{franchiseId}
+			<include refid="searchFrag" />
+		    ORDER BY
+		        E.EMER_DE DESC
+		    )
+		SELECT A.*
+		    FROM(
+		    SELECT OTHEREMERGENCY.*, ROWNUM RNUM
+		    FROM OTHEREMERGENCY
+		    )A
+		WHERE RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+	</select>
+
+
+	<select id="selectTotalRecord">
+		SELECT COUNT(*)
+		FROM EMERGENCY
+		WHERE EMER_REQST = #{franchiseId}
+		<include refid="searchFrag" />
+	</select>
+
+	<update id="updateEmerApprove">
+		UPDATE EMERGENCY
+		SET EMER_PARTN = #{emerPartn}
+		WHERE EMER_NO = #{emerNo}
+	</update>
+
+	<update id="updateMyFranEmerApproveInv">
+		UPDATE INVENTORY I
+		SET I.FIV_QY = I.FIV_QY - (
+		                            SELECT A.EDETAIL_QY
+		                            FROM EMERGENCYDT A
+		                            WHERE A.FIV_ID = I.FIV_ID
+		                            AND A.EMER_NO = #{emerNo}
+		                          )
+		WHERE I.FIV_ID IN (
+		                    SELECT FIV_ID
+		                    FROM EMERGENCYDT
+		                    WHERE EMER_NO = #{emerNo}
+		                  )
+	</update>
+
+	<update id="updateOtherFranEmerApporveInv">
+		UPDATE INVENTORY I
+		SET I.FIV_QY = I.FIV_QY + (
+		                            SELECT A.EDETAIL_QY
+		                            FROM (  SELECT FIV_ID, EDETAIL_QY
+		                                    FROM VIEW_EMERGENCYDT
+		                                    WHERE EMER_NO = #{emerNo}
+		                                ) A
+		                            WHERE A.FIV_ID = I.FIV_ID
+		                          )
+		WHERE I.FIV_ID IN (
+		                    SELECT FIV_ID
+		                    FROM VIEW_EMERGENCYDT
+		                    WHERE EMER_NO = #{emerNo}
+		                  )
+	</update>
+
+	<insert id="insertMyFranEmerApproveExp">
+		INSERT INTO EXPENSE (
+		    FEXPS_NO,
+		    FRANCHISEE_ID,
+		    FEXPS_SE,
+		    FEXPS_NM,
+		    FEXPS_CN,
+		    FEXPS_DE,
+		    FEXPS_AMOUNT
+		)
+		SELECT
+		    'FEXPS' || EXPENSE_SEQ.NEXTVAL,
+		    FRANCHISE_ID,
+		    'COMN16DT004',
+		    '긴급재고 환불비',
+		    (SELECT LISTAGG(FRANPROD_NM || '(' || EDETAIL_QY || '개)', ', ') WITHIN GROUP (ORDER BY FRANPROD_NM)
+		     FROM EMERGENCYDT E INNER JOIN INVENTORY I ON (E.FIV_ID = I.FIV_ID)
+		                        INNER JOIN FRANPROD F ON (F.FRANPROD_ID = I.FRANPROD_ID)
+		    WHERE EMER_NO = #{emerNo}),
+		    SYSDATE,
+		    EMER_AMOUNT
+		FROM EMERGENCY
+		WHERE EMER_NO = #{emerNo}
+	</insert>
+
+	<insert id="insertOtherFranEmerApproveSell">
+		INSERT INTO FRANSELLING (
+		    FSEL_NO,
+		    FRANCHISEE_ID,
+		    FSEL_SE,
+		    FSEL_NM,
+		    FSEL_CN,
+		    FSEL_DE,
+		    FSEL_AMOUNT
+		)
+		SELECT
+		    'FSEL' || FRANSELLING_SEQ.NEXTVAL,
+		    EMER_REQST,
+		    'COMN18DT003',
+		    '긴급재고 환불비',
+		    (SELECT LISTAGG(FRANPROD_NM || '(' || EDETAIL_QY || '개)', ', ') WITHIN GROUP (ORDER BY FRANPROD_NM)
+		     FROM EMERGENCYDT E INNER JOIN INVENTORY I ON (E.FIV_ID = I.FIV_ID)
+		                        INNER JOIN FRANPROD F ON (F.FRANPROD_ID = I.FRANPROD_ID)
+		    WHERE EMER_NO = #{emerNo}),
+		    SYSDATE,
+		    EMER_AMOUNT
+		FROM EMERGENCY
+		WHERE EMER_NO = #{emerNo}
+	</insert>
+
+	<update id="updateEmerFranInvStatus">
+		UPDATE EMERGENCY
+		SET EMER_REJ_CN = #{emerRejCn}
+		WHERE EMER_NO = #{emerNo}
+	</update>
+
+	<select id="selectApproveYourEmpId">
+		SELECT EMP_ID
+		FROM EMPLOYEE
+		WHERE EMP_NO = (SELECT EMP_NO
+		                FROM FRANCHISE
+		                WHERE FRANCHISE_ID = (SELECT FRANCHISE_ID
+		                                        FROM EMERGENCY
+		                                        WHERE EMER_NO = #{emerNo}))
+	</select>
+</mapper>

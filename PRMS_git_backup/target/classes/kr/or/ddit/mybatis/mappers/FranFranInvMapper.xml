@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.franchise.franchisee.mapper.FranFranInvMapper">
+
+	<sql id="searchFrag">
+		<trim prefix="AND" >
+        	<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(paging.simpleCondition.searchType)
+        				and @org.apache.commons.lang3.StringUtils@isNotBlank(paging.simpleCondition.searchWord)">
+        		<choose>
+        			<when test="paging.simpleCondition.searchType eq 'search'">
+						INSTR(P.FRANPROD_NM, #{paging.simpleCondition.searchWord}) > 0
+        			</when>
+        		</choose>
+        	</if>
+        </trim>
+	</sql>
+
+	<select id="selectFranFranInvList">
+		WITH OTHERSTAFFFRANINV AS (
+        SELECT
+            I.FIV_ID,
+            I.FIV_QY,
+            I.FRANCHISE_ID,
+            I.FRANPROD_ID,
+            P.FRANPROD_NM,
+            P.FRANPROD_PC,
+            P.FRANPROD_IMAGE
+        FROM
+            INVENTORY I INNER JOIN FRANPROD P ON (I.FRANPROD_ID = P.FRANPROD_ID)
+        WHERE I.FRANCHISE_ID = #{franchiseId}
+        AND I.FIV_QY > 0
+        <include refid="searchFrag" />
+        ORDER BY I.FIV_QY ASC
+        )
+    SELECT A.*
+        FROM(
+        SELECT OTHERSTAFFFRANINV.*, ROWNUM RNUM
+        FROM OTHERSTAFFFRANINV
+        )A
+    WHERE RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+	</select>
+
+	<select id="selectTotalRecord">
+		SELECT COUNT(*)
+		FROM INVENTORY I INNER JOIN FRANPROD P ON (I.FRANPROD_ID = P.FRANPROD_ID)
+		WHERE I.FRANCHISE_ID = #{franchiseId}
+		AND I.FIV_QY > 0
+		<include refid="searchFrag" />
+	</select>
+
+	<update id="updateFranInvDispose">
+		UPDATE INVENTORY
+		SET
+		   FIV_QY = FIV_QY-#{fivQy}
+		WHERE
+		    FIV_ID = #{fivId}
+	</update>
+
+	<update id="updateFranInvReturn">
+		UPDATE INVENTORY
+		SET
+		   FIV_QY = FIV_QY-#{fivQy}
+		WHERE
+		   FIV_ID = #{fivId}
+	</update>
+
+	<update id="updateAdminInvReturn">
+		UPDATE ADMININV
+		SET
+		    ADMININV_QY = ADMININV_QY+#{fivQy}
+		WHERE
+		    PROD_ID = (
+		        SELECT A.PROD_ID
+		        FROM ADMININV A INNER JOIN PROD P ON (A.PROD_ID = P.PROD_ID)
+		                        INNER JOIN FRANPROD F ON (P.PROD_ID = F.PROD_ID)
+		                        INNER JOIN INVENTORY I ON (F.FRANPROD_ID = I.FRANPROD_ID)
+		        WHERE I.FIV_ID = #{fivId}
+		    )
+	</update>
+
+	<insert id="insertFranReturnSell">
+		INSERT INTO FRANSELLING (
+		    FSEL_NO,
+		    FRANCHISEE_ID,
+		    FSEL_SE,
+		    FSEL_NM,
+		    FSEL_CN,
+		    FSEL_AMOUNT
+		)
+		SELECT
+		    'FSEL' || FRANSELLING_SEQ.NEXTVAL AS FSEL_NO
+		    , #{franchiseId}
+		    , 'COMN16DT002'
+		    , '재고반품'
+		    , F.FRANPROD_NM ||': '||#{inventory.fivQy}||'개'
+		    , F.FRANPROD_PC * #{inventory.fivQy}
+		FROM
+		    INVENTORY I INNER JOIN FRANPROD F ON (I.FRANPROD_ID = F.FRANPROD_ID)
+
+		WHERE
+		    I.FIV_ID = #{inventory.fivId}
+	</insert>
+
+	<insert id="insertAdminReturnExp">
+		INSERT INTO ADMINEXP (
+		    ADMINEXP_NO,
+		    HQ_ID,
+		    COMN_CODE_ID,
+		    ADMINEXP_NM,
+		    ADMINEXP_CN,
+		    ADMINEXP_AMOUNT
+		)
+		SELECT
+		    'AEXP' || ADMINEXP_SEQ.NEXTVAL
+		    , 'HEAD1'
+		    , 'COMN11DT010'
+		    , '재고반품 환불비용'
+		    , P.PROD_SLE_NM ||': '||#{fivQy}||'개'
+		    , F.FRANPROD_PC * #{fivQy}
+		FROM
+		    ADMININV A INNER JOIN PROD P ON (A.PROD_ID = P.PROD_ID)
+		                INNER JOIN FRANPROD F ON (P.PROD_ID = F.PROD_ID)
+		                INNER JOIN INVENTORY I ON (F.FRANPROD_ID = I.FRANPROD_ID)
+		WHERE
+		    I.FIV_ID = #{fivId}
+	</insert>
+
+
+
+
+
+
+
+</mapper>

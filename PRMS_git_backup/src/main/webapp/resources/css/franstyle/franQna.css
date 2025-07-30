@@ -1,0 +1,206 @@
+/* Common Layout */
+.container-preboard h4 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+  color: #333;
+}
+
+/* Table Basic Style */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 17px;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 14px 16px;
+  vertical-align: top;
+  text-align: left;
+}
+
+.notice-background {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  width: 150px;
+  color: #333;
+}
+
+/* Content Text */
+.board-content {
+  line-height: 1.8;
+  font-size: 15px;
+  color: #444;
+}
+
+/* Button Alignment */
+.noticeBtn-group {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.noticeBtn-group .btn-group form {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+/* Detail Button Color Effect */
+.ms-btn-2 {
+  background-color: #3e9172;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  font-size: 17px;
+  border-radius: 4px;
+}
+
+.ms-btn-2:hover {
+  background-color: #2fae7e;
+}
+
+/* Admin Answer Area */
+.admin-answer {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 40px;
+  background-color: #f3f5f7;
+  border: 1px solid #dcdfe3;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.admin-profile-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+  border: 1px solid #ccc;
+}
+
+.admin-text {
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Admin Name and Date */
+.admin-text strong {
+  display: block;
+  font-size: 16px;
+  color: #222;
+  margin-bottom: 4px;
+}
+
+.qna-cnstyle {
+  font-size: 17px !important;
+}
+
+/* Specific styles for the second page's question display */
+.board-header-container {
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.board-header-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #343a40;
+}
+
+.board-header-date {
+  font-size: 14px;
+  color: #6c757d;
+  margin-bottom: 3px;
+}
+
+.contentCn {
+  padding: 20px 15px;
+  line-height: 1.8;
+  font-size: 16px;
+  color: #495057;
+}
+
+
+.comment-list {
+  margin-top: 30px;
+}
+
+.comment {
+  border: 1px solid #e0e0e0;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.comment-body h3 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #3f51b5;
+  margin-bottom: 10px;
+}
+
+.comment-author {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.comment-date {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.comment-content {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #555;
+}
+
+.detailBtn {
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px; 
+}
+
+.detailBtn .btn {
+  padding: 8px 15px;
+  font-size: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.detailBtn .btn-primary {
+  background-color: #3f51b5;
+  border-color: #3f51b5;
+  color: white;
+}
+
+.detailBtn .btn-primary:hover {
+  background-color: #1976d2;
+  border-color: #1976d2;
+}
+
+.detailBtn .btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: white;
+}
+
+.detailBtn .btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}

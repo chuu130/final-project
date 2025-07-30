@@ -1,0 +1,106 @@
+/* QNA 디테일 페이지 속성 */
+
+ /* 공통 레이아웃 */
+.container-preboard h4 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+  color: #333;
+}
+
+/* 테이블 기본 스타일 */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 17px;
+}
+
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 14px 16px;
+  vertical-align: top;
+  text-align: left;
+}
+
+.notice-background {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  width: 150px;
+  color: #333;
+}
+
+/* 내용 텍스트 */
+.board-content {
+  line-height: 1.8;
+  font-size: 15px;
+  color: #444;
+}
+
+/* 버튼 정렬 */
+.noticeBtn-group {
+  margin-top: 30px;
+      display: flex;
+    justify-content: space-around;
+}
+
+.noticeBtn-group .btn-group form {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+/* 디테일 버튼 색상 효과 */  
+.ms-btn-2 {
+  background-color: #3e9172;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  font-size: 17px;
+  border-radius: 4px;
+}
+
+.ms-btn-2:hover {
+  background-color: #2fae7e;
+}
+
+/* 관리자 답변 영역 */
+.admin-answer {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 40px;
+  background-color: #f3f5f7;
+  border: 1px solid #dcdfe3;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.admin-profile-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+  border: 1px solid #ccc;
+}
+
+.admin-text {
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* 관리자 이름과 날짜 */
+.admin-text strong {
+  display: block;
+  font-size: 16px;
+  color: #222;
+  margin-bottom: 4px;
+}
+.qna-cnstyle{
+  font-size: 17px !important;
+	
+}
+ 

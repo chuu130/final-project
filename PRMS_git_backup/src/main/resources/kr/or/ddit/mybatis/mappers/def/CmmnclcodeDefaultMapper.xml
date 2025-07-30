@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.CmmnclcodeDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.CmmnclcodeDefaultVO">
+    <id column="CMMNCL_CODE_ID" jdbcType="VARCHAR" property="cmmnclCodeId" />
+    <result column="CMMNCL_CODE_NM" jdbcType="VARCHAR" property="cmmnclCodeNm" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from CMMNCLCODE
+    where CMMNCL_CODE_ID = #{cmmnclCodeId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="kr.or.ddit.vo.def.CmmnclcodeDefaultVO">
+    insert into CMMNCLCODE (CMMNCL_CODE_ID, CMMNCL_CODE_NM)
+    values (#{cmmnclCodeId,jdbcType=VARCHAR}, #{cmmnclCodeNm,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="kr.or.ddit.vo.def.CmmnclcodeDefaultVO">
+    update CMMNCLCODE
+    set CMMNCL_CODE_NM = #{cmmnclCodeNm,jdbcType=VARCHAR}
+    where CMMNCL_CODE_ID = #{cmmnclCodeId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select CMMNCL_CODE_ID, CMMNCL_CODE_NM
+    from CMMNCLCODE
+    where CMMNCL_CODE_ID = #{cmmnclCodeId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select CMMNCL_CODE_ID, CMMNCL_CODE_NM
+    from CMMNCLCODE
+  </select>
+</mapper>

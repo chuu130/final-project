@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.main.mapper.FoundMapper">
+	<resultMap id="BaseResultMap"
+		type="kr.or.ddit.vo.def.FoundDefaultVO">
+		<id column="FOUND_NO" jdbcType="VARCHAR" property="foundNo" />
+		<result column="FOUND_NM" jdbcType="VARCHAR" property="foundNm" />
+		<result column="FOUND_TELNO" jdbcType="VARCHAR"
+			property="foundTelno" />
+		<result column="FOUND_EMAIL" jdbcType="VARCHAR"
+			property="foundEmail" />
+		<result column="FOUND_ADRES1" jdbcType="VARCHAR"
+			property="foundAdres1" />
+		<result column="FOUND_ADRES2" jdbcType="VARCHAR"
+			property="foundAdres2" />
+		<result column="FOUND_CN" jdbcType="VARCHAR" property="foundCn" />
+		<result column="FOUND_DE" jdbcType="TIMESTAMP"
+			property="foundDe" />
+		<result column="FOUND_PLACE" jdbcType="VARCHAR"
+			property="foundPlace" />
+		<result column="FOUND_ATCH" jdbcType="VARCHAR"
+			property="foundAtch" />
+		<result column="FOUND_SIDE_SE" jdbcType="VARCHAR"
+			property="foundSideSe" />
+		<result column="FOUND_LICENSE_AT" jdbcType="VARCHAR"
+			property="foundLicenseAt" />
+		<result column="FOUND_CONFM_AT" jdbcType="VARCHAR"
+			property="foundConfmAt" />
+		<result column="EMP_NO" jdbcType="VARCHAR" property="empNo" />
+		<association property="employee" javaType="EmployeeDefaultVO" autoMapping="true" />
+	</resultMap>
+
+	<insert id="insertFound" parameterType="FoundDefaultVO">
+		insert into FOUND (
+		FOUND_NO
+		, FOUND_NM
+		, FOUND_TELNO
+		, FOUND_EMAIL
+		, FOUND_ZIP
+		, FOUND_ADRES1
+		, FOUND_ADRES2
+		, FOUND_CN
+		, FOUND_PLACE
+		, FOUND_ATCH
+		, FOUND_LICENSE_AT
+		)
+		values (
+		'FOU' || FOUND_SEQ.NEXTVAL
+		, #{foundNm,jdbcType=VARCHAR}
+		, #{foundTelno,jdbcType=VARCHAR}
+		, #{foundEmail,jdbcType=VARCHAR}
+		, #{foundZip,jdbcType=VARCHAR}
+		, #{foundAdres1,jdbcType=VARCHAR}
+		, #{foundAdres2,jdbcType=VARCHAR}
+		, #{foundCn,jdbcType=VARCHAR}
+		, #{foundPlace,jdbcType=VARCHAR}
+		, #{foundAtch,jdbcType=VARCHAR}
+		, #{foundLicenseAt,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<select id="selectFoundList">
+		WITH OTHERFOUND AS (
+		SELECT
+		FOUND_NO,
+		FOUND_NM,
+		FOUND_TELNO,
+		FOUND_EMAIL,
+		FOUND_ZIP,
+		FOUND_ADRES1,
+		FOUND_ADRES2,
+		FOUND_CN,
+		FOUND_DE,
+		FOUND_PLACE,
+		FOUND_ATCH,
+		FOUND_SIDE_SE,
+		FOUND_LICENSE_AT,
+		FOUND_CONFM_AT,
+		EMP_NO
+		FROM FOUND
+		WHERE FOUND_CONFM_AT = 'P'
+		ORDER BY
+		FOUND.FOUND_NO DESC
+		)
+		SELECT A.*
+		FROM(
+		SELECT OTHERFOUND.*, ROWNUM RNUM
+		FROM
+		OTHERFOUND
+		)A
+		WHERE RNUM BETWEEN #{firstRecord} AND #{lastRecord}
+	</select>
+
+	<select id="selectTotalRecord">
+		SELECT COUNT(*)
+		FROM FOUND
+		WHERE FOUND_CONFM_AT = 'P'
+	</select>
+
+	<select id="Foundlicense" parameterType="FoundDefaultVO">
+		SELECT *
+		FROM found
+		WHERE FOUND_No = #{foundNo,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateFound">
+		UPDATE FOUND
+		SET FOUND_CONFM_AT = #{foundConfmAt},
+			FOUND_CKDE = SYSDATE
+		WHERE FOUND_NO = #{foundNo}
+	</update>
+
+	<select id="selectFoundDetail">
+		SELECT
+		FOUND_NO,
+		FOUND_NM,
+		FOUND_TELNO,
+		FOUND_EMAIL,
+		FOUND_ZIP,
+		FOUND_ADRES1,
+		FOUND_ADRES2,
+		FOUND_CN,
+		FOUND_DE,
+		FOUND_PLACE,
+		FOUND_ATCH,
+		FOUND_SIDE_SE,
+		FOUND_LICENSE_AT,
+		FOUND_CONFM_AT,
+		EMP_NO
+		FROM
+		FOUND
+		WHERE
+		FOUND_NO=#{foundNo}
+	</select>
+
+	<select id="foundSuccessList">
+		SELECT
+		FOUND_NO,
+		FOUND_NM,
+		FOUND_TELNO,
+		FOUND_EMAIL,
+		FOUND_ZIP,
+		FOUND_ADRES1,
+		FOUND_ADRES2,
+		FOUND_CN,
+		FOUND_DE,
+		FOUND_PLACE,
+		FOUND_ATCH,
+		FOUND_SIDE_SE,
+		FOUND_LICENSE_AT,
+		FOUND_CONFM_AT,
+		EMP_NO
+		FROM
+		FOUND
+		WHERE
+		FOUND_CONFM_AT = 'Y'
+	</select>
+
+	<select id="foundAtList" resultMap="BaseResultMap">
+		select a.*, b.*
+		from found a inner join employee b on (a.emp_no = b.emp_no)
+		where a.FOUND_DE IS NOT NULL AND a.EMP_NO IS NOT NULL
+	</select>
+
+	<select id="selectfound" parameterType="string">
+		select *
+		from found
+		where FOUND_NO= #{foundNo}
+	</select>
+
+	<update id="foundSideSeupdate" parameterType="string">
+		update found
+		set FOUND_SIDE_SE = 'Y'
+		where FOUND_NO=#{foundNo}
+	</update>
+
+</mapper>

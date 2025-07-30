@@ -1,0 +1,68 @@
+.hljs {
+  display: block;
+  overflow-x: auto;
+  color: rgba(var(--#{$prefix}body-color-rgb), .75);
+  font-size: $font-size-base * .9;
+}
+.hljs-code,
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-tag {
+	color: rgba(var(--#{$prefix}body-color-rgb), .5);
+	
+	& .hljs-name {
+		color: $indigo-700;
+	}
+}
+.hljs-comment {
+	color: rgba(var(--#{$prefix}body-color-rgb), .25);
+}
+.hljs-string,
+.hljs-bullet {
+  color: $blue;
+}
+.hljs-attr {
+	color: $teal-600;
+}
+.hljs a {
+  color: inherit;
+  
+	&:focus,
+	&:hover {
+		color: inherit;
+		text-decoration: underline;
+	}
+}
+.hljs-container {
+  padding: $card-spacer-y $card-spacer-x;
+  border-top: 1px solid var(--#{$prefix}border-color);
+  position: relative;
+  z-index: 1;
+  background: rgba(var(--#{$prefix}body-bg-rgb), .5);
+	
+	& pre {
+		border: none;
+		padding: 0;
+		margin: 0;
+		background: none;
+		border-radius: 0;
+	}
+}
+
+@if $enable-dark-mode {
+	@include color-mode(dark, true) {
+		.hljs-tag {
+			& .hljs-name {
+				color: $red-300;
+			}
+		}
+		.hljs-string,
+		.hljs-bullet {
+			color: $indigo-300;
+		}
+		.hljs-attr {
+			color: $orange-400;
+		}
+	}
+}

@@ -1,0 +1,44 @@
+@@include('./partial/head.html', {
+	"title": "Error Page", 
+	"bodyAttr": "class='pace-top'",
+	"css": [
+]})
+	<!-- BEGIN #app -->
+	<div id="app" class="app app-full-height app-without-header">
+		<!-- BEGIN error -->
+		<div class="error-page">
+			<!-- BEGIN error-page-content -->
+			<div class="error-page-content">
+				<div class="error-code">404</div>
+				<h1>Oops!</h1> 
+				<h3>We can't seem to find the page you're looking for</h3>
+				<hr class="opacity-1">
+				<p class="mb-2">
+					Here are some helpful links instead:
+				</p>
+				<p class="mb-5">
+					<a href="index.html" class="link-secondary text-decoration-none">Home</a>
+					<span class="link-divider"></span>
+					<a href="page_search_results.html" class="link-secondary text-decoration-none">Search</a>
+					<span class="link-divider"></span>
+					<a href="email_inbox.html" class="link-secondary text-decoration-none">Email</a>
+					<span class="link-divider"></span>
+					<a href="calendar.html" class="link-secondary text-decoration-none">Calendar</a>
+					<span class="link-divider"></span>
+					<a href="settings.html" class="link-secondary text-decoration-none">Settings</a>
+					<span class="link-divider"></span>
+					<a href="helper.html" class="link-secondary text-decoration-none">Helper</a>
+				</p>
+				<a href="javascript:window.history.back();" class="btn btn-theme px-3 rounded-pill"><i class="fa fa-arrow-left me-1 ms-n1"></i> Go Back</a>
+			</div>
+			<!-- END error-page-content -->
+		</div>
+		<!-- END error -->
+		
+		@@include('./partial/theme-panel.html')
+		@@include('./partial/scroll-top-btn.html')
+	</div>
+	<!-- END #app -->
+	
+@@include('./partial/script.html', {"script": [
+]})

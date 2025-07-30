@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.franchise.staff.mapper.StaffEmerFranInvMapper">
+
+	<sql id="searchFrag">
+		<trim prefix="AND">
+        	<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(paging.simpleCondition.searchWord)">
+        		<choose>
+        			<when test="paging.simpleCondition.searchType eq 'search'">
+						INSTR(P.FRANPROD_NM, #{paging.simpleCondition.searchWord}) > 0
+        			</when>
+        		</choose>
+        	</if>
+        </trim>
+	</sql>
+
+	<select id="selectStaffEmerFranInvList" resultType="InventoryDefaultVO">
+		WITH OTHERINVENTORY AS (
+	        SELECT
+	            I.FIV_ID,
+	            I.FIV_QY,
+	            I.FRANCHISE_ID,
+	            I.FRANPROD_ID,
+	            P.FRANPROD_NM,
+	            P.FRANPROD_PC,
+	            P.FRANPROD_IMAGE
+	        FROM
+	            INVENTORY I INNER JOIN FRANPROD P ON (I.FRANPROD_ID = P.FRANPROD_ID)
+	        WHERE
+	        	I.FRANCHISE_ID = #{what}
+	        	<include refid="searchFrag" />
+	        ORDER BY I.ROWID DESC
+	        )
+	    SELECT A.*
+	        FROM(
+	        SELECT OTHERINVENTORY.*, ROWNUM RNUM
+	        FROM OTHERINVENTORY
+	        )A
+	    WHERE RNUM BETWEEN #{paging.firstRecord} AND #{paging.lastRecord}
+	</select>
+
+	<select id="selectTotalRecord">
+		SELECT COUNT(*)
+		FROM INVENTORY I INNER JOIN FRANPROD P ON (I.FRANPROD_ID = P.FRANPROD_ID)
+		WHERE I.FRANCHISE_ID = #{what}
+		<include refid="searchFrag" />
+	</select>
+
+	<select id="selectStaffFranchiseList" resultType="FranchiseDefaultVO">
+		SELECT
+		    FRANCHISE_ID,
+		    FRANCHISE_AREA,
+		    FRANCHISE_NM,
+		    FRANCHISE_TEL,
+		    FRANCHISE_ZIP,
+		    FRANCHISE_ADD1,
+		    FRANCHISE_ADD2,
+		    FRANCHISE_EMAIL,
+		    FRANCHISE_YN_AT,
+		    FRANCHISE_HOTEL_CO,
+		    EMP_NO,
+		    CMMN_CODE_NM
+		FROM
+		    FRANCHISE INNER JOIN CMMNCODE ON (FRANCHISE_AREA = CMMN_CODE_ID)
+		WHERE CMMN_CODE_NM IN (
+		    SELECT DISTINCT CMMN_CODE_NM
+		    FROM FRANCHISE INNER JOIN CMMNCODE ON (FRANCHISE_AREA = CMMN_CODE_ID)
+		    WHERE FRANCHISE_ID = #{franchiseId}
+		)
+		AND FRANCHISE_ID != #{franchiseId}
+	</select>
+</mapper>

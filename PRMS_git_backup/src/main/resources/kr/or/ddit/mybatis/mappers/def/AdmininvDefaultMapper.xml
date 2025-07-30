@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.def.mapper.AdmininvDefaultMapper">
+  <resultMap id="BaseResultMap" type="kr.or.ddit.vo.def.AdmininvDefaultVO">
+    <id column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+    <result column="ADMININV_NM" jdbcType="VARCHAR" property="admininvNm" />
+    <result column="ADMININV_DETAIL" jdbcType="VARCHAR" property="admininvDetail" />
+    <result column="ADMININV_QY" jdbcType="NUMERIC" property="admininvQy" />
+    <association property="partprod" javaType="PartprodDefaultVO" autoMapping="true"/>
+  </resultMap>
+  <delete id="deleteAdminInv" parameterType="java.lang.String">
+    delete from ADMININV
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertAdminInv" parameterType="kr.or.ddit.vo.def.AdmininvDefaultVO">
+    insert into ADMININV (PROD_ID, ADMININV_NM, ADMININV_DETAIL,
+      ADMININV_QY)
+    values (#{prodId,jdbcType=VARCHAR}, #{admininvNm,jdbcType=VARCHAR}, #{admininvDetail,jdbcType=VARCHAR},
+      #{admininvQy,jdbcType=NUMERIC})
+  </insert>
+  <update id="updateAdminInv" parameterType="kr.or.ddit.vo.def.AdmininvDefaultVO">
+    update ADMININV
+    set ADMININV_NM = #{admininvNm,jdbcType=VARCHAR},
+      ADMININV_DETAIL = #{admininvDetail,jdbcType=VARCHAR},
+      ADMININV_QY = #{admininvQy,jdbcType=NUMERIC}
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectAdminInv" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select a.*, b.*
+	from ADMININV a inner join partprod b on (a.prod_id = b.prod_id)
+	where a.PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAdminInvList" resultMap="BaseResultMap">
+    select PROD_ID, ADMININV_NM, ADMININV_DETAIL, ADMININV_QY
+    from ADMININV
+  </select>
+
+</mapper>

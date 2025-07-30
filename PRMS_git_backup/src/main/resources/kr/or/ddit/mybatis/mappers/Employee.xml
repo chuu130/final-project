@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.main.mapper.EmployeeMapper">
+
+	<!-- 임직원 권한을 가져오기 위한 맵 -->
+	<resultMap type="EmployeeDefaultVO" id="empMap"
+		autoMapping="true">
+		<association property="role" javaType="CmmncodeDefaultVO"
+			autoMapping="true" />
+	</resultMap>
+
+	<!-- 아이디를 이용하여 임직원 정보를 가져오는 쿼리 -->
+	<select id="selectEmployeeByName" resultMap="empMap">
+		select
+		emp_no
+		,emp_id
+		,emp_password
+		,emp_nm
+		,emp_salary
+		,emp_zip
+		,emp_adres1
+		,emp_adres2
+		,emp_email
+		,emp_telno
+		,emp_cl
+		,emp_bir
+		,emp_de
+		,emp_leave_at
+		,emp_license_at
+		,emp_profile
+		,emp_resume
+		,hq_id
+		,franchise_id
+		,cmmn_code_nm
+		from
+		employee inner join cmmncode on (emp_cl =
+		cmmn_code_id)
+		where emp_id =
+		#{username}
+	</select>
+
+	<!-- 임직원 아이디 찾기 쿼리 -->
+	<select id="selectEmployeeId"
+		parameterType="EmployeeIdFindingVO" resultType="string">
+		SELECT EMP_ID
+		FROM
+		EMPLOYEE
+		WHERE EMP_NM = #{empNm} AND EMP_TELNO = #{empTelno}
+	</select>
+
+	<!-- 임직원 비밀번호를 수정하기전 임직원 정보를 가져오는 쿼리 -->
+	<select id="selectEmployeePw"
+		parameterType="EmployeePwFindingVO" resultType="EmployeeDefaultVO">
+		SELECT
+		EMP_NO
+		,EMP_ID
+		,EMP_NM
+		,EMP_TELNO
+		,EMP_EMAIL
+		FROM EMPLOYEE
+		WHERE EMP_ID = #{empId} AND
+		EMP_EMAIL = #{empEmail}
+	</select>
+
+	<!-- 임직원 비밀번호를 수정하는 쿼리 -->
+	<select id="updateEmployeePw" parameterType="EmployeeDefaultVO">
+		UPDATE EMPLOYEE
+		SET
+		EMP_PASSWORD = #{empPassword}
+		WHERE EMP_ID = #{empId}
+	</select>
+
+	<select id="selectEmployeeFranId" parameterType="string">
+		SELECT *
+		fROM
+		EMPLOYEE
+		WHERE EMP_ID = #{empId}
+	</select>
+
+	<insert id="insertEmployee"
+		parameterType="kr.or.ddit.vo.def.EmployeeDefaultVO">
+		insert into EMPLOYEE (EMP_NO, EMP_ID, EMP_PASSWORD,
+		EMP_NM, EMP_SALARY, EMP_ZIP,
+		EMP_ADRES1, EMP_ADRES2, EMP_EMAIL,
+		EMP_TELNO, EMP_CL, EMP_BIR,
+		EMP_DE, EMP_LEAVE_AT, EMP_LICENSE_AT,
+		EMP_PROFILE, EMP_RESUME, HQ_ID,
+		FRANCHISE_ID)
+		values
+		(EMPLOYEE_SEQ.nextval, #{empId,jdbcType=VARCHAR},
+		#{empPassword,jdbcType=VARCHAR},
+		#{empNm,jdbcType=VARCHAR},
+		#{empSalary,jdbcType=NUMERIC}, #{empZip,jdbcType=VARCHAR},
+		#{empAdres1,jdbcType=VARCHAR}, #{empAdres2,jdbcType=VARCHAR},
+		#{empEmail,jdbcType=VARCHAR},
+		#{empTelno,jdbcType=VARCHAR},
+		#{empCl,jdbcType=VARCHAR}, #{empBir,jdbcType=TIMESTAMP},
+		#{empDe,jdbcType=TIMESTAMP}, #{empLeaveAt,jdbcType=VARCHAR},
+		#{empLicenseAt,jdbcType=VARCHAR},
+		#{empProfile,jdbcType=VARCHAR},
+		#{empResume,jdbcType=VARCHAR}, #{hqId,jdbcType=VARCHAR},
+		#{franchiseId,jdbcType=VARCHAR})
+	</insert>
+
+	<select id="countemp">
+		SELECT count(EMP_NO)
+		fROM EMPLOYEE
+
+	</select>
+
+	<select id="countmaxcnt">
+		select max(TO_NUMBER(emp_no))
+		from employee
+
+	</select>
+
+	<update id="updateLeaveYn" parameterType="string">
+		update EMPLOYEE
+		set EMP_LEAVE_AT = 'Y'
+		where emp_no = #{empNo}
+	</update>
+
+
+</mapper>

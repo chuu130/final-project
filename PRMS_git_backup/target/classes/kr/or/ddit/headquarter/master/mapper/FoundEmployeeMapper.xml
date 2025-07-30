@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.headquarter.master.mapper.FoundEmployeeMapper">
+
+	<select id="selectFoundEmployeeList">
+		SELECT
+		    EMP_NO,
+		    EMP_ID,
+		    EMP_PASSWORD,
+		    EMP_NM,
+		    EMP_SALARY,
+		    EMP_ZIP,
+		    EMP_ADRES1,
+		    EMP_ADRES2,
+		    EMP_EMAIL,
+		    EMP_TELNO,
+		    EMP_CL,
+		    EMP_BIR,
+		    EMP_DE,
+		    EMP_LEAVE_AT,
+		    EMP_LICENSE_AT,
+		    EMP_PROFILE,
+		    EMP_RESUME,
+		    HQ_ID,
+		    FRANCHISE_ID
+		FROM
+		    EMPLOYEE
+		WHERE EMP_CL = 'COMN06DT002'
+	</select>
+</mapper>

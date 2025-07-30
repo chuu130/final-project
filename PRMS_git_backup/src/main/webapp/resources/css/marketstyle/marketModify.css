@@ -1,0 +1,250 @@
+@charset "UTF-8";
+
+/* 폰트 설정 */
+/* * { font-family: 'Spoqa Han Sans Neo', 'sans-serif' !important ; } */
+* { font-family: "Noto Sans KR", sans-serif !important ;}
+
+.noto-sans-kr {
+  font-family: "Noto Sans KR", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+#fastyle{
+    font-family: var(--fa-style-family, "Font Awesome 6 Free") !important;
+    font-weight: var(--fa-style, 900);
+}
+
+#body-search{
+    margin-left: 200px;
+    width: 550px;
+    min-width:300px;
+}
+
+/* 스크롤바 */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+  background-color: #00ff0000;
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+  	background-color:transparent;
+}
+::-webkit-scrollbar-track:hover{
+  background-color:transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color:#e1e1e6;
+  	border-radius: 10px;
+  	height: 30%;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background-color:#c6c6c8;
+}
+/* 스크롤바 */
+
+/*#3e9172*/
+
+/* 뒤로가기 */
+#backbtn{
+	border: none;
+    background: transparent;
+    color: #288852;
+    width: fit-content;
+}
+#backbtn:hover{
+    color: #41bb77;
+}
+
+/* 미용예약페이지 */
+#resbtn a{
+	background: #54a06c;
+	border: none;
+}
+
+#resbtn a:hover{
+	background: #46855a;
+	color: #fff;
+}
+
+#optionsize li{
+	height: 30px;
+	border-radius: 20px;
+	font-size: small;
+}
+
+#titlefont{
+	font-size: 25px;
+	font-weight: 600;
+	width:fit-content;
+}
+
+.smtitle{
+	margin-top:20px;
+	color:#3e9172;
+	font-size: medium;
+}
+
+.bordercss{
+	display: inline-block;
+	border-bottom: solid 2px #eee;
+	margin-bottom: 20px;
+}
+
+#rowstyle{
+	flex-wrap: nowrap; margin-bottom: 30px;
+}
+
+#reviewstyle{
+	display: flex;
+	align-items: center;
+	margin-bottom: 7px;
+}
+
+#reviewstyle2{
+	font-size: smaller;
+	color: #999;
+}
+
+#reviewstyle2 a{
+	color: #999;
+	font-size: 14px;
+	line-height: 20px;
+}
+
+#datestyle{
+	min-width: fit-content;
+	padding: 46px 40px 20px 40px !important;
+}
+
+#datetitle{
+	margin-bottom: 30px;
+	font-size: 20px;
+	font-weight: 600;
+}
+
+.ms-pro-variation .ms-pro-variation-inner .ms-pro-variation-content .input-group #datepicker{
+	height:35px;
+	border-radius:var(--bs-border-radius);
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	font-size:small;
+}
+.ms-pro-variation .ms-pro-variation-inner .ms-pro-variation-content .input-group #datepicker1{
+	height:35px;
+	border-radius:var(--bs-border-radius);
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	font-size:small;
+}
+.ms-pro-variation .ms-pro-variation-inner .ms-pro-variation-content .input-group #datepicker2{
+	height:35px;
+	border-radius:var(--bs-border-radius);
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	font-size:small;
+}
+
+#optiontitle{
+	margin: 30px 0 30px 0;
+	font-size: 20px;
+	font-weight: 600;
+}
+
+#inputstyle{
+	height: 40px;
+	border-radius: 7px;
+	margin-bottom: 0;
+}
+
+#selectstyle {
+	height: 40px !important;
+	border-radius: 7px !important;
+	margin-bottom: 0;
+}
+
+#selectstyle::after {
+	height: 40px !important;
+}
+
+.kgstyle{
+	display: inline-block;
+	width: calc(100% - 40px) !important;
+	margin-right: 5px;
+}
+
+#pricestyle{
+	display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0;
+    padding-top: 30px;
+    padding-bottom: 0;
+}
+
+#submitMsg{
+	flex-direction: row;
+	align-items: center;
+}
+
+#hotellistyle{
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+#hotellistyle li{
+	margin-bottom: 35px;
+}
+/* 미용예약페이지 */
+
+/* 예약조회 페이지 */
+
+#cancel{
+	display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    margin-bottom: 15px;
+}
+
+#titleresdt{
+	margin: 20px 0 20px 10px;
+    display: block;
+}
+
+.resinfotitle{
+	color: #3e9172;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+#tmstyle{
+	display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+    font-size:14px;
+}
+
+#allbtn{
+	transition: all 0.3s ease-in-out;
+    padding: 5px 10px;
+    background: #17181c;
+    color: #fff;
+    text-align: center;
+    font-size: 13px;
+    text-decoration: none;
+    border: 0;
+    border-radius: 3px;
+    height: 30px;
+}
+
+#allbtn:hover{
+	background: #efefef;
+    color: #17181c;
+    border: 0;
+}
+
+/* 예약조회 페이지 */
